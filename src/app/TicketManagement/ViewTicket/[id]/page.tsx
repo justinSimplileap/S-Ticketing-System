@@ -150,7 +150,7 @@ const Page: React.FC = () => {
 
   return (
     <div className="">
-      <div className="flex items-center justify-between shadow-md p-8 sticky top-0 z-50 bg-white">
+      {/* <div className="flex items-center justify-between shadow-md p-8 sticky top-0 z-50 bg-white">
         <div className="flex items-center gap-3">
           <div className="text-[#2A2C3E] text-xl">
             <Link href="/TicketManagement">Ticket Management </Link>
@@ -172,7 +172,7 @@ const Page: React.FC = () => {
             <Image src={userBg} alt="User" width={50} />
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
         <div className="text-[#2A2C3E] text-2xl mb-6">View Ticket</div>

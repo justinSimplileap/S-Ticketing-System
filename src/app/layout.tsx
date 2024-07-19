@@ -27,4 +27,34 @@ export default function RootLayout({
 }
 
 
+// import { useEffect, useState, type ReactNode } from "react";
+// import { usePathname } from "next/navigation";
+// import Sidebar from "@/Components/common/Sidebar";
+// import TopBar from "@/Components/common/TopBar";
+// type Props = {
+//   children: ReactNode;
+//   title: string;
+// };
+// const routesArray = ["/login", ];
+// const Layout = ({ children, title }: Props) => {
+//   const pathName = usePathname();
+//   return (
+//     <>
+//         <div className="flex h-[100vh]">
+//           <div className="">
+//             {!routesArray.includes(pathName) && <Sidebar />}
+//           </div>
+//           <div className="w-full overflow-y-auto bg-[#F9F9F9]">
+//             <div className="sticky top-0 z-50">
+//               {!routesArray.includes(pathName) && <TopBar  />}
+//             </div>
+//             <div>{children}</div>
+//           </div>
+//         </div>
+//     </>
+//   );
+// };
+// export default Layout;
+
+
 

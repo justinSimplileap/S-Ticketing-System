@@ -1,76 +1,89 @@
 "use client";
 import Image from "next/image";
-import { useState, useRef } from "react";
-import addticket from "../../../../public/images/add.svg";
-import Bell from "../../../../public/images/bell.svg";
-import userBg from "../../../../public/images/User.svg";
-import breadcrumbArrow from "../../../../public/images/BreadcrumbArrow.svg";
-import DropdownArrow from "../../../../public/images/dropdown-arrow_svgrepo.com.svg";
+import { useState, useRef, useEffect } from "react";
+import addticket from "../../../../../public/images/add.svg";
+import Bell from "../../../../../public/images/bell.svg";
+import userBg from "../../../../../public/images/User.svg";
+import breadcrumbArrow from "../../../../../public/images/BreadcrumbArrow.svg";
+import DropdownArrow from "../../../../../public/images/dropdown-arrow_svgrepo.com.svg";
+import Delete from "../../../../../public/images/deleteTicket.svg";
 import Link from "next/link";
 import { Button } from "@headlessui/react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "@/Components/common/Loader";
-import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
+import { usePathname } from "next/navigation";
 import { base_url } from "@/utils/constant";
 
-const ReactQuill = dynamic(() => import("react-quill"), {
-  ssr: false,
-});
-
 export default function Page() {
+  const pathname = usePathname();
+  const parts = pathname.split("/");
+  const value = parts[parts.length - 1];
+  // value contains the ticket id params
+
   const [ticketType, setTicketType] = useState("Select Ticket Type");
   const [priority, setPriority] = useState("Select Priority");
   const [subject, setSubject] = useState("");
   const [requestDetails, setRequestDetails] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  //   const [ticketFile, setTicketFile] = useState<File>([]);
+  const [ticketFilename, setTicketFilename] = useState<string>("");
 
+  const [fileCombination, setfileCombination] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // const [text, setText] = useState('');
-  const [editorHtml, setEditorHtml] = useState("");
-  const textInput = useRef(null);
-
   const [errors, setErrors] = useState({
     ticketType: false,
     priority: false,
     subject: false,
     requestDetails: false,
-
   });
 
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
-      ],
-      ["link"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-  ];
-
-  const handleTextAreaChange = (html: any) => {
-    setEditorHtml(html);
-  };
-
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+
+  console.log("fileCombination", fileCombination)
+
+  const fetchTickets = async () => {
+    try {
+      const response: AxiosResponse<any> = await axios.get(
+        `${base_url}/viewTicketDetails/${value}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response) {
+        let ticketfilename = response.data.ticketDetails[0].details_images_url;
+        ticketfilename = ticketfilename.replace(/[\[\]"]+/g, "");
+        let arrayOfArrays = ticketfilename
+          .split(",")
+          .map((item: string) => item.split(","));
+        let combinedArray = arrayOfArrays.reduce((acc: string | any[], currentArray: any) => {
+          return acc.concat(currentArray);
+        }, []);
+
+        setfileCombination(combinedArray)
+
+        // let combinedArray = array1.concat(array2);
+
+        // ticketfilename = ticketfilename[ticketfilename.length - 1];
+        // console.log(one, two);
+        setTicketType(response.data.ticketDetails[0].ticket_type);
+        setPriority(response.data.ticketDetails[0].priority);
+        setSubject(response.data.ticketDetails[0].subject);
+        setRequestDetails(response.data.ticketDetails[0].details);
+        setTicketFilename(ticketfilename);
+      }
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+    }
+  };
 
   const handleTicketTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTicketType(e.target.value);
@@ -87,12 +100,12 @@ export default function Page() {
     setErrors({ ...errors, subject: false });
   };
 
-  // const handleRequestDetailsChange = (
-  //   e: React.ChangeEvent<HTMLTextAreaElement>
-  // ) => {
-  //   setRequestDetails(e.target.value);
-  //   setErrors({ ...errors, requestDetails: false });
-  // };
+  const handleRequestDetailsChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setRequestDetails(e.target.value);
+    setErrors({ ...errors, requestDetails: false });
+  };
 
   const handleAddNewClick = () => {
     if (fileInputRef.current) {
@@ -105,11 +118,6 @@ export default function Page() {
       setSelectedFiles([...selectedFiles, ...Array.from(e.target.files)]);
     }
   };
-
-  // const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  //   setText(e.target.value);
-  //   setErrors({ ...errors, requestDetails: false });
-  // };
 
   const handleCancel = () => {
     setTicketType("Select Ticket Type");
@@ -148,10 +156,10 @@ export default function Page() {
       }));
       valid = false;
     }
-    if (editorHtml.trim() === "") {
+    if (requestDetails.trim() === "") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        editorHtml: true,
+        requestDetails: true,
       }));
       valid = false;
     }
@@ -166,15 +174,15 @@ export default function Page() {
       formData.append("ticket_type", ticketType);
       formData.append("priority", priority);
       formData.append("subject", subject);
-      formData.append("details", editorHtml);
+      formData.append("details", requestDetails);
 
       console.log({ selectedFiles });
 
       selectedFiles.forEach((file) => formData.append("files", file));
 
       try {
-        const response = await axios.post(
-          `${base_url}/addNewTicket`,
+        const response = await axios.put(
+          `${base_url}/editTicketDetails/${value}`,
           formData,
           {
             headers: {
@@ -194,35 +202,38 @@ export default function Page() {
     }
   };
 
+  const handleRemoveSelectedFile = (index: number) => {
+    setSelectedFiles((prevSelectedFiles) =>
+      prevSelectedFiles.filter((_, i) => i !== index)
+    );
+  };
+
+  const handleRemoveUploadedFile = async (index: any) => {
+    try {
+      const response = await axios.put(
+        `${base_url}/deleteTicketImage/${value}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Adjust as needed
+          },
+        },
+        index,
+        
+      );
+      console.log({ response });
+      toast.success("Ticket files deleted successfully");
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   return (
     <div className="">
       <Toaster />
-      {/* <div className="flex items-center justify-between shadow-md p-8 sticky top-0 z-50 bg-white">
-        <div className="flex items-center gap-3">
-          <div className="text-[#2A2C3E] text-xl">
-            <Link href="/TicketManagement">Ticket Management </Link>
-          </div>
-          <div>
-            <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
-          </div>
-          <div className="text-[#2A2C3E] text-xl">New Ticket</div>
-          <div>
-            <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
-          </div>
-        </div>
-
-        <div className="flex gap-4 justify-center items-center">
-          <div>
-            <Image src={Bell} alt="Notification Bell" width={25} />
-          </div>
-          <div>
-            <Image src={userBg} alt="User" width={50} />
-          </div>
-        </div>
-      </div> */}
 
       <div className="p-10 mx-10 my-12 bg-[#F9F9F9] rounded-md h-screen shadow-md">
-        <div className="text-[#2A2C3E] text-2xl mb-6">New Ticket</div>
+        <div className="text-[#2A2C3E] text-2xl mb-6">Edit Ticket</div>
 
         <form className="space-y-6" onSubmit={handleFormSubmit}>
           <div className="grid grid-cols-2 gap-3">
@@ -309,24 +320,14 @@ export default function Page() {
             )}
           </div>
 
-          <div className="flex flex-col gap-0 my-2">
+          <div className="relative">
             <label
               htmlFor="requestDetails"
               className="block text-[#5E626C] pb-2"
             >
               Request Details <span className="text-red-600 text-md">*</span>
             </label>
-            <ReactQuill
-              id="requestDetials"
-              value={editorHtml}
-              onChange={handleTextAreaChange}
-              theme="snow"
-              className={"h-[100px] my-5"}
-              modules={modules}
-              formats={formats}
-            />
-
-            {/* <textarea
+            <textarea
               id="requestDetails"
               name="requestDetails"
               rows={4}
@@ -336,8 +337,7 @@ export default function Page() {
               className={`mt-1 text-[#5E626C] w-full p-2 px-3 border bg-white rounded-md ${
                 errors.requestDetails ? "border-red-500" : "border-gray-300"
               }`}
-            ></textarea> */}
-
+            ></textarea>
             {errors.requestDetails && (
               <p className="text-red-500 text-xs mt-1">
                 Please enter request details
@@ -345,7 +345,7 @@ export default function Page() {
             )}
           </div>
 
-          <div className="rounded-md bg-[#F0ECFB] p-8 my-3">
+          <div className="rounded-md bg-[#F0ECFB] p-8">
             <div className="flex justify-between items-center ">
               <div>
                 <h1 className="text-md font-medium text-lg">Attach files</h1>
@@ -368,6 +368,24 @@ export default function Page() {
               multiple
             />
             <div className="mt-4">
+              {fileCombination && (
+                <div className="flex items-center">
+                  <ul className="list-disc pl-5">
+                  {fileCombination.map((file: any, index:any) => (
+                      <li key={index} className="text-[#5E626C]">
+                        {file}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveUploadedFile(index)}
+                          className="text-red-500 ml-2"
+                        >
+                          <Image src={Delete} width={20} alt="delete" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {selectedFiles.length > 0 && (
                 <div>
                   <h2 className="text-md font-medium text-lg">
@@ -377,6 +395,13 @@ export default function Page() {
                     {selectedFiles.map((file, index) => (
                       <li key={index} className="text-[#5E626C]">
                         {file.name}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSelectedFile(index)}
+                          className="text-red-500 ml-2"
+                        >
+                          <Image src={Delete} width={20} alt="delete" />
+                        </button>
                       </li>
                     ))}
                   </ul>
@@ -399,7 +424,7 @@ export default function Page() {
                 type="submit"
                 className="flex rounded bg-[#5027D9] py-3 px-7 text-sm text-white items-center gap-2"
               >
-                Raise ticket
+                Update ticket
               </Button>
             </div>
           </div>

@@ -7,7 +7,7 @@ import Link from "next/link";
 import Icon_Order from "../../../../public/images/Icon_Order.svg";
 import Arrow from "../../../../public/images/Arrow 2.svg"
 import Rectangle from "../../../../public/images/Rectangle.svg"
-import Table from "../../../Components/common/Table"
+import TableTwo from "../../../Components/common/TableTwo"
 import group from "../../../../public/images/group.svg"
 import warning from "../../../../public/images/warning.svg"
 import test from "../../../../public/images/test.svg"
@@ -98,7 +98,7 @@ const Manager: React.FC = () => {
 
     return (
         <div className=''>
-            <div className='flex justify-between p-6 bg-[#FFFFFF] drop-shadow-md'>
+            {/* <div className='flex justify-between p-6 bg-[#FFFFFF] drop-shadow-md'>
                 <h1 className="font-medium text-xl font-lato">Dashboard</h1>
                 <div className='flex space-x-4'>
                     <div className="w-10 h-10 bg-[#F8F9FA] rounded-md flex items-center justify-center">
@@ -106,7 +106,7 @@ const Manager: React.FC = () => {
                     </div>
                     <div className="w-10 h-10 bg-[#F8F9FA] rounded-md flex items-center justify-center"></div>
                 </div>
-            </div>
+            </div> */}
             <div className='p-6'>
                 <div className=" shadow-lg rounded-md">
                     <h1 className=" p-7 text-[#2A2C3E] text-2xl font-bold font-lato">Summary</h1>
@@ -180,7 +180,7 @@ const Manager: React.FC = () => {
                 </div>
             </div>
             <div className='p-6'>
-                <Table tickets={tickets} />
+                <TableTwo tickets={tickets}/>
             </div>
 
         </div>

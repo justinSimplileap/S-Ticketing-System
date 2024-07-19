@@ -1,41 +1,125 @@
-"use client"
+"use client";
 
 import Image from "next/image";
-import Bell from "../../../public/images/bell.svg";
-import userBg from "../../../public/images/User.svg";
 import Arrow from "../../../public/images/Arrow 2.svg";
 import Circle from "../../../public/images/Icon_Order.svg";
 import Link from "next/link";
-import Table from "../../Components/common/Table"
+import Table from "../../Components/common/Table";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
+import { base_url } from "@/utils/constant";
 
 
+type Ticket = {
+  id: number;
+  user_id: number;
+  organization_id: number;
+  company_legal_name: string;
+  ticket_type: string;
+  priority: string;
+  status: string;
+  subject: string;
+  details: string;
+  details_images_url: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  actions: string;
+};
 
-// Define an interface for the table data
-interface TicketData {
-  slno: string;
-  name: string;
-  tickets: number;
-}
 
-// Sample data for the table
-const ticketData: TicketData[] = [
-  { slno: "01.", name: "Incident", tickets: 5 },
-  { slno: "02.", name: "Problem", tickets: 3 },
-  { slno: "03.", name: "Change", tickets: 8 },
-  { slno: "04.", name: "Service Request", tickets: 8 },
-];
 
 export default function SuperAdminDashboard() {
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [newTickets, setNewTickets] = useState<number>(0);
+  const [openTickets, setOpenTickets] = useState<number>(0);
+  const [closedTickets, setClosedTickets] = useState<number>(0);
+  const [highPriorityTickets, setHighPriorityTickets] = useState<number>(0);
+  const [allTickets, setAllTickets] = useState<number>(0);
 
-  const [tickets, setTickets] = useState([]);
+  const [incidentTickets, setIncidentTickets] = useState<number>(0);
+  const [problemTickets, setProblemTickets] = useState<number>(0);
+  const [changeTickets, setChangeTickets] = useState<number>(0);
+  const [serviceRequestTickets, setServiceRequestTickets] = useState<number>(0);
 
+  // const [tickets, setTickets] = useState([]);
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  const fetchTickets = async () => {
+    try {
+      const response = await axios.get<{ user: Ticket[] }>(
+        `${base_url}/allTickets`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const tickets = response.data.user;
+      // console.log("tickets",tickets)
+
+      if (!response.data.user) {
+        throw new Error("No tickets found");
+      }
+
+      const activeTickets = response.data.user.filter(
+        (ticket) => ticket.status === "Active"
+      );
+
+      const closedTickets = response.data.user.filter(
+        (ticket) => ticket.status === "Closed"
+      );
+
+      const highPriorityTickets = response.data.user.filter(
+        (ticket) => ticket.priority === "High"
+      );
+
+      const closedHighPriorityTickets = closedTickets.filter(
+        (ticket) => ticket.priority === "High"
+      );
+
+      const incidentTickets = response.data.user.filter(
+        (ticket) => ticket.ticket_type === "Incident"
+      );
+
+      const problemTickets = response.data.user.filter(
+        (ticket) => ticket.ticket_type === "Problem"
+      );
+
+      const changeTickets = response.data.user.filter(
+        (ticket) => ticket.ticket_type === "Change"
+      );
+
+      const serviceRequestTickets = response.data.user.filter(
+        (ticket) => ticket.ticket_type === "Service Request"
+      );
+
+      setOpenTickets(activeTickets.length);
+      setNewTickets(response.data.user.length);
+      setClosedTickets(closedTickets.length);
+      setTickets(response.data.user);
+      setHighPriorityTickets(
+        highPriorityTickets.length - closedHighPriorityTickets.length
+      );
+
+      setAllTickets(response.data.user.length);
+
+      setIncidentTickets(incidentTickets.length);
+      setProblemTickets(problemTickets.length);
+      setChangeTickets(changeTickets.length);
+      setServiceRequestTickets(serviceRequestTickets.length);
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+      toast.error("Failed to fetch tickets");
+    }
+  };
 
   return (
     <div>
-      <div className="flex justify-between items-center shadow-md p-8 sticky top-0 z-50 bg-white">
+      {/* <div className="flex justify-between items-center shadow-md p-8 sticky top-0 z-50 bg-white">
         <div className="text-[#2A2C3E] text-xl">Dashboard</div>
         <div className="flex gap-4 justify-center items-center">
           <div>
@@ -45,11 +129,11 @@ export default function SuperAdminDashboard() {
             <Image src={userBg} alt="User" width={50} />
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="p-10 pb-0">
-        <div className="shadow-sm p-7 rounded-md">
-          <div className="text-xl font-medium mb-7">Summary</div>
+      <div className="p-7 pb-0">
+        <div className="shadow-sm p-5 rounded-md">
+          <div className="text-2xl font-medium mb-7">Summary</div>
 
           <div className="grid grid-cols-2 gap-5">
             {/* left side */}
@@ -58,7 +142,10 @@ export default function SuperAdminDashboard() {
                 <div className="flex items-center gap-8">
                   <Image src={Circle} alt="Circle Icon" width={90} />
                   <div>
-                    <div className="text-4xl text-[#5027D9]">75</div>
+                    <div className="text-4xl text-[#5027D9]">
+                      {highPriorityTickets}
+                    </div>
+
                     <div className="text-[#696969]">High Priority Tickets</div>
                   </div>
                 </div>
@@ -76,7 +163,7 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
                   <div className="pl-5 grid gap-3">
-                    <div className="text-4xl text-[#5027D9]">75</div>
+                    <div className="text-4xl text-[#5027D9]">{newTickets}</div>
                     <div className="text-[#696969]">New Tickets</div>
                   </div>
                 </div>
@@ -91,7 +178,7 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
                   <div className="pl-5 grid gap-3">
-                    <div className="text-4xl text-[#5027D9]">75</div>
+                    <div className="text-4xl text-[#5027D9]">{openTickets}</div>
                     <div className="text-[#696969]">Open Tickets</div>
                   </div>
                 </div>
@@ -106,7 +193,9 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
                   <div className="pl-5 grid gap-3">
-                    <div className="text-4xl text-[#5027D9]">75</div>
+                    <div className="text-4xl text-[#5027D9]">
+                      {closedTickets}
+                    </div>
                     <div className="text-[#696969]">Closed Tickets</div>
                   </div>
                 </div>
@@ -121,7 +210,7 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
                   <div className="pl-5 grid gap-3">
-                    <div className="text-4xl text-[#5027D9]">75</div>
+                    <div className="text-4xl text-[#5027D9]">{allTickets}</div>
                     <div className="text-[#696969]">Total Tickets</div>
                   </div>
                 </div>
@@ -185,13 +274,36 @@ export default function SuperAdminDashboard() {
                         </tr>
                       </thead>
                       <tbody>
-                        {ticketData.map((data, index) => (
-                          <tr key={index}>
-                            <td className="py-3 text-left pl-5">{data.slno}</td>
-                            <td className="py-2 text-left pl-5">{data.name}</td>
-                            <td className="py-2 text-left pl-5">{data.tickets}</td>
-                          </tr>
-                        ))}
+                        <tr>
+                          <td className="py-3 text-left pl-5">01.</td>
+                          <td className="py-2 text-left pl-5">Incident</td>
+                          <td className="py-2 text-left pl-5">
+                            {incidentTickets}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="py-3 text-left pl-5">02.</td>
+                          <td className="py-2 text-left pl-5">Problem</td>
+                          <td className="py-2 text-left pl-5">
+                            {problemTickets}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="py-3 text-left pl-5">03.</td>
+                          <td className="py-2 text-left pl-5">Change</td>
+                          <td className="py-2 text-left pl-5">
+                            {changeTickets}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="py-3 text-left pl-5">04.</td>
+                          <td className="py-2 text-left pl-5">
+                            Service Request
+                          </td>
+                          <td className="py-2 text-left pl-5">
+                            {serviceRequestTickets}
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -203,12 +315,13 @@ export default function SuperAdminDashboard() {
       </div>
       {/* end of top half */}
 
-
       <div className="m-8 flex flex-col gap-5">
         <div className="flex p-7 justify-between">
           <div className="text-3xl text-[#2A2C3E]">Recent Tickets</div>
           <div className="text-2xl text-[#696969] flex gap-3 justify-center items-center">
-            <div><Link href="/AllTickets">View All Tickets </Link></div>
+            <div>
+              <Link href="/AllTickets">View All Tickets </Link>
+            </div>
             <div>
               <Link href="#">
                 <Image src={Arrow} alt="hhh" width={28} />
@@ -217,7 +330,7 @@ export default function SuperAdminDashboard() {
           </div>
         </div>
         <div>
-          <Table tickets={tickets}/>
+          <Table tickets={tickets} />
         </div>
       </div>
     </div>

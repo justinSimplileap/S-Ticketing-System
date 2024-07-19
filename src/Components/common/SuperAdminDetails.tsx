@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import { useForm, SubmitHandler, FieldErrors, UseFormRegister } from "react-hook-form";
 import Image from 'next/image';
 import Profile from "../../../public/images/Profile.svg";
@@ -7,8 +7,6 @@ import Close from "../../../public/images/closebutton.svg";
 import axios from 'axios';
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { base_url } from "@/utils/constant";
-// Define types for form inputs
 type FormInputs = {
   customer_name: string;
   company_legal_name: string;
@@ -22,11 +20,43 @@ type FormInputs = {
   about_company: string;
   work_domain: string;
 };
-const CustomerForm: React.FC = () => {
-  const router = useRouter();
-  const { register, handleSubmit, formState: { errors }, setValue, } = useForm<FormInputs>();
-  const [workDomains, setWorkDomains] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<string>("");
+type SuperAdminDetailsProps = {
+    superAdmin: {
+      customer_name: string;
+      company_legal_name: string;
+      email: string;
+      phone_number: string;
+      company_url: string;
+      address: string;
+      city: string;
+      country: string;
+      postal_code: string;
+      about_company: string;
+      work_domain: string;
+    } | null;
+  };
+  const SuperAdminDetails: React.FC<SuperAdminDetailsProps> = ({ superAdmin }) => {
+    const router = useRouter();
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormInputs>();
+    const [workDomains, setWorkDomains] = useState<string[]>([]);
+    const [inputValue, setInputValue] = useState<string>("");
+  useEffect(() => {
+    if (superAdmin) {
+      setValue("customer_name", superAdmin.customer_name);
+      setValue("company_legal_name", superAdmin.company_legal_name);
+      setValue("email", superAdmin.email);
+      setValue("phone_number", superAdmin.phone_number);
+      setValue("company_url", superAdmin.company_url);
+      setValue("address", superAdmin.address);
+      setValue("city", superAdmin.city);
+      setValue("country", superAdmin.country);
+      setValue("postal_code", superAdmin.postal_code);
+      setValue("about_company", superAdmin.about_company);
+      const domains = superAdmin.work_domain.split(",");
+      setWorkDomains(domains);
+      setValue("work_domain", domains.join(","));
+    }
+  }, [superAdmin, setValue]);
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
@@ -44,32 +74,11 @@ const CustomerForm: React.FC = () => {
     setValue("work_domain", newWorkDomains.join(","), { shouldValidate: true });
   };
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    try {
-      console.log(data);
-      const response = await axios.post(
-        `${base_url}/addCustomer`,
-        {
-          customer_name: data.customer_name,
-          company_legal_name: data.company_legal_name,
-          company_url: data.company_url,
-          phone_number: data.phone_number,
-          email: data.email,
-          address: data.address,
-          postal_code: data.postal_code,
-          country: data.country,
-          city: data.city,
-          about_company: data.about_company,
-          work_domain: data.work_domain,
-        },
-      );
-      toast.success("Customer added successfully");
-      console.log("Form submitted successfully:", response.data);
-      location.reload();
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
+    
+    
   };
   return (
+    
     <div className="p-5 pt-0">
       <Toaster />
       <div className="text-xl font-semibold">Basic Details</div>
@@ -292,4 +301,4 @@ const CustomerForm: React.FC = () => {
     </div>
   );
 };
-export default CustomerForm;
+export default SuperAdminDetails;

@@ -65,7 +65,7 @@ const DashboardPage: React.FC = () => {
       }
 
       const activeTickets = response.data.tickets.filter(
-        (ticket) => ticket.status === 'Active'
+        (ticket) => ticket.status === 'Open'
       );
 
       const closedTickets = response.data.tickets.filter(
@@ -108,17 +108,6 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center shadow-md p-8 sticky top-0 z-50 bg-white">
-        <div className="text-[#17192b] text-xl">Dashboard</div>
-        <div className="flex gap-4 justify-center items-center">
-          <div>
-            <Image src={Bell} alt="hhh" width={25} />
-          </div>
-          <div>
-            <Image src={profilePicture} alt="hhh" width={50} height={50} className='bg-gray-500'/>
-          </div>
-        </div>
-      </div>
       <div>
         <Link href="/TicketManagement/NewTicket">
           <ButtonPurple />

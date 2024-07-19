@@ -16,7 +16,7 @@ const LayoutComponent = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   return (
    
-    <div className="flex h-screen ">
+    <div className="flex ">
       {/* Left side with background image */}
       <div className="relative w-1/2 h-screen">
         <Image src={cover} alt="Logo" layout="fill" objectFit="cover" className="absolute"/>

@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,9 +14,7 @@ interface BreadcrumbNavigationProps {
   items: BreadcrumbItem[];
 }
 
-const BreadcrumbNavigation: React.FC<BreadcrumbNavigationProps> = ({
-  items,
-}) => {
+const BreadcrumbNavigation: React.FC<BreadcrumbNavigationProps> = ({ items }) => {
   return (
     <div className="flex justify-between items-center p-6 bg-[#FFFFFF] drop-shadow-md">
       <div className="flex items-center space-x-2">
@@ -30,12 +28,7 @@ const BreadcrumbNavigation: React.FC<BreadcrumbNavigationProps> = ({
               <span className="font-normal">{item.label}</span>
             )}
             {index < items.length - 1 && (
-              <Image
-                src={Arrow}
-                alt="Breadcrumb Arrow"
-                width={20}
-                height={20}
-              />
+              <Image src={Arrow} alt="Breadcrumb Arrow" width={20} height={20} />
             )}
           </React.Fragment>
         ))}

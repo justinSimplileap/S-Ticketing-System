@@ -47,7 +47,7 @@ const Table: React.FC = () => {
                 </thead>
                 <tbody>
                     {tableData.map((row, index) => (
-                        <tr key={index} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 text-[#1D1C2B]">
+                        <tr key={index} className="odd:bg-white border-b dark:border-gray-700 text-[#1D1C2B]">
                             {tableHead.map((heading) => (
                                 <td key={heading} className="px-6 py-4">
                                     {row[heading]}

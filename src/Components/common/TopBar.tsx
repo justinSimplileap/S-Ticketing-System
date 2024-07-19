@@ -1,20 +1,20 @@
-import { Dispatch, SetStateAction } from 'react';
-import Image from 'next/image';
-import Bell from '../../../public/images/bell.svg';
-import userBg from '../../../public/images/User.svg';
-import breadcrumbArrow from '../../../public/images/BreadcrumbArrow.svg';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import Hamburger from '../../../public/images/Hamburger.svg';
+import { Dispatch, SetStateAction } from "react";
+import Image from "next/image";
+import Bell from "../../../public/images/bell.svg";
+import userBg from "../../../public/images/User.svg";
+import breadcrumbArrow from "../../../public/images/breadcrumbArrow.svg";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import Hamburger from "../../../public/images/Hamburger.svg";
 
 const formatBreadcrumbName = (name: string) => {
-  return name.replace(/([a-z])([A-Z])/g, '$1 $2');
+  return name.replace(/([a-z])([A-Z])/g, "$1 $2");
 };
 
 const generateBreadcrumbs = (pathname: string) => {
-  const pathParts = pathname.split('/').filter((part) => part);
+  const pathParts = pathname.split("/").filter((part) => part);
   const breadcrumbs = pathParts.map((part, index) => {
-    const href = '/' + pathParts.slice(0, index + 1).join('/');
+    const href = "/" + pathParts.slice(0, index + 1).join("/");
     return { name: formatBreadcrumbName(part), href };
   });
   return breadcrumbs;
@@ -37,7 +37,7 @@ const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <div className="flex justify-between items-center shadow-md px-8 py-5 sticky top-0 z-50 bg-[#2A2C3E] lg:bg-white">
+    <div className="flex justify-between items-center shadow-md px-8 py-5 sticky top-0 z-50 bg-[#2A2C3E] lg:bg-white w-[100%] ">
       <div className="flex gap-2 items-center text-[#17192b] text-xl ">
         <Image
           src={Hamburger}

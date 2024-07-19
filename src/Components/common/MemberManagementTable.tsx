@@ -58,7 +58,7 @@ const MemberTable: React.FC = () => {
 
   // const handleDelete = async (memberId: string) => {
   //     try {
-  //         await axios.delete(`http://localhost:8000/members/${memberId}`);
+  //         await axios.delete(`http://${base_url}/members/${memberId}`);
 
   //         const updatedMembers = members.filter(member => member.Member_id !== memberId);
   //         setMembers(updatedMembers);

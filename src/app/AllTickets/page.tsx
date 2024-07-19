@@ -42,7 +42,7 @@
 //   const fetchTickets = async () => {
 //   try {
 //     const response = await axios.get<{ tickets: Ticket[] }>(
-//       "http://localhost:8000/viewAllTickets",
+//       "http://${base_url}/viewAllTickets",
 //       {
 //         headers: {
 //           Authorization: `Bearer ${localStorage.getItem("token")}`,
