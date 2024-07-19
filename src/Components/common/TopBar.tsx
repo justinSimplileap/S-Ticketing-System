@@ -1,18 +1,18 @@
-import { Dispatch, SetStateAction } from "react";
-import Image from "next/image";
-import Bell from "../../../public/images/bell.svg";
-import userBg from "../../../public/images/User.svg";
-import breadcrumbArrow from "../../../public/images/breadcrumbArrow.svg";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import Hamburger from "../../../public/images/Hamburger.svg";
+import { Dispatch, SetStateAction } from 'react';
+import Image from 'next/image';
+import Bell from '../../../public/images/bell.svg';
+import userBg from '../../../public/images/User.svg';
+import breadcrumbArrow from '../../../public/images/BreadcrumbArrow.svg';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import Hamburger from '../../../public/images/Hamburger.svg';
 
 const formatBreadcrumbName = (name: string) => {
   return name.replace(/([a-z])([A-Z])/g, '$1 $2');
 };
 
 const generateBreadcrumbs = (pathname: string) => {
-  const pathParts = pathname.split('/').filter(part => part);
+  const pathParts = pathname.split('/').filter((part) => part);
   const breadcrumbs = pathParts.map((part, index) => {
     const href = '/' + pathParts.slice(0, index + 1).join('/');
     return { name: formatBreadcrumbName(part), href };
@@ -25,7 +25,10 @@ interface TopBarProps {
   isSidebarExpanded: boolean;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ setIsSidebarExpanded, isSidebarExpanded }) => {
+const TopBar: React.FC<TopBarProps> = ({
+  setIsSidebarExpanded,
+  isSidebarExpanded,
+}) => {
   const pathname = usePathname();
   const breadcrumbs = generateBreadcrumbs(pathname);
 
@@ -50,7 +53,12 @@ const TopBar: React.FC<TopBarProps> = ({ setIsSidebarExpanded, isSidebarExpanded
             </Link>
             {index < breadcrumbs.length - 1 && (
               <span className="mx-2">
-                <Image src={breadcrumbArrow} alt="breadcrumb" width={20} height={20} />
+                <Image
+                  src={breadcrumbArrow}
+                  alt="breadcrumb"
+                  width={20}
+                  height={20}
+                />
               </span>
             )}
           </div>
