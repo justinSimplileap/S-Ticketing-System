@@ -9,6 +9,7 @@ import logo from "../../../public/images/logo.svg";
 import cover from "../../../public/images/cover.png";
 import Illustration from "../../../public/images/Illustration.svg";
 import Link from "next/link";
+import { base_url } from "@/utils/constant";
 
 // Define the interface for form inputs
 interface FormData {
@@ -24,7 +25,7 @@ const LoginForm = () => {
   const onSubmit = async (data: FormData) => {
     try {
       // Send login request to backend
-      const response = await axios.post("http://localhost:8000/login", {
+      const response = await axios.post(`${base_url}/login`, {
         email: data.username,
         password: data.password,
       });

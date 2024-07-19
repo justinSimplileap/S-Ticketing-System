@@ -10,6 +10,7 @@ import userBg from "../../../../../public/images/User.svg";
 import axios, { AxiosResponse } from "axios";
 import { useRouter, usePathname } from "next/navigation";
 import addticket from "../../../../../public/images/add.svg";
+import { base_url } from "@/utils/constant";
 
 interface UploadedFile {
   filename: string;
@@ -49,7 +50,7 @@ const Page: React.FC = () => {
   const fetchTickets = async () => {
     try {
       const response: AxiosResponse<any> = await axios.get(
-        `http://localhost:8000/viewTicketDetails/${value}`,
+        `${base_url}/viewTicketDetails/${value}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

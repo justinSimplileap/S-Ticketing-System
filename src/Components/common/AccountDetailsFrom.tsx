@@ -10,6 +10,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { base_url } from "@/utils/constant";
 
 type FormInputs = {
   customerName: string;
@@ -43,7 +44,7 @@ const AccountDetailsForm: React.FC = () => {
   const fetchUserDetails = async () => {
     try {
       const response = await axios.get<UserDetailsResponse>(
-        "http://localhost:8000/getUserDetails",
+        `${base_url}/getUserDetails`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -113,7 +114,7 @@ const AccountDetailsForm: React.FC = () => {
     console.log("Form data:", data); // Log form data to console
     try {
       const response = await axios.post(
-        "http://localhost:8000/addAccountDetails",
+        `${base_url}/addAccountDetails`,
         {
           customer_name: data.customerName,
           company_legal_name: data.companyName,

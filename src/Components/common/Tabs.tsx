@@ -10,6 +10,7 @@ import toast, { Toaster } from "react-hot-toast";
 import AccountDetailsForm from "./AccountDetailsFrom";
 import { Button } from "@headlessui/react";
 import MemberManagementTable from "../common/MemberManagementTable"
+import { base_url } from "@/utils/constant";
 
 // Define types for form inputs
 type FormInputs = {
@@ -111,7 +112,7 @@ const Example: React.FC = () => {
   const onSubmitSecurity: SubmitHandler<SecurityInputs> = async (data) => {
     try {
       const response = await axios.post(
-        'http://localhost:8000/resetPassword',
+        `${base_url}/resetPassword`,
         {
           currentPassword: data.currentPassword,
           newPassword: data.newPassword,

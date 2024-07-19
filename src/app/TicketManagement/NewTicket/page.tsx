@@ -11,6 +11,7 @@ import { Button } from "@headlessui/react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Delete from "../../../../public/images/delete_white.svg";
+import { base_url } from "@/utils/constant";
 
 export default function Page() {
   const [ticketType, setTicketType] = useState("Select Ticket Type");
@@ -161,7 +162,7 @@ export default function Page() {
 
       try {
         const response = await axios.post(
-          "http://localhost:8000/addNewTicket",
+          `${base_url}/addNewTicket`,
           formData,
           {
             headers: {

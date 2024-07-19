@@ -13,6 +13,7 @@ import TablePagination from "@/Components/others/TablePagination";
 import axios from "axios";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { base_url } from "@/utils/constant";
 
 type Ticket = {
   id: number;
@@ -67,7 +68,7 @@ function TicketManagementPage() {
       }
 
       const response = await axios.get<{ tickets: Ticket[], totalPages: number, currentPage: number }>(
-        "http://localhost:8000/filtertickets",
+      `${base_url}/filtertickets`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -105,7 +106,7 @@ function TicketManagementPage() {
       }
 
       const response = await axios.get<{ user: User }>(
-        "http://localhost:8000/getUserDetails",
+        `${base_url}/getUserDetails`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

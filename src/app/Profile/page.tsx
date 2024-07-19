@@ -12,6 +12,7 @@ import Tabs from "../../Components/common/Tabs";
 import Form from "../../Components/common/form";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { base_url } from "@/utils/constant";
 
 type User = {
   profile_url: string;
@@ -29,7 +30,7 @@ export default function Profile() {
   const fetchUser = async () => {
     try {
       const response = await axios.get<{ user: User }>(
-        "http://localhost:8000/getUserDetails",
+        `${base_url}/getUserDetails`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

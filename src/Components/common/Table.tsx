@@ -7,6 +7,7 @@ import deleteIcon from "../../../public/images/deleteTicket.svg";
 import axios from "axios";
 import Loader from "./Loader";
 import toast, { Toaster } from "react-hot-toast";
+import { base_url } from "@/utils/constant";
 
 
 
@@ -116,7 +117,7 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
       setLoading(true)
       if (selectedTicket){
         console.log(selectedTicket);
-        const deleteTicketRow = await axios.get(`http://localhost:8000/deleteTicket/${selectedTicket.id}`,
+        const deleteTicketRow = await axios.get(`${base_url}/deleteTicket/${selectedTicket.id}`,
           {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

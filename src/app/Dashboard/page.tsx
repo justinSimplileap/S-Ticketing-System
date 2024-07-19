@@ -12,6 +12,7 @@ import Table from '../../Components/common/Table';
 import WarningIcon from "../../../public/images/WarningIcon.svg"
 import OpenTickets from "../../../public/images/OpenTickets.svg"
 import ClosedTickets from "../../../public/images/closedTicket.svg"
+import { base_url } from '@/utils/constant';
 
 
 type Ticket = {
@@ -51,7 +52,7 @@ const DashboardPage: React.FC = () => {
   const fetchTickets = async () => {
     try {
       const response = await axios.get<{ tickets: Ticket[] }>(
-        'http://localhost:8000/viewAllTickets',
+        `${base_url}/viewAllTickets`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -89,7 +90,7 @@ const DashboardPage: React.FC = () => {
   const fetchUser = async () => {
     try {
       const response = await axios.get<{ user: User }>(
-        'http://localhost:8000/getUserDetails',
+        `${base_url}/getUserDetails`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
