@@ -19,7 +19,7 @@ export default function Page() {
   const pathname = usePathname();
   const parts = pathname.split("/");
   const value = parts[parts.length - 1];
-  // value contains the ticket id params
+  
 
   const [ticketType, setTicketType] = useState("Select Ticket Type");
   const [priority, setPriority] = useState("Select Priority");
@@ -44,8 +44,22 @@ export default function Page() {
     fetchTickets();
   }, []);
 
-
-  console.log("fileCombination", fileCombination)
+  const renderSections = (content: string) => {
+    const sections = content.split(/<\/?h[1-6]>/g);
+    return sections.map((section, index) => (
+      <div key={index}>
+        {section.startsWith("<h") ? (
+          <h2
+            className="my-4 text-lg font-medium"
+            dangerouslySetInnerHTML={{ __html: section }}
+          />
+        ) : (
+          <p dangerouslySetInnerHTML={{ __html: section }} />
+        )}
+      </div>
+    ));
+  };
+  
 
   const fetchTickets = async () => {
     try {
@@ -58,27 +72,35 @@ export default function Page() {
         }
       );
 
+      
+      
       if (response) {
-        let ticketfilename = response.data.ticketDetails[0].details_images_url;
-        ticketfilename = ticketfilename.replace(/[\[\]"]+/g, "");
-        let arrayOfArrays = ticketfilename
-          .split(",")
-          .map((item: string) => item.split(","));
-        let combinedArray = arrayOfArrays.reduce((acc: string | any[], currentArray: any) => {
-          return acc.concat(currentArray);
-        }, []);
 
-        setfileCombination(combinedArray)
-
-        // let combinedArray = array1.concat(array2);
-
-        // ticketfilename = ticketfilename[ticketfilename.length - 1];
-        // console.log(one, two);
-        setTicketType(response.data.ticketDetails[0].ticket_type);
+        setTicketType(response.data.ticketDetails[0].ticket_type)
+        
         setPriority(response.data.ticketDetails[0].priority);
         setSubject(response.data.ticketDetails[0].subject);
         setRequestDetails(response.data.ticketDetails[0].details);
+        
+        // console.log(response);
+        let ticketfilename = response.data.ticketDetails[0].details_images_url;
+        console.log("ticketfilename",ticketfilename)
+        
+        // ticketfilename = ticketfilename.replace(/[\[\]"]+/g, "");
+        // let arrayOfArrays = ticketfilename
+        //   .split(",")
+        //   .map((item: string) => item.split(","));
+        // let combinedArray = arrayOfArrays.reduce((acc: string | any[], currentArray: any) => {
+        //   return acc.concat(currentArray);
+        // }, []);
+
+        setfileCombination(ticketfilename)
+
         setTicketFilename(ticketfilename);
+        
+
+        
+        
       }
     } catch (error) {
       console.error("Error fetching tickets:", error);
@@ -191,7 +213,7 @@ export default function Page() {
             },
           }
         );
-        toast.success("New Ticket Added Successfully");
+        toast.success("Ticket Updated Successfully");
 
         handleCancel();
       } catch (error) {
