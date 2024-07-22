@@ -1,21 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import breadcrumbArrow from "../../../../../public/images/BreadcrumbArrow.svg";
-import Bell from "../../../../../public/images/bell.svg";
-import userBg from "../../../../../public/images/User.svg";
 import axios, { AxiosResponse } from "axios";
 import { useRouter, usePathname } from "next/navigation";
 import addticket from "../../../../../public/images/add.svg";
+import sendComment from "../../../../../public/images/sendComment.svg";
+import sendAttachment from "../../../../../public/images/Attachment.svg";
 import { base_url } from "@/utils/constant";
+import toast, { Toaster } from "react-hot-toast";
+import Loader from "@/Components/common/Loader";
 
 interface UploadedFile {
   filename: string;
   fileUrl: string;
   uploadedOn: string;
+}
+
+interface Comment {
+  user: string;
+  text: string;
+  attachments: File[];
+  comment_description: string;
+  comment_by: string;
 }
 
 const Page: React.FC = () => {
@@ -32,6 +41,10 @@ const Page: React.FC = () => {
   const [description, setDescription] = useState("");
 
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [attachments, setAttachments] = useState<File[]>([]);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -45,7 +58,28 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     fetchTickets();
+    fetchComments();
   }, []);
+
+
+  const fetchComments = async () => {
+    try {
+      const response: AxiosResponse<any> = await axios.get(
+        `${base_url}/fetchComments/${value}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      setComments(response.data.ticket);
+
+      console.log("response", response);
+    } catch (error) {
+      
+    }
+  }
 
   const fetchTickets = async () => {
     try {
@@ -112,7 +146,7 @@ const Page: React.FC = () => {
       case "high":
         return "text-red-300";
       case "medium":
-        return "text-yellow-600";
+        return "text-purple-300";
       case "low":
         return "text-green-300";
       default:
@@ -122,7 +156,7 @@ const Page: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case "active":
+      case "open":
         return "text-red-300";
       case "closed":
         return "text-green-600";
@@ -148,32 +182,54 @@ const Page: React.FC = () => {
     ));
   };
 
+  const handleAddComment = async () => {
+    try {
+      const formData = new FormData();
+
+      formData.append("comment_description", newComment);
+
+      attachments.forEach((file) => {
+        formData.append("attachment", file);
+      });
+
+      const response = await axios.post(
+        `${base_url}/addComment/${value}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      toast.success("Comment Added successfully")
+      console.log("Comment added successfully:", response.data);
+
+      setNewComment("");
+      setAttachments([]);
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+  const handleAddAttachment = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleAttachmentChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.files) {
+      setAttachments(Array.from(event.target.files));
+    }
+  };
+
   return (
     <div className="">
-      {/* <div className="flex items-center justify-between shadow-md p-8 sticky top-0 z-50 bg-white">
-        <div className="flex items-center gap-3">
-          <div className="text-[#2A2C3E] text-xl">
-            <Link href="/TicketManagement">Ticket Management </Link>
-          </div>
-          <div>
-            <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
-          </div>
-          <div className="text-[#2A2C3E] text-xl">View Ticket</div>
-          <div>
-            <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
-          </div>
-        </div>
-
-        <div className="flex gap-4 justify-center items-center">
-          <div>
-            <Image src={Bell} alt="Notification Bell" width={25} />
-          </div>
-          <div>
-            <Image src={userBg} alt="User" width={50} />
-          </div>
-        </div>
-      </div> */}
-
+      <Toaster />
       <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
         <div className="text-[#2A2C3E] text-2xl mb-6">View Ticket</div>
 
@@ -282,7 +338,90 @@ const Page: React.FC = () => {
               Events content goes here.
             </TabPanel>
 
-            <TabPanel className="p-7 bg-white"></TabPanel>
+            <TabPanel className="p-5 lg:p-7 bg-white">
+              <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
+                <div className="text-base font-medium pb-5">Comments</div>
+                <div>
+                {comments.map((comment: Comment, index: number) => (
+        <div key={index} className="pb-5 flex justify-start items-center">
+          <div className="bg-[#041444] rounded-full w-12 h-12 flex items-center justify-center text-white mr-6">
+            {comment.comment_by.charAt(0)}
+          </div>
+          <div>
+            <p className="font-bold text-[#4B4B4B]">{comment.comment_by}</p>
+            <p className="text-[#4B4B4B]">
+              {comment.comment_description.split(" ").map((word, idx) =>
+                word.startsWith("@") ? (
+                  <span key={idx} className="text-[#F5862D] font-bold">
+                    {word}{" "}
+                  </span>
+                ) : (
+                  <span key={idx}>{word} </span>
+                )
+              )}
+            </p>
+            {/* Assuming there are no attachments in the provided response */}
+          </div>
+        </div>
+      ))}
+                </div>
+                <div className="flex items-end justify-between lg:mt-10 border rounded p-1 ">
+                  <div className="w-full mr-2 m-auto">
+                    <input
+                      type="text"
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      placeholder="Add a comment"
+                      className="w-full lg:p-4 focus:outline-none "
+                    />
+                    {attachments.length > 0 && (
+                      <div className="mt-2">
+                        <p className="text-base font-medium">
+                          Selected Attachments:
+                        </p>
+                        <div className="list-disc list-inside">
+                          {attachments.map((file, index) => (
+                            <div className="grid grid-cols-3" key={index}>
+                              <div className="text-sm text-gray-500">
+                                {file.name}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="relative">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        id="attachment"
+                        className="hidden"
+                        onChange={handleAttachmentChange}
+                        multiple
+                      />
+                      <label htmlFor="attachment" className="cursor-pointer">
+                        <button
+                          className="bg-white text-white lg:p-4 rounded-md border-[#5027D9] border"
+                          onClick={handleAddAttachment}
+                        >
+                          <Image src={sendAttachment} alt="" width={25} />
+                        </button>
+                      </label>
+                    </div>
+                    <div className="">
+                      <button
+                        onClick={handleAddComment}
+                        className="bg-[#5027D9] text-white p-4 rounded border-[#5027D9] border"
+                      >
+                        <Image src={sendComment} alt="" width={25} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabPanel>
             <TabPanel className="p-7 bg-white">
               <div className="flex justify-between items-center mb-4">
                 <div className="font-semibold">All Uploaded Files</div>
