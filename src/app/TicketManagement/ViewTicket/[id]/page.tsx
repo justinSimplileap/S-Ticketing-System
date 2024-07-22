@@ -61,7 +61,6 @@ const Page: React.FC = () => {
     fetchComments();
   }, []);
 
-
   const fetchComments = async () => {
     try {
       const response: AxiosResponse<any> = await axios.get(
@@ -76,10 +75,8 @@ const Page: React.FC = () => {
       setComments(response.data.ticket);
 
       console.log("response", response);
-    } catch (error) {
-      
-    }
-  }
+    } catch (error) {}
+  };
 
   const fetchTickets = async () => {
     try {
@@ -203,7 +200,7 @@ const Page: React.FC = () => {
         }
       );
 
-      toast.success("Comment Added successfully")
+      toast.success("Comment Added successfully");
       console.log("Comment added successfully:", response.data);
 
       setNewComment("");
@@ -342,28 +339,38 @@ const Page: React.FC = () => {
               <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
                 <div className="text-base font-medium pb-5">Comments</div>
                 <div>
-                {comments.map((comment: Comment, index: number) => (
-        <div key={index} className="pb-5 flex justify-start items-center">
-          <div className="bg-[#041444] rounded-full w-12 h-12 flex items-center justify-center text-white mr-6">
-            {comment.comment_by.charAt(0)}
-          </div>
-          <div>
-            <p className="font-bold text-[#4B4B4B]">{comment.comment_by}</p>
-            <p className="text-[#4B4B4B]">
-              {comment.comment_description.split(" ").map((word, idx) =>
-                word.startsWith("@") ? (
-                  <span key={idx} className="text-[#F5862D] font-bold">
-                    {word}{" "}
-                  </span>
-                ) : (
-                  <span key={idx}>{word} </span>
-                )
-              )}
-            </p>
-            {/* Assuming there are no attachments in the provided response */}
-          </div>
-        </div>
-      ))}
+                  {comments.map((comment: Comment, index: number) => (
+                    <div
+                      key={index}
+                      className="pb-5 flex justify-start items-center"
+                    >
+                      <div className="bg-[#041444] rounded-full w-12 h-12 flex items-center justify-center text-white mr-6">
+                        {comment.comment_by.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-bold text-[#4B4B4B]">
+                          {comment.comment_by}
+                        </p>
+                        <p className="text-[#4B4B4B]">
+                          {comment.comment_description
+                            .split(" ")
+                            .map((word, idx) =>
+                              word.startsWith("@") ? (
+                                <span
+                                  key={idx}
+                                  className="text-[#F5862D] font-bold"
+                                >
+                                  {word}{" "}
+                                </span>
+                              ) : (
+                                <span key={idx}>{word} </span>
+                              )
+                            )}
+                        </p>
+                        {/* Assuming there are no attachments in the provided response */}
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <div className="flex items-end justify-between lg:mt-10 border rounded p-1 ">
                   <div className="w-full mr-2 m-auto">
