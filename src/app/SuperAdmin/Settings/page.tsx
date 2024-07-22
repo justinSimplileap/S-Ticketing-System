@@ -28,7 +28,7 @@ import green from "../../../../public/images/Ellipse262.svg";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { UUID } from "crypto";
-import SuperAdminDetails from "../../../Components/common/SuperAdminDetails"
+import SuperAdminDetails from "../../../Components/common/SuperAdminDetails";
 import { base_url } from "@/utils/constant";
 
 const designations = ["Manager", "Developer", "Designer", "Analyst", "Intern"];
@@ -103,6 +103,7 @@ interface Employee {
   name: string;
   role: string;
   imageUrl: string;
+  designation: string;
 }
 
 const convertClientToCustomer = (client: Client): Customer => {
@@ -124,29 +125,12 @@ const convertClientToCustomer = (client: Client): Customer => {
   };
 };
 
-// Define a union type for departments
-// type Department = "Admin" | "Managers" | "Development";
-type Department = "Admin"  | "Development" | "Design";
-
-
-// const customers: Customer[] = [
-//   {
-//     id: "123",
-//     name: "Shankara",
-//     url: "www.example.com",
-//     area: "IT",
-//     phone: "123-456-7890",
-//     email: "john@example.com",
-//   },
-//   {
-//     id: "234",
-//     name: "Jane Doe",
-//     url: "www.example.com",
-//     area: "Marketing",
-//     phone: "987-654-3210",
-//     email: "jane@example.com",
-//   },
-// ];
+const Department: { [key: string]: string } = {
+  "1": "Admin",
+  "2": "Manager",
+  "3": "Developer",
+  "4": "Designer",
+};
 
 export default function Settings() {
   useEffect(() => {
@@ -224,6 +208,15 @@ export default function Settings() {
     string | null
   >(null);
   // const [selectedUserCompanyName, setSelectedUserCompanyName] = useState<string | null>(null);
+
+  const [employees, setEmployees] = useState<{ [key: string]: Employee[] }>({
+    Admin: [],
+    Manager: [],
+    Developer: [],
+    Designer: [],
+  });
+
+  const [selectedTab, setSelectedTab] = useState<string>("Admin");
 
   useEffect(() => {
     if (innerTabIndex === 1 && organizationId) {
@@ -318,7 +311,7 @@ export default function Settings() {
   const handleDeleteMember = async (user_id: any) => {
     try {
       const response = await axios.delete(
-        `http://${base_url}/deleteClientTeamMember/${user_id}`
+        `${base_url}/deleteClientTeamMember/${user_id}`
       );
       if (response) {
         toast.success("Team member deleted successfully!");
@@ -332,7 +325,6 @@ export default function Settings() {
     }
   };
 
-
   const [superAdmin, setSuperAdmin] = useState(null);
 
   useEffect(() => {
@@ -340,48 +332,66 @@ export default function Settings() {
       try {
         const response = await axios.get(`${base_url}/superadmin/details`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
         setSuperAdmin(response.data);
       } catch (error) {
-        console.error('Error fetching super admin details', error);
+        console.error("Error fetching super admin details", error);
       }
     };
 
     fetchSuperAdminDetails();
   }, []);
 
-
-  const [departmentTabs, setDepartmentTabs] = useState([
-    "Admin",
-    // "Managers",
-    "Development",
-    "Design",
-  ]);
-
-  const employees = {
-    Admin: [
-      { id: 1, name: "Harsha Sir", role: "Admin", imageUrl: ProfilePic },
-      { id: 2, name: "Keshav Sir", role: "Admin", imageUrl: ProfilePic },
-    ],
-    Development: [
-      { id: 5, name: "Kashish", role: "Developer", imageUrl: ProfilePic },
-      { id: 6, name: "Justin", role: "Developer", imageUrl: ProfilePic },
-      { id: 7, name: "Amar", role: "Designer", imageUrl: ProfilePic },
-    ],
-    Design: [
-      { id: 5, name: "Kashish", role: "Developer", imageUrl: ProfilePic },
-      { id: 6, name: "Justin", role: "Developer", imageUrl: ProfilePic },
-      { id: 7, name: "Amar", role: "Designer", imageUrl: ProfilePic },
-    ],
+  const Department: { [key: string]: string } = {
+    "Super Admin": "Admin",
+    "Manager": "Manager",
+    "Developer": "Developer",
+    "Designer": "Designer",
   };
+  const departmentTabs = ["Admin", "Manager", "Developer", "Designer"];
 
+  useEffect(() => {
+    const getSuperAdminOrganisation = async () => {
+      try {
+        const response = await axios.get(`${base_url}/users/Organisation`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
-  // Function to get employees of the selected department
-  const getEmployees = (department: string): Employee[] => {
-    return employees[department as Department] || [];
-  };
+        const mappedEmployees = response.data.reduce(
+          (acc: { [key: string]: Employee[] }, employee: any) => {
+            const department = Department[employee.designation] || "Others";
+            console.log("deparments", department);
+            console.log("dessssss", employee.designation);
+            const formattedEmployee: Employee = {
+              id: employee.id,
+              name: employee.customer_name,
+              role: employee.designation,
+              designation: employee.designation,
+              imageUrl: employee.profile_url || ProfilePic, // Use default image if profile_url is null
+            };
+
+            if (!acc[department]) {
+              acc[department] = [];
+            }
+            acc[department].push(formattedEmployee);
+            return acc;
+          },
+          {}
+        );
+
+        setEmployees(mappedEmployees);
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching super admin details", error);
+      }
+    };
+
+    getSuperAdminOrganisation();
+  }, []);
 
   const handlePositionSelect = (position: string) => {
     if (selectedPositions.includes(position)) {
@@ -389,6 +399,12 @@ export default function Settings() {
     } else {
       setSelectedPositions([...selectedPositions, position]);
     }
+  };
+
+  const handleTabClick = (department: string) => {
+    // console.log("depa", department);
+    setSelectedTab(department);
+    console.log("sele", selectedTab);
   };
 
   // status management tab
@@ -737,7 +753,9 @@ export default function Settings() {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
                                   Email
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Delete</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                  Delete
+                                </th>
                               </tr>
                             </thead>
 
@@ -951,191 +969,130 @@ export default function Settings() {
                   </div>
                 </div>
               ) : (
-                <div className="flex justify-between items-center py-7 ">
+                <div className="flex justify-between items-center py-7">
                   <h2 className="text-2xl font-semibold">
                     Organisation Management
                   </h2>
                   <div className="flex gap-5">
-                    {/* <SearchBar /> */}
-                    <div className="flex gap-5 ">
-                      <div>
-                        <Button
-                          type="button"
-                          className="rounded bg-[#5027D9] py-2 px-4 text-sm text-white items-center gap-2  flex"
-                          onClick={handleAddMemberClick}
-                        >
-                          <Image src={Plus} alt="add" width={22} height={22} />
-                          Add new member
-                        </Button>
-                      </div>
-                    </div>
+                    <Button
+                      type="button"
+                      className="rounded bg-[#5027D9] py-2 px-4 text-sm text-white items-center gap-2 flex"
+                      onClick={handleAddMemberClick}
+                    >
+                      <Image src={Plus} alt="add" width={22} height={22} />
+                      Add new member
+                    </Button>
                   </div>
                 </div>
               )}
+
               {showAddMemberForm ? (
-                <div className=" mt-7 mb-10">
-                  {/* <CustomerForm onCancel={handleCancelAddMember} /> */}
-                  <div>
-                    <h2 className="text-xl font-semibold mb-4">
-                      Basic Details
-                    </h2>
-                    <div className="flex py-5 items-center">
-                      <div className="w-[20%] ">
-                        <Image
-                          src={ProfilePic}
-                          alt="Profile Pic"
-                          className="pr-3"
-                          width={150}
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4 w-full">
-                        <div>
-                          <label
-                            htmlFor="customerName"
-                            className="block text-sm "
-                          >
-                            Full name
-                          </label>
-                          <input
-                            id="customerName"
-                            type="text"
-                            // {...register("customerName", { required: true })}
-                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                          />
-                          {/* {errors.customerName && (
-              <span role="alert" className="text-red-600">
-                Customer Name is required
-              </span>
-            )} */}
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="companyName"
-                            className="block text-sm  "
-                          >
-                            Gender
-                          </label>
-                          <input
-                            id="companyName"
-                            type="text"
-                            // {...register("companyName", { required: true })}
-                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                          />
-                          {/* {errors.companyName && (
-              <span role="alert" className="text-red-600">
-                Company Name is required
-              </span>
-            )} */}
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="companyUrl"
-                            className="block text-sm "
-                          >
-                            Department
-                          </label>
-                          <input
-                            id="companyUrl"
-                            type="url"
-                            // {...register("companyUrl", { required: true })}
-                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                          />
-                          {/* {errors.companyUrl && (
-              <span role="alert" className="text-red-600">
-                Company URL is required
-              </span>
-            )} */}
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="companyUrl"
-                            className="block text-sm "
-                          >
-                            Position
-                          </label>
-                          <input
-                            id="companyUrl"
-                            type="url"
-                            // {...register("companyUrl", { required: true })}
-                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                          />
-                          {/* {errors.companyUrl && (
-              <span role="alert" className="text-red-600">
-                Company URL is required
-              </span>
-            )} */}
-                        </div>
-                      </div>
+                <div className="mt-7 mb-10">
+                  <h2 className="text-xl font-semibold mb-4">Basic Details</h2>
+                  <div className="flex py-5 items-center">
+                    <div className="w-[20%]">
+                      <Image
+                        src={ProfilePic}
+                        alt="Profile Pic"
+                        className="pr-3"
+                        width={150}
+                      />
                     </div>
-                    <div className="text-xl font-semibold py-7">
-                      Contact details
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4 w-full">
                       <div>
-                        <label htmlFor="companyUrl" className="block text-sm ">
-                          Phone number
+                        <label htmlFor="customerName" className="block text-sm">
+                          Full name
                         </label>
                         <input
-                          id="companyUrl"
-                          type="url"
-                          // {...register("companyUrl", { required: true })}
+                          id="customerName"
+                          type="text"
                           className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
                         />
-                        {/* {errors.companyUrl && (
-              <span role="alert" className="text-red-600">
-                Company URL is required
-              </span>
-            )} */}
                       </div>
-
                       <div>
-                        <label htmlFor="companyUrl" className="block text-sm ">
-                          Email *
+                        <label htmlFor="companyName" className="block text-sm">
+                          Gender
                         </label>
                         <input
-                          id="companyUrl"
-                          type="url"
-                          // {...register("companyUrl", { required: true })}
+                          id="companyName"
+                          type="text"
                           className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
                         />
-                        {/* {errors.companyUrl && (
-              <span role="alert" className="text-red-600">
-                Company URL is required
-              </span>
-            )} */}
+                      </div>
+                      <div>
+                        <label htmlFor="department" className="block text-sm">
+                          Department
+                        </label>
+                        <input
+                          id="department"
+                          type="text"
+                          className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="position" className="block text-sm">
+                          Position
+                        </label>
+                        <input
+                          id="position"
+                          type="text"
+                          className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                        />
                       </div>
                     </div>
-
-                    <div className="text-xl font-semibold py-7">
-                      Permission settings
+                  </div>
+                  <div className="text-xl font-semibold py-7">
+                    Contact details
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="phoneNumber" className="block text-sm">
+                        Phone number
+                      </label>
+                      <input
+                        id="phoneNumber"
+                        type="text"
+                        className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                      />
                     </div>
-
-                    <div className="flex gap-20">
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id="manager"
-                          checked={selectedPositions.includes("Manager")}
-                          onChange={() => handlePositionSelect("Manager")}
-                          className="form-checkbox h-5 w-5 text-[#5027D9]"
-                        />
-                        <label htmlFor="manager" className="ml-2">
-                          Manager
-                        </label>
-                      </div>
-
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id="admin"
-                          checked={selectedPositions.includes("Admin")}
-                          onChange={() => handlePositionSelect("Admin")}
-                          className="form-checkbox h-5 w-5 text-[#5027D9]"
-                        />
-                        <label htmlFor="admin" className="ml-2">
-                          Admin
-                        </label>
-                      </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm">
+                        Email *
+                      </label>
+                      <input
+                        id="email"
+                        type="email"
+                        className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                  <div className="text-xl font-semibold py-7">
+                    Permission settings
+                  </div>
+                  <div className="flex gap-20">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="manager"
+                        checked={selectedPositions.includes("Manager")}
+                        onChange={() => handlePositionSelect("Manager")}
+                        className="form-checkbox h-5 w-5 text-[#5027D9]"
+                      />
+                      <label htmlFor="manager" className="ml-2">
+                        Manager
+                      </label>
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="admin"
+                        checked={selectedPositions.includes("Admin")}
+                        onChange={() => handlePositionSelect("Admin")}
+                        className="form-checkbox h-5 w-5 text-[#5027D9]"
+                      />
+                      <label htmlFor="admin" className="ml-2">
+                        Admin
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -1149,8 +1106,8 @@ export default function Settings() {
                       <div className="text-xl pb-7 font-semibold">
                         Department
                       </div>
-                      <TabList className="space-y-4 ">
-                        {departmentTabs.map((innerTab, index) => (
+                      <TabList className="space-y-4">
+                        {departmentTabs.map((tab, index) => (
                           <Tab
                             as="div"
                             key={index}
@@ -1161,35 +1118,30 @@ export default function Settings() {
                                   : "text-[#91919B] p-3"
                               }`
                             }
+                            onClick={() => handleTabClick(tab)}
                           >
-                            {innerTab}
+                            {tab}
                           </Tab>
                         ))}
                       </TabList>
                     </TabGroup>
                   </div>
-                  <div className="w-[85%] pl-4">
-                    {/* Display the total number of employees */}
-                    <div className="mb-4">
-                      <h3 className="text-lg font-semibold pb-3">
-                        Total Members:{" "}
-                        <span className="text-[#5027D9]">
-                          {getEmployees(departmentTabs[innerTabIndex]).length}
-                        </span>
-                      </h3>
-                    </div>
-                    {/* Render employees of the selected department */}
-                    <div className="grid grid-cols-4 gap-4">
-                      {getEmployees(departmentTabs[innerTabIndex]).map(
-                        (employee) => (
+
+                  {/* Display Employees Based on Selected Tab */}
+                  <div className="m-4">
+                    {employees[selectedTab] &&
+                    employees[selectedTab].length > 0 ? (
+                      <div className="grid grid-cols-3 gap-4">
+                        {employees[selectedTab].map((employee) => (
                           <div
                             key={employee.id}
-                            className="flex flex-col items-center justify-between mb-4 p-4 pb-0 border rounded "
+                            className="flex flex-col items-center justify-between mb-4 p-4 border rounded"
                           >
                             <Image
                               src={employee.imageUrl}
                               alt={employee.name}
-                              className="w-full h-full"
+                              width={100}
+                              height={100}
                             />
                             <div className="bg-white border-t-4 border-[#5027D9] w-[90%] pt-2 mt-1">
                               <h3 className="text-center font-semibold">
@@ -1200,9 +1152,11 @@ export default function Settings() {
                               </p>
                             </div>
                           </div>
-                        )
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p>No employees in this department</p>
+                    )}
                   </div>
                 </div>
               )}
@@ -1310,6 +1264,23 @@ export default function Settings() {
 
             {/* Priority management tab */}
             <TabPanel className="p-10 bg-white">
+              <div className="flex justify-between items-center pb-7">
+                <h2 className="text-2xl font-semibold">Priority Management</h2>
+                <div className="flex gap-5">
+                  {/* <SearchBar /> */}
+                  <div className="flex gap-5">
+                    <div>
+                      <Button
+                        type="button"
+                        className="rounded bg-[#5027D9] py-2.5 px-14 text-sm text-white items-center gap-2 flex"
+                        // onClick={handleAddMemberClick}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="flex gap-4">
                 <div className="w-[35%]">
                   <select
@@ -1426,7 +1397,7 @@ export default function Settings() {
                 <TabPanels>
                   <TabPanel>
                     <div className="pt-7">
-                    <SuperAdminDetails superAdmin={superAdmin} />
+                      <SuperAdminDetails superAdmin={superAdmin} />
                     </div>
                   </TabPanel>
                   <TabPanel>

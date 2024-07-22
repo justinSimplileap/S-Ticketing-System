@@ -127,6 +127,8 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
       toast.error("Failed to update customer");
     }
   };
+
+
   const onDelete = async () => {
     try {
       if (!selectedUserId) {
@@ -141,14 +143,19 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
           },
         }
       );
+  
       toast.success("Customer deleted successfully");
       console.log("Customer deleted successfully:", response.data);
-      location.reload(); 
+  
+      router.push("/SuperAdmin/Settings"); 
     } catch (error) {
       console.error("Error deleting customer:", error);
       toast.error("Failed to delete customer");
     }
   };
+  
+
+
   return (
     <div className="p-5 pt-0">
       <Toaster />

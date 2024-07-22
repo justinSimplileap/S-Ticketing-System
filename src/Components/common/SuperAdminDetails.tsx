@@ -1,12 +1,20 @@
 "use client";
-import React, { useState, useEffect  } from "react";
-import { useForm, SubmitHandler, FieldErrors, UseFormRegister } from "react-hook-form";
-import Image from 'next/image';
+import React, { useState, useEffect } from "react";
+import {
+  useForm,
+  SubmitHandler,
+  FieldErrors,
+  UseFormRegister,
+} from "react-hook-form";
+import Image from "next/image";
 import Profile from "../../../public/images/Profile.svg";
 import Close from "../../../public/images/closebutton.svg";
-import axios from 'axios';
+import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { base_url } from "@/utils/constant";
+
+
 type FormInputs = {
   customer_name: string;
   company_legal_name: string;
@@ -21,25 +29,32 @@ type FormInputs = {
   work_domain: string;
 };
 type SuperAdminDetailsProps = {
-    superAdmin: {
-      customer_name: string;
-      company_legal_name: string;
-      email: string;
-      phone_number: string;
-      company_url: string;
-      address: string;
-      city: string;
-      country: string;
-      postal_code: string;
-      about_company: string;
-      work_domain: string;
-    } | null;
-  };
-  const SuperAdminDetails: React.FC<SuperAdminDetailsProps> = ({ superAdmin }) => {
-    const router = useRouter();
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormInputs>();
-    const [workDomains, setWorkDomains] = useState<string[]>([]);
-    const [inputValue, setInputValue] = useState<string>("");
+  superAdmin: {
+    customer_name: string;
+    company_legal_name: string;
+    email: string;
+    phone_number: string;
+    company_url: string;
+    address: string;
+    city: string;
+    country: string;
+    postal_code: string;
+    about_company: string;
+    work_domain: string;
+  } | null;
+};
+const SuperAdminDetails: React.FC<SuperAdminDetailsProps> = ({
+  superAdmin,
+}) => {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<FormInputs>();
+  const [workDomains, setWorkDomains] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
   useEffect(() => {
     if (superAdmin) {
       setValue("customer_name", superAdmin.customer_name);
@@ -52,7 +67,9 @@ type SuperAdminDetailsProps = {
       setValue("country", superAdmin.country);
       setValue("postal_code", superAdmin.postal_code);
       setValue("about_company", superAdmin.about_company);
-      const domains = superAdmin.work_domain.split(",");
+      const domains = superAdmin.work_domain
+        ? superAdmin.work_domain.split(",")
+        : [];
       setWorkDomains(domains);
       setValue("work_domain", domains.join(","));
     }
@@ -73,18 +90,38 @@ type SuperAdminDetailsProps = {
     setWorkDomains(newWorkDomains);
     setValue("work_domain", newWorkDomains.join(","), { shouldValidate: true });
   };
+
+
+
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    
-    
+    try {
+      const response = await axios.put(
+        `${base_url}/updateSuperAdmin`, 
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, 
+          },
+        }
+      );
+      
+      toast.success(response.data.message);
+      // window.location.reload();
+    } catch (error) {
+      console.error("Failed to update Super Admin", error);
+      toast.error("Failed to update Super Admin");
+    }
   };
+
+
+
   return (
-    
     <div className="p-5 pt-0">
       <Toaster />
       <div className="text-xl font-semibold">Basic Details</div>
       <div className="flex py-5 items-center">
         <div className="w-[20%]">
-          <Image src={Profile} alt="Profile Pic" className="pr-3"  />
+          <Image src={Profile} alt="Profile Pic" className="pr-3" />
         </div>
         <div className="grid grid-cols-2 gap-4 w-full">
           <div>
@@ -138,7 +175,10 @@ type SuperAdminDetailsProps = {
         </div>
       </div>
       <div className="text-xl font-semibold py-7">Contact Details</div>
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid grid-cols-2 gap-4"
+      >
         <div>
           <label htmlFor="phoneNumber" className="block text-sm ">
             Phone Number
@@ -251,44 +291,44 @@ type SuperAdminDetailsProps = {
           )}
         </div>
         <div className="col-span-2">
-            <label htmlFor="workDomain" className="block mt-6">
-              Work Domain
-            </label>
-            <div className="border-2 border-[#DFEAF2] rounded-md p-2 mt-2 bg-white h-40 cursor-pointer">
-              {workDomains.map((domain, index) => (
-                <span
-                  key={index}
-                  className="inline-block bg-[#E8E3FA] rounded-full pl-5 pr-7 py-3 text-sm text-black mr-2 mb-2"
+          <label htmlFor="workDomain" className="block mt-6">
+            Work Domain
+          </label>
+          <div className="border-2 border-[#DFEAF2] rounded-md p-2 mt-2 bg-white h-40 cursor-pointer">
+            {workDomains.map((domain, index) => (
+              <span
+                key={index}
+                className="inline-block bg-[#E8E3FA] rounded-full pl-5 pr-7 py-3 text-sm text-black mr-2 mb-2"
+              >
+                {domain}
+                <button
+                  onClick={() => handleRemove(index)}
+                  className="ml-5 text-black"
                 >
-                  {domain}
-                  <button
-                    onClick={() => handleRemove(index)}
-                    className="ml-5 text-black"
-                  >
-                    <Image src={Close} alt="Remove" width={10} />
-                  </button>
-                </span>
-              ))}
-              <input
-                id="workDomain"
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="input-field p-2 mt-2 w-full border-none focus:outline-none"
-              />
-            </div>
-            <input
-              type="hidden"
-              {...register("work_domain", { required: true })}
-              value={workDomains.join(",")}
-            />
-            {errors.work_domain && (
-              <span role="alert" className="text-red-600">
-                Work Domain is required
+                  <Image src={Close} alt="Remove" width={10} />
+                </button>
               </span>
-            )}
+            ))}
+            <input
+              id="workDomain"
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="input-field p-2 mt-2 w-full border-none focus:outline-none"
+            />
           </div>
+          <input
+            type="hidden"
+            {...register("work_domain", { required: true })}
+            value={workDomains.join(",")}
+          />
+          {errors.work_domain && (
+            <span role="alert" className="text-red-600">
+              Work Domain is required
+            </span>
+          )}
+        </div>
         <div className="flex justify-end w-full mt-6 col-span-2">
           <button
             type="submit"
