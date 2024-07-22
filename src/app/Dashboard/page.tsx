@@ -12,6 +12,7 @@ import Table from '../../Components/common/Table';
 import WarningIcon from "../../../public/images/WarningIcon.svg"
 import OpenTickets from "../../../public/images/OpenTickets.svg"
 import ClosedTickets from "../../../public/images/closedTicket.svg"
+import { useRouter } from 'next/navigation';
 import { base_url } from '@/utils/constant';
 
 
@@ -37,6 +38,7 @@ type User = {
 };
 
 const DashboardPage: React.FC = () => {
+  const router = useRouter();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [newTickets, setNewTickets] = useState<number>(0);
   const [openTickets, setOpenTickets] = useState<number>(0);
@@ -50,6 +52,7 @@ const DashboardPage: React.FC = () => {
   }, []);
 
   const fetchTickets = async () => {
+    
     try {
       const response = await axios.get<{ tickets: Ticket[] }>(
         `${base_url}/viewAllTickets`,
@@ -106,17 +109,31 @@ const DashboardPage: React.FC = () => {
     }
   }
 
+  const handleCardClick1 = () => {
+    router.push('/TicketManagement?priority=High');
+  }
+
+  const handleCardClick2 = () => {
+    router.push('/TicketManagement?status=Open');
+  }
+
+  const handleCardClick3 = () => {
+    router.push('/TicketManagement?status=Closed');
+  }
+
+  const handleButtonClick = () => {
+    router.push("/TicketManagement/NewTicket")
+  }
+
   return (
     <div className="">
-      <div>
-        <Link href="/TicketManagement/NewTicket">
+      <div onClick={handleButtonClick}>
           <ButtonPurple />
-        </Link>
       </div>
       <div className="ml-8 mr-8 shadow-lg rounded-md">
         <h1 className="text-3xl p-7 text-[#2A2C3E]">Summary</h1>
         <div className="grid grid-cols-3 gap-5 mr-7">
-          <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7">
+          <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer" onClick={handleCardClick1}>
             <div className="grid grid-cols-2 pb-10">
               <div >
                 <Image src={WarningIcon} alt="hhh" width={80} />
@@ -131,7 +148,7 @@ const DashboardPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7">
+          <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer" onClick={handleCardClick2}>
             <div className="grid grid-cols-2 pb-10">
               <div>
                 <Image src={OpenTickets} alt="hhh" width={80} />
@@ -146,7 +163,7 @@ const DashboardPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7">
+          <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer" onClick={handleCardClick3}>
             <div className="grid grid-cols-2 pb-10">
               <div>
                 <Image src={ClosedTickets} alt="hhh" width={80} />

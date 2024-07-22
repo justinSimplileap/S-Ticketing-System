@@ -4,8 +4,16 @@ import Bell from "../../../public/images/bell.svg";
 import userBg from "../../../public/images/User.svg";
 import breadcrumbArrow from "../../../public/images/breadcrumbArrow.svg";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Hamburger from "../../../public/images/Hamburger.svg";
+import { base_url } from "@/utils/constant";
+import axios from "axios";
+
+type User = {
+  profile_url: string;
+};
+
 
 const formatBreadcrumbName = (name: string) => {
   return name.replace(/([a-z])([A-Z])/g, "$1 $2");
@@ -25,10 +33,37 @@ interface TopBarProps {
   isSidebarExpanded: boolean;
 }
 
+
+
 const TopBar: React.FC<TopBarProps> = ({
   setIsSidebarExpanded,
   isSidebarExpanded,
 }) => {
+  const [profilePicture, setProfilePicture] = useState("");
+
+  useEffect(() => {
+    fetchUser();
+  })
+  
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get<{ user: User }>(
+        `${base_url}/getUserDetails`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+      if(response){
+        setProfilePicture(response.data.user.profile_url)
+      }
+      
+    } catch (error) {
+      console.error('Error fetching tickets:', error);
+    }
+  }
+
   const pathname = usePathname();
   const breadcrumbs = generateBreadcrumbs(pathname);
 
@@ -68,8 +103,8 @@ const TopBar: React.FC<TopBarProps> = ({
         <div>
           <Image src={Bell} alt="Notification Bell" width={25} />
         </div>
-        <div>
-          <Image src={userBg} alt="User Profile" width={50} />
+        <div className="w-12 h-12 rounded-full overflow-hidden items-center justify-center flex">
+          <Image src={profilePicture} alt="User Profile" width={50} height={50} layout="intrinsic"/>
         </div>
       </div>
     </div>

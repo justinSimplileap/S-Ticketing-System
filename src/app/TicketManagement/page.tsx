@@ -163,26 +163,6 @@ function TicketManagementPage() {
 
   return (
     <div className="">
-      {/* <div className="flex justify-between items-center shadow-md px-8 py-4 sticky top-0 z-50 bg-white">
-        <div className="text-[#2A2C3E] text-xl">Ticket Management</div>
-        <div className="flex gap-4 justify-center items-center">
-          <div>
-            <Image src={Bell} alt="Notification Bell" width={25} />
-          </div>
-          <div className="w-12 h-12 rounded-full overflow-hidden">
-            {profilePicture && (
-              <Image
-                src={profilePicture}
-                alt="Profile Picture"
-                width={48}
-                height={48}
-                className="object-cover w-full h-full"
-              />
-            )}
-          </div>
-        </div>
-      </div> */}
-
       <div className="lg:flex justify-between items-center mt-5 lg:mt-10 lg:mx-8 mx-5">
         <div>
           <h1 className="text-3xl text-[#2A2C3E] mb-7 lg:mg-0">Tickets</h1>

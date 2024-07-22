@@ -25,7 +25,12 @@ interface Comment {
   attachments: File[];
   comment_description: string;
   comment_by: string;
+  commentedOn: string;
 }
+
+type User = {
+  company_legal_name: string;
+};
 
 const Page: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -39,12 +44,14 @@ const Page: React.FC = () => {
   const [assignedTo, setAssignedTo] = useState("");
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
+  const [projectName, setProjectName] = useState("");
 
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [attachments, setAttachments] = useState<File[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [commentedOn, setCommentedOn] = useState("");
 
   const router = useRouter();
   const pathname = usePathname();
@@ -59,7 +66,26 @@ const Page: React.FC = () => {
   useEffect(() => {
     fetchTickets();
     fetchComments();
+    fetchUser();
   }, []);
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get<{ user: User }>(
+        `${base_url}/getUserDetails`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response) {
+        setProjectName(response.data.user.company_legal_name);
+      }
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+    }
+  };
 
   const fetchComments = async () => {
     try {
@@ -72,9 +98,12 @@ const Page: React.FC = () => {
         }
       );
 
-      setComments(response.data.ticket);
+      const commentsData = response.data.ticket.map((comment: any) => ({
+        ...comment,
+        commentedOn: new Date(comment.createdAt).toLocaleString(),
+      }));
 
-      console.log("response", response);
+      setComments(commentsData.reverse());
     } catch (error) {}
   };
 
@@ -228,8 +257,6 @@ const Page: React.FC = () => {
     <div className="">
       <Toaster />
       <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
-        <div className="text-[#2A2C3E] text-2xl mb-6">View Ticket</div>
-
         <div className="grid grid-cols-3 py-5">
           <div className="pb-5">
             <div className="text-base font-medium">Ticket ID</div>
@@ -271,9 +298,7 @@ const Page: React.FC = () => {
           </div>
 
           <div className="pb-5">
-            <div className="text-base font-medium">
-              Total Hours Logged on Tickets
-            </div>
+            <div className="text-base font-medium">Hours Logged</div>
             <div>
               <p className="text-base py-5 text-[#7D7D7D]">{totalHours}</p>
             </div>
@@ -290,6 +315,12 @@ const Page: React.FC = () => {
             <div className="text-base font-medium">Assigned To</div>
             <div>
               <p className="text-base py-5 text-[#7D7D7D]">{assignedTo}</p>
+            </div>
+          </div>
+          <div className="">
+            <div className="text-base font-medium">Project Name</div>
+            <div>
+              <p className="text-base py-5 text-[#7D7D7D]">{projectName}</p>
             </div>
           </div>
         </div>
@@ -336,7 +367,7 @@ const Page: React.FC = () => {
             </TabPanel>
 
             <TabPanel className="p-5 lg:p-7 bg-white">
-              <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
+              <div className="bg-[#F9F9F9] p-10 m-5 rounded-md">
                 <div className="text-base font-medium pb-5">Comments</div>
                 <div>
                   {comments.map((comment: Comment, index: number) => (
@@ -347,27 +378,29 @@ const Page: React.FC = () => {
                       <div className="bg-[#041444] rounded-full w-12 h-12 flex items-center justify-center text-white mr-6">
                         {comment.comment_by.charAt(0)}
                       </div>
-                      <div>
-                        <p className="font-bold text-[#4B4B4B]">
-                          {comment.comment_by}
-                        </p>
-                        <p className="text-[#4B4B4B]">
-                          {comment.comment_description
-                            .split(" ")
-                            .map((word, idx) =>
-                              word.startsWith("@") ? (
-                                <span
-                                  key={idx}
-                                  className="text-[#F5862D] font-bold"
-                                >
-                                  {word}{" "}
-                                </span>
-                              ) : (
-                                <span key={idx}>{word} </span>
-                              )
-                            )}
-                        </p>
-                        {/* Assuming there are no attachments in the provided response */}
+                      <div className="flex w-full justify-between">
+                        <div>
+                          <p className="font-bold text-[#4B4B4B]">
+                            {comment.comment_by}
+                          </p>
+                          <p className="text-[#4B4B4B]">
+                            {comment.comment_description
+                              .split(" ")
+                              .map((word, idx) =>
+                                word.startsWith("@") ? (
+                                  <span
+                                    key={idx}
+                                    className="text-[#F5862D] font-bold"
+                                  >
+                                    {word}{" "}
+                                  </span>
+                                ) : (
+                                  <span key={idx}>{word} </span>
+                                )
+                              )}
+                          </p>
+                        </div>
+                        <div className="text-sm text-gray-500">{comment.commentedOn}</div>
                       </div>
                     </div>
                   ))}
