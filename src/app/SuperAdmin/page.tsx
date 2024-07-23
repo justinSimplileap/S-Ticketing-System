@@ -51,7 +51,7 @@ export default function SuperAdminDashboard() {
   const fetchTickets = async () => {
     try {
       const response = await axios.get<{ user: Ticket[] }>(
-        `${base_url}/allTickets`,
+        `${base_url}/SuperAdminAllTickets`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
