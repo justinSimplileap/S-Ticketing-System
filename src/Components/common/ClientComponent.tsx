@@ -69,8 +69,9 @@ export default function ClientComponent({
   // );
 
   const sidebarRoutes = [
-    "/login",
+      "/login",
       "/reset",
+      "/AccountDetails",
       "/FirstPassword",
       "/team/Managerlogin",
       "/Onboard/ManagerOnboard",

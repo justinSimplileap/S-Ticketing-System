@@ -60,16 +60,16 @@ const LoginForm = () => {
         const responseData = response.data;
         
 
-        if (responseData?.user?.role === "Super Admin") {
+        if (responseData?.user?.role === "1") {
           router.push("/SuperAdmin");
 
-        }else if (responseData?.user?.role === "Client" && responseData?.user?.onBoarded === false){
-          router.push("/AccountDetils")
-        } else if (responseData?.user?.role === "Client" && responseData?.user?.onBoarded === true){
+        }else if (responseData?.user?.role === "4" && responseData?.user?.onBoarded === false){
+          router.push("/AccountDetails")
+        } else if (responseData?.user?.role === "4" && responseData?.user?.onBoarded === true){
           router.push("/Dashboard")
-        } else if (responseData?.user?.role === "Team" && responseData?.user?.onBoarded === false){
+        } else if (responseData?.user?.role === "3" && responseData?.user?.onBoarded === false){
           router.push("/Onboard/AccountDetails")
-        } else if (responseData?.user?.role === "Team" && responseData?.user?.onBoarded === true){
+        } else if (responseData?.user?.role === "3" && responseData?.user?.onBoarded === true){
           router.push("/team/ManagerDashboard")
         } else {
           toast.error("Error logging in. Please check your credentials.");
