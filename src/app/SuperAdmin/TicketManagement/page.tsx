@@ -27,15 +27,43 @@ type Ticket = {
   actions: string;
 };
 
+type Client = {
+  id: number;
+  user_id: string;
+  organization_id: string;
+  customer_name: string;
+  gender: string | null;
+  profile_url: string | null;
+  role: string;
+  onBoarded: boolean;
+  company_legal_name: string;
+  company_url: string;
+  designation: string | null;
+  phone_number: string;
+  email: string;
+  password: string;
+  address: string;
+  country: string;
+  city: string;
+  postal_code: string;
+  about_company: string;
+  work_domain: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export default function Page() {
   // State variables to manage dropdown values
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [typeValue, setTypeValue] = useState("Type");
   const [priorityValue, setPriorityValue] = useState("Priority");
   const [statusValue, setStatusValue] = useState("Status");
+  const [customerName, setCustomerName] =useState("CustomerName")
+  const [clients, setClients] = useState<Client[]>([]);
 
   useEffect(() => {
     fetchTickets();
+    fetchClients();
   }, []);
 
   const fetchTickets = async () => {
@@ -59,12 +87,22 @@ export default function Page() {
   }
 };
 
+const fetchClients = async () => {
+  try {
+    const response = await axios.get<{ clients: Client[] }>(`${base_url}/viewAllClients`);
+    setClients(response.data.clients);
+  } catch (error) {
+    console.error("Error fetching clients", error);
+  }
+};
+
 
   const handleReset = () => {
     console.log("test")
     setTypeValue("Type");
     setPriorityValue("Priority");
     setStatusValue("Status");
+    setCustomerName("CustomerName");
   };
 
   return (
@@ -95,15 +133,19 @@ export default function Page() {
 
       <div className="py-7 px-5 font-semibold rounded-md m-8 bg-[#F9F9F9]">
         <p>Filter ticket by</p>
-        {/* <Filterdropdowns
+        <Filterdropdowns
           typeValue={typeValue}
           setTypeValue={setTypeValue}
           priorityValue={priorityValue}
           setPriorityValue={setPriorityValue}
           statusValue={statusValue}
           setStatusValue={setStatusValue}
+          customerName={customerName}
+          setCustomerName={setCustomerName}
+          clients={clients}
           handleReset={handleReset}
-        /> */}
+          fetchTickets={fetchTickets}
+        />
       </div>
       <div className="mx-8">
         <Table tickets={tickets} />
