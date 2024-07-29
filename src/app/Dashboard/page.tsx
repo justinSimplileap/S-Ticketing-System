@@ -15,7 +15,6 @@ import ClosedTickets from "../../../public/images/closedTicket.svg"
 import { useRouter } from 'next/navigation';
 import { base_url } from '@/utils/constant';
 
-
 type Ticket = {
   id: number;
   user_id: number;
