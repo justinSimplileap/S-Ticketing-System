@@ -14,12 +14,17 @@ import toast, { Toaster } from "react-hot-toast";
 import Loader from "@/Components/common/Loader";
 import { usePathname } from "next/navigation";
 import { base_url } from "@/utils/constant";
+import "react-quill/dist/quill.snow.css";
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+});
 
 export default function Page() {
   const pathname = usePathname();
   const parts = pathname.split("/");
   const value = parts[parts.length - 1];
-  
 
   const [ticketType, setTicketType] = useState("Select Ticket Type");
   const [priority, setPriority] = useState("Select Priority");
@@ -28,6 +33,7 @@ export default function Page() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   //   const [ticketFile, setTicketFile] = useState<File>([]);
   const [ticketFilename, setTicketFilename] = useState<string>("");
+  const [editorHtml, setEditorHtml] = useState("");
 
   const [fileCombination, setfileCombination] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +45,34 @@ export default function Page() {
   });
 
   const [loading, setLoading] = useState(false);
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      ["link"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+  ];
+
 
   useEffect(() => {
     fetchTickets();
@@ -59,7 +93,6 @@ export default function Page() {
       </div>
     ));
   };
-  
 
   const fetchTickets = async () => {
     try {
@@ -72,20 +105,17 @@ export default function Page() {
         }
       );
 
-      
-      
       if (response) {
+        setTicketType(response.data.ticketDetails[0].ticket_type);
 
-        setTicketType(response.data.ticketDetails[0].ticket_type)
-        
         setPriority(response.data.ticketDetails[0].priority);
         setSubject(response.data.ticketDetails[0].subject);
         setRequestDetails(response.data.ticketDetails[0].details);
-        
+
         // console.log(response);
         let ticketfilename = response.data.ticketDetails[0].details_images_url;
-        console.log("ticketfilename",ticketfilename)
-        
+        console.log("ticketfilename", ticketfilename);
+
         // ticketfilename = ticketfilename.replace(/[\[\]"]+/g, "");
         // let arrayOfArrays = ticketfilename
         //   .split(",")
@@ -94,13 +124,9 @@ export default function Page() {
         //   return acc.concat(currentArray);
         // }, []);
 
-        setfileCombination(ticketfilename)
+        setfileCombination(ticketfilename);
 
         setTicketFilename(ticketfilename);
-        
-
-        
-        
       }
     } catch (error) {
       console.error("Error fetching tickets:", error);
@@ -122,12 +148,12 @@ export default function Page() {
     setErrors({ ...errors, subject: false });
   };
 
-  const handleRequestDetailsChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setRequestDetails(e.target.value);
-    setErrors({ ...errors, requestDetails: false });
-  };
+  // const handleRequestDetailsChange = (
+  //   e: React.ChangeEvent<HTMLTextAreaElement>
+  // ) => {
+  //   setRequestDetails(e.target.value);
+  //   setErrors({ ...errors, requestDetails: false });
+  // };
 
   const handleAddNewClick = () => {
     if (fileInputRef.current) {
@@ -153,6 +179,15 @@ export default function Page() {
       subject: false,
       requestDetails: false,
     });
+  };
+
+  const handleTextAreaChange = (html: any) => {
+    setEditorHtml(html);
+  };
+
+  const handleRequestDetailsChange = (html: string) => {
+    setRequestDetails(html);
+    setErrors({ ...errors, requestDetails: false });
   };
 
   const validateForm = () => {
@@ -240,8 +275,7 @@ export default function Page() {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Adjust as needed
           },
         },
-        index,
-        
+        index
       );
       console.log({ response });
       toast.success("Ticket files deleted successfully");
@@ -342,7 +376,7 @@ export default function Page() {
             )}
           </div>
 
-          <div className="relative">
+          {/* <div className="relative">
             <label
               htmlFor="requestDetails"
               className="block text-[#5E626C] pb-2"
@@ -360,6 +394,30 @@ export default function Page() {
                 errors.requestDetails ? "border-red-500" : "border-gray-300"
               }`}
             ></textarea>
+            {errors.requestDetails && (
+              <p className="text-red-500 text-xs mt-1">
+                Please enter request details
+              </p>
+            )}
+          </div> */}
+
+          <div className="flex flex-col gap-0 my-2">
+            <label
+              htmlFor="requestDetails"
+              className="block text-[#5E626C] pb-2"
+            >
+              Request Details <span className="text-red-600 text-md">*</span>
+            </label>
+            <ReactQuill
+              id="requestDetials"
+              value={requestDetails}
+              onChange={handleRequestDetailsChange}
+              theme="snow"
+              className={"h-[100px] my-5"}
+              modules={modules}
+              formats={formats}
+            />
+
             {errors.requestDetails && (
               <p className="text-red-500 text-xs mt-1">
                 Please enter request details
@@ -393,7 +451,7 @@ export default function Page() {
               {fileCombination && (
                 <div className="flex items-center">
                   <ul className="list-disc pl-5">
-                  {fileCombination.map((file: any, index:any) => (
+                    {fileCombination.map((file: any, index: any) => (
                       <li key={index} className="text-[#5E626C]">
                         {file}
                         <button

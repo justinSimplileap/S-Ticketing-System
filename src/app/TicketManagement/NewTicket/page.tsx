@@ -326,18 +326,6 @@ export default function Page() {
               formats={formats}
             />
 
-            {/* <textarea
-              id="requestDetails"
-              name="requestDetails"
-              rows={4}
-              value={requestDetails}
-              placeholder="Enter request details"
-              onChange={handleRequestDetailsChange}
-              className={`mt-1 text-[#5E626C] w-full p-2 px-3 border bg-white rounded-md ${
-                errors.requestDetails ? "border-red-500" : "border-gray-300"
-              }`}
-            ></textarea> */}
-
             {errors.requestDetails && (
               <p className="text-red-500 text-xs mt-1">
                 Please enter request details
