@@ -36,6 +36,31 @@ type User = {
   profile_url: string;
 };
 
+type Client = {
+  id: number;
+  user_id: string;
+  organization_id: string;
+  customer_name: string;
+  gender: string | null;
+  profile_url: string | null;
+  role: string;
+  onBoarded: boolean;
+  company_legal_name: string;
+  company_url: string;
+  designation: string | null;
+  phone_number: string;
+  email: string;
+  password: string;
+  address: string;
+  country: string;
+  city: string;
+  postal_code: string;
+  about_company: string;
+  work_domain: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 function TicketManagementPage() {
   const searchParams = useSearchParams();
 
@@ -50,6 +75,8 @@ function TicketManagementPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [customerName, setCustomerName] =useState("CustomerName")
+  const [clients, setClients] = useState<Client[]>([]);
 
   useEffect(() => {
     fetchTickets();
@@ -199,6 +226,9 @@ function TicketManagementPage() {
           setStatusValue={setStatusValue}
           handleReset={handleReset}
           fetchTickets={fetchTickets}
+          customerName={customerName}
+          setCustomerName={setCustomerName}
+          clients={clients}
         />
       </div>
       <div className="mx-8">
