@@ -399,34 +399,31 @@ const Page: React.FC = () => {
           <TabPanels>
             <TabPanel className="p-10 bg-white">
               <div className="p-4">
-                <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
-                  <div className="grid py-5">
+                <div className="bg-[#F9F9F9] p-10 m-3 rounded-md">
+                  <div className="grid gap-5">
                     <div className="pb-5 w-full">
                       <div className="text-base font-medium">Events</div>
                       <div>
                         {events.length > 0 ? (
                           <ul className="space-y-2">
-                            {events.map((event, index) => {
-                              const eventDate = new Date(
-                                event.createdAt
-                              ).toLocaleString();
+                          {events
+                            .sort((a, b) => {
+                              return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                            })
+                            .map((event, index) => {
+                              const eventDate = new Date(event.createdAt).toLocaleString();
                               return (
                                 <li
                                   key={index}
                                   className="text-[#5027D9] flex items-center space-x-2 cursor-pointer w-full"
                                 >
-                                  <Image
-                                    src={Ellipse}
-                                    alt="ellipse"
-                                    width={15}
-                                    height={15}
-                                  />
+                                  <Image src={Ellipse} alt="ellipse" width={15} height={15} />
                                   <span>{event.event_details}</span>
-                                  <span>on {eventDate}</span>
+                                  <span className="text-gray-400">on {eventDate}</span>
                                 </li>
                               );
                             })}
-                          </ul>
+                        </ul>
                         ) : (
                           <p className="text-gray-500">No events available.</p>
                         )}
