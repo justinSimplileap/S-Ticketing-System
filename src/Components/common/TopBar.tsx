@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Hamburger from "../../../public/images/Hamburger.svg";
 import { base_url } from "@/utils/constant";
+import Porfile from "../../../public/images/Profile.svg"
 import axios from "axios";
 
 type User = {
@@ -104,7 +105,7 @@ const TopBar: React.FC<TopBarProps> = ({
           <Image src={Bell} alt="Notification Bell" width={25} />
         </div>
         <div className="w-12 h-12 rounded-full overflow-hidden items-center justify-center flex">
-          <Image src={profilePicture} alt="User Profile" width={50} height={50} layout="intrinsic"/>
+          <Image src={profilePicture ? profilePicture : Porfile} alt="User Profile" width={50} height={50} layout="intrinsic"/>
         </div>
       </div>
     </div>

@@ -174,7 +174,7 @@ export default function Page() {
 
       try {
         const response = await axios.post(
-          `${base_url}/addNewTicket`,
+          `${base_url}/addTickets`,
           formData,
           {
             headers: {

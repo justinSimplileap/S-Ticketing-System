@@ -1,8 +1,5 @@
 "use client";
 import React from "react";
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import CustomerForm from "@/Components/common/CustomerForm";
 import AccountDetailsFrom from "@/Components/common/AccountDetailsFrom";
 
 // Define the interface for form data

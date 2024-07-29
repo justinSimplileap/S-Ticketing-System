@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
+
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter, usePathname } from "next/navigation";
@@ -12,6 +12,7 @@ import sendAttachment from "../../../../../public/images/Attachment.svg";
 import { base_url } from "@/utils/constant";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "@/Components/common/Loader";
+import Ellipse from "../../../../../public/images/Ellipse262.svg";
 
 interface UploadedFile {
   filename: string;
@@ -31,6 +32,18 @@ interface Comment {
 type User = {
   company_legal_name: string;
 };
+
+interface Event {
+  id: number;
+  user_id: string;
+  ticket_id: number;
+  organization_id: string;
+  company_legal_name: string;
+  event_by: string;
+  event_details: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const Page: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -52,6 +65,7 @@ const Page: React.FC = () => {
   const [attachments, setAttachments] = useState<File[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [commentedOn, setCommentedOn] = useState("");
+  const [events, setEvents] = useState<Event[]>([]);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -67,7 +81,28 @@ const Page: React.FC = () => {
     fetchTickets();
     fetchComments();
     fetchUser();
+    fetchEvents();
   }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get<{ event: Event[] }>(
+        `${base_url}/getEventDetails/${value}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response) {
+        console.log(response.data.event);
+        setEvents(response.data.event);
+        console.log("events", events);
+      }
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
 
   const fetchUser = async () => {
     try {
@@ -363,7 +398,43 @@ const Page: React.FC = () => {
           </TabList>
           <TabPanels>
             <TabPanel className="p-10 bg-white">
-              Events content goes here.
+              <div className="p-4">
+                <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
+                  <div className="grid py-5">
+                    <div className="pb-5 w-full">
+                      <div className="text-base font-medium">Events</div>
+                      <div>
+                        {events.length > 0 ? (
+                          <ul className="space-y-2">
+                            {events.map((event, index) => {
+                              const eventDate = new Date(
+                                event.createdAt
+                              ).toLocaleString();
+                              return (
+                                <li
+                                  key={index}
+                                  className="text-[#5027D9] flex items-center space-x-2 cursor-pointer w-full"
+                                >
+                                  <Image
+                                    src={Ellipse}
+                                    alt="ellipse"
+                                    width={15}
+                                    height={15}
+                                  />
+                                  <span>{event.event_details}</span>
+                                  <span>on {eventDate}</span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        ) : (
+                          <p className="text-gray-500">No events available.</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </TabPanel>
 
             <TabPanel className="p-5 lg:p-7 bg-white">
@@ -400,7 +471,9 @@ const Page: React.FC = () => {
                               )}
                           </p>
                         </div>
-                        <div className="text-sm text-gray-500">{comment.commentedOn}</div>
+                        <div className="text-sm text-gray-500">
+                          {comment.commentedOn}
+                        </div>
                       </div>
                     </div>
                   ))}
