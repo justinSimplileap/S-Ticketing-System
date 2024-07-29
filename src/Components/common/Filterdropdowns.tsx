@@ -5,7 +5,6 @@ import { Button } from "@headlessui/react";
 // import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 
-
 interface Client {
   id: number;
   customer_name: string;
@@ -21,7 +20,7 @@ interface DropdownFiltersProps {
   setCustomerName: (value: string) => void;
   clients: Client[];
   handleReset: () => void;
-  fetchTickets: () => void; 
+  fetchTickets: () => void;
 }
 
 const DropdownFilters: React.FC<DropdownFiltersProps> = ({
@@ -37,18 +36,41 @@ const DropdownFilters: React.FC<DropdownFiltersProps> = ({
   handleReset,
   fetchTickets,
 }) => {
+  const pathname = usePathname();
+  console.log("this is path", pathname);
 
-  const pathname = usePathname()
-  console.log("this is path",pathname)
-
-
-  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>, setValue: (value: string) => void) => {
+  const handleChange = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    setValue: (value: string) => void
+  ) => {
     setValue(e.target.value);
     fetchTickets();
   };
 
   return (
     <div className="lg:grid grid-cols-5 gap-2 font-normal mt-2">
+      {pathname === "/SuperAdmin/TicketManagement" && (
+        <div className="relative">
+          <select
+            name="customer"
+            id="customer"
+            value={customerName}
+            onChange={(e) => handleChange(e, setCustomerName)}
+            className="w-[100%] p-2 pl-3 pr-8 border-2 border-[#E8E8E8] rounded-md text-[#8E8E8E] appearance-none bg-white"
+          >
+            <option value="CustomerName">Customer Name</option>
+            {clients.map((client) => (
+              <option key={client.id} value={client.customer_name}>
+                {client.customer_name}
+              </option>
+            ))}
+          </select>
+          <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+            <Image src={DropdownArrow} alt="drop" width={20} />
+          </div>
+        </div>
+      )}
+
       <div className="relative">
         <select
           name="type"
@@ -101,28 +123,6 @@ const DropdownFilters: React.FC<DropdownFiltersProps> = ({
           <Image src={DropdownArrow} alt="drop" width={20} />
         </div>
       </div>
-
-      {pathname === "/SuperAdmin/TicketManagement" && (
-        <div className="relative">
-          <select
-            name="customer"
-            id="customer"
-            value={customerName}
-            onChange={(e) => handleChange(e, setCustomerName)}
-            className="w-[100%] p-2 pl-3 pr-8 border-2 border-[#E8E8E8] rounded-md text-[#8E8E8E] appearance-none bg-white"
-          >
-            <option value="CustomerName">Customer Name</option>
-            {clients.map((client) => (
-              <option key={client.id} value={client.customer_name}>
-                {client.customer_name}
-              </option>
-            ))}
-          </select>
-          <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-            <Image src={DropdownArrow} alt="drop" width={20} />
-          </div>
-        </div>
-      )}
 
       <Button
         onClick={handleReset}

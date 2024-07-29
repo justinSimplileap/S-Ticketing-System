@@ -8,9 +8,12 @@ import axios from "axios";
 import Loader from "./Loader";
 import toast, { Toaster } from "react-hot-toast";
 import { base_url } from "@/utils/constant";
+import { usePathname } from "next/navigation";
 
 type Ticket = {
   id: number;
+  user_id: number;
+  company_legal_name: string;
   ticket_type: string;
   subject: string;
   priority: string;
@@ -18,6 +21,7 @@ type Ticket = {
   updatedAt: string;
   status: string;
   actions: string;
+  customer_name?: string;
 };
 
 type TableRow = {
@@ -29,6 +33,7 @@ type TableRow = {
   "Updated At": string;
   Status: string;
   Actions: string;
+  "Customer Name"?: string;
 };
 
 type TableProps = {
@@ -37,24 +42,37 @@ type TableProps = {
 
 const Table: React.FC<TableProps> = ({ tickets }) => {
   console.log({ tickets });
-
+  const pathname = usePathname();
   const router = useRouter();
 
   const [viewingTicket, setViewingTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(false);
+  const showCustomerName = pathname === "/SuperAdmin/TicketManagement";
 
-  const tableHead: (keyof TableRow)[] = [
-    "Ticket ID",
-    "Ticket Type",
-    "Subject",
-    "Priority",
-    "Status",
-    "Created At",
-    "Updated At",
-    "Actions",
-  ];
+  const tableHead: (keyof TableRow)[] = showCustomerName
+  ? [
+      "Ticket ID",
+      "Customer Name",
+      "Ticket Type",
+      "Subject",
+      "Priority",
+      "Status",
+      "Created At",
+      "Updated At",
+      "Actions",
+    ]
+  : [
+      "Ticket ID",
+      "Ticket Type",
+      "Subject",
+      "Priority",
+      "Status",
+      "Created At",
+      "Updated At",
+      "Actions",
+    ];
 
-  const tableData: TableRow[] = Array.isArray(tickets)
+    const tableData: TableRow[] = Array.isArray(tickets)
     ? tickets.map((ticket) => ({
         "Ticket ID": ticket.id.toString(),
         "Ticket Type": ticket.ticket_type,
@@ -64,6 +82,7 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
         "Updated At": new Date(ticket.updatedAt).toLocaleString(),
         Status: ticket.status,
         Actions: "view",
+        "Customer Name": ticket.customer_name ?? "", 
       }))
     : [];
 
@@ -104,7 +123,7 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
     const selectedTicket = tickets.find((ticket) => ticket.id === ticketId);
     if (selectedTicket) {
       setViewingTicket(selectedTicket);
-      console.log(selectedTicket); // Log all details of the selected ticket
+      console.log(selectedTicket); 
       router.push(`/TicketManagement/EditTicket/${selectedTicket.id}`);
     }
   };

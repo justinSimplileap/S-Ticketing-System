@@ -67,25 +67,25 @@ export default function Page() {
   }, []);
 
   const fetchTickets = async () => {
-  try {
-    const response = await axios.get<{ tickets: Ticket[] }>(
-      `${base_url}/viewAllTickets`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+    try {
+      const response = await axios.get<{ user: Ticket[] }>(
+        `${base_url}/SuperAdminAllTickets`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-    if (response.data.tickets) {
-      setTickets(response.data.tickets);
-    } else {
-      throw new Error("No tickets found");
+      if (response.data.user) {
+        setTickets(response.data.user);
+      } else {
+        throw new Error("No tickets found");
+      }
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
     }
-  } catch (error) {
-    console.error("Error fetching tickets:", error);
-  }
-};
+  };
 
 const fetchClients = async () => {
   try {
