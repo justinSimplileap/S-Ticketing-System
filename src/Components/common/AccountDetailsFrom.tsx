@@ -30,8 +30,20 @@ type FormInputs = {
 interface UserDetailsResponse {
   user: {
     email: string;
+    customer_name: string;
+    company_legal_name: string;
+    phone_number: string;
+    company_url: string;
+    address: string;
+    city: string;
+    country: string;
+    postal_code: string;
+    about_company: string;
+    work_domain: string;
   };
 }
+
+const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"]
 
 const AccountDetailsForm: React.FC = () => {
   const router = useRouter();
@@ -64,7 +76,22 @@ const AccountDetailsForm: React.FC = () => {
         }
       );
       if (response) {
+        const {user} = response.data;
         setUserEmail(response.data.user.email);
+        setValue("customerName", user.customer_name);
+        setValue("companyName", user.company_legal_name);
+        setValue("phoneNumber", user.phone_number);
+        setValue("companyUrl", user.company_url);
+        setValue("companyAddress", user.address);
+        setValue("city", user.city);
+        setValue("country", user.country);
+        setValue("postalCode", user.postal_code);
+        setValue("aboutCompany", user.about_company);
+
+
+        const workDomainsArray = user.work_domain.split(",");
+        setValue("workDomain", user.work_domain);
+        setWorkDomains(workDomainsArray);
       }
     } catch (error) {
       console.log(error);
@@ -322,19 +349,20 @@ const AccountDetailsForm: React.FC = () => {
             )}
           </div>
           <div>
-            <label htmlFor="country" className="block text-sm">
-              Country
-            </label>
-            <input
+            <label htmlFor="country" className="block text-sm">Country</label>
+            <select
               id="country"
-              type="text"
               {...register("country", { required: true })}
               className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-            />
+            >
+              {countries.map((country, index) => (
+                <option key={index} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
             {errors.country && (
-              <span role="alert" className="text-red-600">
-                Country is required
-              </span>
+              <span className="text-red-500">This field is required</span>
             )}
           </div>
           <div>
