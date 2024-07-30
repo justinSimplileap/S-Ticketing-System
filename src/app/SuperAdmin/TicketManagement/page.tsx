@@ -25,6 +25,7 @@ type Ticket = {
   createdAt: string;
   updatedAt: string;
   actions: string;
+  customer_name: string;
 };
 
 type Client = {
@@ -53,18 +54,64 @@ type Client = {
 };
 
 export default function Page() {
-  // State variables to manage dropdown values
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [typeValue, setTypeValue] = useState("Type");
   const [priorityValue, setPriorityValue] = useState("Priority");
   const [statusValue, setStatusValue] = useState("Status");
+  // const [customerNameValue, setCustomerNameValue] = useState("")
   const [customerName, setCustomerName] =useState("CustomerName")
   const [clients, setClients] = useState<Client[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchTickets();
     fetchClients();
   }, []);
+
+  useEffect(() => {
+    filterTickets();
+  }, [typeValue, priorityValue, statusValue, searchQuery, customerName]);
+
+  const filterTickets = async (page = 1) => {
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const response = await axios.get<{ tickets: Ticket[], totalPages: number, currentPage: number }>(
+        `${base_url}/filtertickets`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            type: typeValue !== "Type" ? typeValue : undefined,
+            priority: priorityValue !== "Priority" ? priorityValue : undefined,
+            status: statusValue !== "Status" ? statusValue : undefined,
+            customerName: customerName != "CustomerName" ? customerName : undefined,
+            search: searchQuery || '',
+            page: page,
+            limit: 10,
+          },
+        }
+      );
+
+      console.log("response", response);
+
+      if (response.data) {
+        setTickets(response.data.tickets);
+        setTotalPages(response.data.totalPages);
+        setCurrentPage(response.data.currentPage);
+      } else {
+        throw new Error("No tickets found");
+      }
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+    }
+  };
 
   const fetchTickets = async () => {
     try {
@@ -114,7 +161,7 @@ const fetchClients = async () => {
         </div>
         <div className="flex justify-around items-center gap-2">
           <div>
-            {/* <SearchBar /> */}
+          <SearchBar setSearchQuery={setSearchQuery} />
           </div>
           <div>
             <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]">
