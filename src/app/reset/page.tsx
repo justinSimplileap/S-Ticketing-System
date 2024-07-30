@@ -8,17 +8,26 @@ import logo from "../../../public/images/logo.svg"
 import cover from "../../../public/images/cover.png"
 import reset from "../../../public/images/reset.svg"
 import Simplileap from "../../../public/images/simplileap_black_logo_2023 1.svg"
+import axios from 'axios';
+import { base_url } from '@/utils/constant';
 // Define the interface for form data
 interface FormData {
-  username: string;
-  password: string;
+  email: string
 }
 
 const LoginForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>(); // Specify the FormData type here
 
-  const onSubmit = (data: FormData) => { // Explicitly type the data parameter
-    console.log(data);
+  const onSubmit = async (data: FormData) => {
+    console.log(data)
+    try {
+      const response = await axios.post(`${base_url}/sendResetLink`, { email: data.email });
+      console.log(response.data);
+  
+    } catch (error) {
+      console.error('Failed to send reset link:', error);
+
+    }
   };
 
   return (
@@ -40,13 +49,13 @@ const LoginForm = () => {
           {/* Mobile logo */}
           <Image src={Simplileap} alt="Logo"/>
         </div>
-        <form className="max-w-md w-full">
+        <form className="max-w-md w-full" onSubmit={handleSubmit(onSubmit)}>
           <h2 className="text-2xl mb-8 text-center font-bold ">Reset Password</h2>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-700 text-sm  mb-2">Enter Your Email
+            <label htmlFor="email" className="block text-gray-700 text-sm  mb-2">Enter Your Email
             <span className="text-red-500 ">*</span>
             </label>
-            <input type="text" id="username" name="username" placeholder="user@mail.com" className="w-full px-3 py-2 border rounded-lg focus:outline-none border-[#D1D1D1]" />
+            <input type="text" id="email"  placeholder="user@mail.com" className="w-full px-3 py-2 border rounded-lg focus:outline-none border-[#D1D1D1]" {...register('email', { required: true })}/>
           </div>
           <div className="mb-4 text-center md:text-left">
             <p className="md:font-light text-[#2A2A2A] md:text-[#2A2A2A] font-semibold text-sm md:text-sm">We will send a password reset link to your registered email ID</p>
