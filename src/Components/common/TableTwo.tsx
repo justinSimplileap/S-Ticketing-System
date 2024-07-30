@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
+
 type Ticket = {
   id: number;
   company_legal_name: string;
@@ -8,6 +9,7 @@ type Ticket = {
   subject: string;
   updatedAt: string;
 };
+
 type TableRow = {
   "Ticket ID": string;
   CompanyName: string;
@@ -16,12 +18,15 @@ type TableRow = {
   Subject: string;
   Updated?: string;
 };
+
 type TableProps = {
   tickets: Ticket[];
   showUpdated?: boolean;
 };
+
 const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
   const router = useRouter();
+
   const tableHead: (keyof TableRow)[] = [
     "Ticket ID",
     "CompanyName",
@@ -29,12 +34,15 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
     "Status",
     "Subject",
   ];
+
   if (showUpdated) {
     tableHead.push("Updated");
   }
+
   const handleTicketClick = (id: number) => {
     router.push(`/team/ViewTicket/${id}`);
   };
+
   const tableData: TableRow[] = tickets.map((ticket) => ({
     "Ticket ID": ticket.id.toString(),
     Subject: ticket.subject,
@@ -43,6 +51,7 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
     CompanyName: ticket.company_legal_name,
     Updated: showUpdated ? ticket.updatedAt : undefined,
   }));
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -98,4 +107,5 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
     </div>
   );
 };
+
 export default TableTwo;

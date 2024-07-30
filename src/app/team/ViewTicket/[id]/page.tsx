@@ -10,7 +10,6 @@ import NextBreadCrumb from "../../../../Components/common/NextBreadCrumb";
 
 import edit from "../../../../../public/images/edit.svg";
 import close from "../../../../../public/images/close.svg";
-import { base_url } from "@/utils/constant";
 
 type Ticket = {
     id: string;
@@ -23,8 +22,12 @@ type Ticket = {
     assignedTo: string;
     subject: string;
     requestDetails: string;
+    customer_name:string;
 };
-
+type Member = {
+    id: number;
+    customer_name: string;
+  };
 const ViewTicketPage: React.FC = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
   const [ticketId, setTicketId] = useState("");
@@ -33,42 +36,35 @@ const ViewTicketPage: React.FC = () => {
   const [priority, setPriority] = useState("");
   const [status, setStatus] = useState("");
   const [totalHours, setTotalHours] = useState("");
-  const [raisedBy, setRaisedBy] = useState("");
+  const [customer_name, setRaisedBy] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
-    const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-    const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [teamMembers, setTeamMembers] = useState<Member[]>([]);
+  const [selectedPerson, setSelectedPerson] = useState<number | null>(null);
+  const [formStatus, setFormStatus] = useState(priority);
+  const [formTotalHours, setFormTotalHours] = useState(totalHours);
+  const [formAdditionalNotes, setFormAdditionalNotes] = useState("");
+  console.log('teamMembers: ', teamMembers);
+
     
     const router = useRouter();
-
     const pathname = usePathname();
     const parts = pathname.split("/");
     const value = parts[parts.length - 1];
 
-    
-    // Mock ticket data (replace with actual data fetching logic)
-    // const ticket: Ticket = {
-    //     id: '#1234',
-    //     type: 'Bug',
-    //     createdOn: 'January 9, 2022',
-    //     priority: 'High',
-    //     status: 'Open',
-    //     totalHours: '5 hours',
-    //     raisedBy: 'John Doe',
-    //     assignedTo: 'Jane Smith',
-    //     subject: 'Issue with login functionality',
-    //     requestDetails: 'User is unable to log in with correct credentials. The issue seems to be related to the authentication service.'
-    // };
 
     useEffect(() => {
         fetchTickets();
+        fetchMembers();
       }, []);
     
       const fetchTickets = async () => {
         try {
           const response: AxiosResponse<any> = await axios.get(
-            `${base_url}/viewTicket/${value}`,
+            `http://localhost:8000/viewTicket/${value}`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -87,7 +83,7 @@ const ViewTicketPage: React.FC = () => {
             setCreatedOn(new Date(response.data.body[0].createdAt).toLocaleDateString());
             setPriority(response.data.body[0].priority);
             setStatus(response.data.body[0].status);
-            setRaisedBy(response.data.body[0].customer_name);
+            setRaisedBy(response.data.body[0].company_legal_name);
             setSubject(response.data.body[0].subject);
             setDescription(response.data.body[0].details);
     
@@ -104,14 +100,73 @@ const ViewTicketPage: React.FC = () => {
           console.error("Error fetching tickets:", error);
         }
       };
+
+      const fetchMembers = async () => {
+        try {
+            const response: AxiosResponse<any> = await axios.get(
+                `http://localhost:8000/teamMembers`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+
+            if (response) {
+                console.log('response: ', response);
+                console.log(response.data)
+                setTeamMembers(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching members:", error);
+        }
+    };
+    const handleStatusChange = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            const response = await axios.put(
+                `http://localhost:8000/updateTicket/${ticketId}`,
+                {
+                    status: formStatus,
+                    totalHours: formTotalHours,
+                    additionalNotes: formAdditionalNotes,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                // Update local state
+                setStatus(formStatus);
+                setTotalHours(formTotalHours);
+                setIsStatusModalOpen(false);
+            }
+        } catch (error) {
+            console.error("Error updating ticket status:", error);
+        }
+    };
+
     
-      
+    
+  const handleAssign = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const selectedMember = teamMembers.find(member => member.id === selectedPerson);
+    if (selectedMember) {
+      console.log('Assigned to:', selectedMember.customer_name);
+      // Here you can perform further actions, like sending the assigned person's data to the backend.
+      setAssignedTo(selectedMember.customer_name); // Update the assignedTo state
+      setIsAssignModalOpen(false); // Close the modal
+    }
+  };
      
     
 
     return (
         <div>
-            
+            {/* <NextBreadCrumb items={breadcrumbItems} /> */}
 
             {/* View Ticket Section */}
             <div className="p-8">
@@ -162,7 +217,7 @@ const ViewTicketPage: React.FC = () => {
                     <div className="grid grid-cols-3">
                         <div>
                             <p className="text-[#2A2C3E] font-medium">Raised By:</p>
-                            <p className="text-[#7D7D7D]">{raisedBy}</p>
+                            <p className="text-[#7D7D7D]">{customer_name}</p>
                         </div>
                         <div>
                             <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
@@ -217,10 +272,10 @@ const ViewTicketPage: React.FC = () => {
                                 <Image src={close} alt="Close Icon" width={16} height={16} />
                             </button>
                         </div>
-                        <form>
+                        <form onSubmit={handleStatusChange}>
                             <div className="mb-4">
                                 <label htmlFor="status" className="block text-gray-700">Choose status*</label>
-                                <select id="status" className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2 text-gray-700">
+                                <select id="status" className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2 text-gray-700" value={formStatus}onChange={(e) => setFormStatus(e.target.value)}>
                                     <option value="Open">Open</option>
                                     <option value="In Progress">In Progress</option>
                                     <option value="Resolved">Resolved</option>
@@ -229,7 +284,14 @@ const ViewTicketPage: React.FC = () => {
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="totalHours" className="block text-gray-700 mt-4">Enter total hours logged*</label>
-                                <input type="text" id="totalHours" name="totalHours" className="w-full px-3 py-2 border rounded-lg focus:outline-none" />
+                                <input
+        type="text"
+        id="totalHours"
+        name="totalHours"
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none"
+        value={formTotalHours}
+        onChange={(e) => setFormTotalHours(e.target.value)}
+    />
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="additionalNotes" className="block text-gray-700">Additional notes</label>
@@ -258,47 +320,57 @@ const ViewTicketPage: React.FC = () => {
 
             {/* Modal for Assigning */}
             <Dialog open={isAssignModalOpen} onClose={() => setIsAssignModalOpen(false)} className="relative z-50">
-                <div className="fixed inset-0 bg-black opacity-50 w-full"></div>
-                <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-                    <DialogPanel className="bg-white p-8 rounded shadow-lg z-50 w-[43em]">
-                        <div className="flex justify-between items-center mb-10">
-                            <DialogTitle className="font-bold text-xl text-[#222222]">Assign To</DialogTitle>
-                            <button onClick={() => setIsAssignModalOpen(false)} className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-300">
-                                <Image src={close} alt="Close Icon" width={16} height={16} />
-                            </button>
-                        </div>
-                        <form>
-                            <div className="mb-4">
-                                <label htmlFor="assignTo" className="block text-gray-700">Choose person*</label>
-                                <select id="assignTo" className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2 text-gray-700">
-                                    <option value="Jane Smith">Jane Smith</option>
-                                    <option value="John Doe">John Doe</option>
-                                    <option value="Alice Johnson">Alice Johnson</option>
-                                    <option value="Bob Brown">Bob Brown</option>
-                                </select>
-                            </div>
-                            <div className="flex justify-end mt-20">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsAssignModalOpen(false)}
-                                    className="mr-2 px-5 py-2 text-[#5027D9] border-2 border-[#5027D9] rounded-lg"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    onClick={() => setIsAssignModalOpen(false)}
-                                    className="px-5 py-2 bg-[#5027D9] text-white rounded-lg text-sm"
-                                >
-                                    Assign
-                                </button>
-                            </div>
-                        </form>
-                    </DialogPanel>
-                </div>
-            </Dialog>
+        <div className="fixed inset-0 bg-black opacity-50 w-full"></div>
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel className="bg-white p-8 rounded shadow-lg z-50 w-[43em]">
+            <div className="flex justify-between items-center mb-10">
+              <DialogTitle className="font-bold text-xl text-[#222222]">Assign</DialogTitle>
+              <Image
+                src={close}
+                alt="Close Icon"
+                width={20}
+                height={20}
+                onClick={() => setIsAssignModalOpen(false)}
+                className="cursor-pointer"
+              />
+            </div>
+            <form onSubmit={handleAssign}>
+              <div className='flex items-center justify-center'>
+                <select
+                  id="dropdown"
+                  className="block w-full p-4 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  value={selectedPerson || ''}
+                  onChange={(e) => setSelectedPerson(Number(e.target.value))}
+                >
+                  <option value="" disabled>Select a person</option>
+                  {teamMembers.map((member) => (
+                    <option key={member.id} value={member.id}>
+                      {member.customer_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mt-10 flex justify-center space-x-10">
+                <button
+                  type="button"
+                  className="bg-[#E4E4E4] text-[#000000] px-8 py-3 rounded-md"
+                  onClick={() => setIsAssignModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-[#5027D9] text-[#FFFFFF] px-8 py-3 rounded-md"
+                >
+                  Assign
+                </button>
+              </div>
+            </form>
+          </DialogPanel>
         </div>
-    );
+      </Dialog>
+    </div>
+  );
 };
-
+    
 export default ViewTicketPage;

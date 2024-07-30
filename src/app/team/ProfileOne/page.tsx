@@ -10,15 +10,7 @@ import Link from "next/link";
 export default function Page() {
   return (
     <div className="">
-     <div className='flex justify-between p-6 bg-[#FFFFFF] drop-shadow-md'>
-        <h1 className="font-medium text-l mt-2">Ticket Management</h1>
-        <div className='flex space-x-4'>
-          <div className="w-10 h-10 bg-[#F8F9FA] rounded-md flex items-center justify-center">
-            <Image src={bell} alt="bell" width={20} height={20} />
-          </div>
-          <div className="w-10 h-10 bg-[#F8F9FA] rounded-md flex items-center justify-center"></div>
-        </div>
-      </div>
+   
       <div>
 
       </div>
