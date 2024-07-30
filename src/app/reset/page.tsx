@@ -1,4 +1,5 @@
 'use client';
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import Head from 'next/head';
@@ -31,10 +32,6 @@ const LoginForm = () => {
           <Image src={reset} alt="reset" className="3xl:w-[50%]" />
         </div>
 
-
-        {/* <div className="flex-grow flex items-center justify-center">
-                  <img src="/illustration.svg" className="h-90" alt="Illustration" /> 
-                </div> */}
       </div>
 
       {/* Right Side: Form */}

@@ -19,13 +19,17 @@ export default function ClientComponent({
   const router = useRouter();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false); // Add state for sidebar expansion
   const [isLoading, setIsLoading] = useState(true);
+  const ResetPathName = window.location.pathname;
+  console.log("ResetPathName", ResetPathName);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const publicPaths = ["/login"];
+    const publicPaths = ["/login", "/reset", "/ResetPassword/[id]"];
     const currentPath = pathname.split("?")[0];
 
-    if (!token && !publicPaths.includes(currentPath)) {
+    if (/^\/ResetPassword\/[^/]+$/.test(window.location.pathname)) {
+      router.push(`${ResetPathName}`);
+    } else if (!token && !publicPaths.includes(currentPath)) {
       toast.error("You must be logged in to view this page.");
       router.push("/login");
       return;
@@ -47,6 +51,7 @@ export default function ClientComponent({
     "/SuperAdmin/TicketManagement",
     "/SuperAdmin/TicketManagement/NewTicket",
     /^\/SuperAdmin\/TicketManagement\/ViewTicket\/[^/]+$/,
+    /^\/ResetPassword\/[^/]+$/,
   ];
 
   const passwordSidebarRoutes = [
@@ -71,6 +76,7 @@ export default function ClientComponent({
     "/team/Managerlogin",
     "/Onboard/ManagerOnboard",
     "/Onboard/ResetPassword",
+    /^\/ResetPassword\/[^/]+$/,
   ];
 
   const matchesRoute = (routes: any) =>
