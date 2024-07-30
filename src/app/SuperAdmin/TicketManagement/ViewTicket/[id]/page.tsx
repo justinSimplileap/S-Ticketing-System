@@ -125,7 +125,7 @@ const Page: React.FC = () => {
   const fetchComments = async () => {
     try {
       const response: AxiosResponse<any> = await axios.get(
-        `${base_url}/fetchComments/${value}`,
+        `${base_url}/superAdminFetchComments/${value}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
