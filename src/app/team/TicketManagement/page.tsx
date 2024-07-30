@@ -91,6 +91,32 @@ const handleSearch = () => {
     // Logic for exporting reports
     console.log('Exporting report...');
   };
+  const exportTableToExcel = () => {
+    const table = document.getElementById('all-tickets-table');
+    if (!table) return;
+
+    let csvContent = "";
+    const rows = Array.from(table.querySelectorAll("tr"));
+
+    rows.forEach(row => {
+      const cols = Array.from(row.querySelectorAll("td, th"));
+      const rowData = cols.map(col => (col as HTMLElement).innerText).join(",");
+      csvContent += rowData + "\n";
+    });
+
+    const dataType = 'text/csv;charset=utf-8;';
+    const fileName = 'tickets.csv';
+    const downloadLink = document.createElement('a');
+
+    const blob = new Blob([csvContent], { type: dataType });
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
 
   return (
     <div>
@@ -126,7 +152,7 @@ const handleSearch = () => {
               className='flex items-center justify-center px-4 py-2  text-[#5027D9] rounded-lg focus:outline-none border border-[#5027D9]'
               onClick={handleExport}
             >
-              <Image src={folder} alt='Export Icon' width={20} height={20} className='mr-2 font-lato' />
+              <Image src={folder} alt='Export Icon' width={20} height={20} className='mr-2 font-lato' onClick={exportTableToExcel} />
               Export Report
             </button>
           </div>

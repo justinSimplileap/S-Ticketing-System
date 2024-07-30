@@ -168,7 +168,7 @@ function TicketManagementPage() {
 
     let csvContent = "";
     const rows = Array.from(table.querySelectorAll("tr"));
-
+       
     rows.forEach(row => {
       const cols = Array.from(row.querySelectorAll("td, th"));
       const rowData = cols.map(col => (col as HTMLElement).innerText).join(",");
