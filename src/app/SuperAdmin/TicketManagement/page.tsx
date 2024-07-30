@@ -9,6 +9,7 @@ import SearchBar from "../../../Components/common/SearchBar";
 import Filterdropdowns from "../../../Components/common/Filterdropdowns";
 import axios from "axios";
 import { base_url } from "@/utils/constant";
+import Link from "next/link";
 
 type Ticket = {
   id: number;
@@ -59,7 +60,7 @@ export default function Page() {
   const [priorityValue, setPriorityValue] = useState("Priority");
   const [statusValue, setStatusValue] = useState("Status");
   // const [customerNameValue, setCustomerNameValue] = useState("")
-  const [customerName, setCustomerName] =useState("CustomerName")
+  const [customerName, setCustomerName] = useState("CustomerName");
   const [clients, setClients] = useState<Client[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -76,28 +77,31 @@ export default function Page() {
 
   const filterTickets = async (page = 1) => {
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
       if (!token) {
         throw new Error("No token found");
       }
 
-      const response = await axios.get<{ tickets: Ticket[], totalPages: number, currentPage: number }>(
-        `${base_url}/filtertickets`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            type: typeValue !== "Type" ? typeValue : undefined,
-            priority: priorityValue !== "Priority" ? priorityValue : undefined,
-            status: statusValue !== "Status" ? statusValue : undefined,
-            customerName: customerName != "CustomerName" ? customerName : undefined,
-            search: searchQuery || '',
-            page: page,
-            limit: 10,
-          },
-        }
-      );
+      const response = await axios.get<{
+        tickets: Ticket[];
+        totalPages: number;
+        currentPage: number;
+      }>(`${base_url}/filtertickets`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          type: typeValue !== "Type" ? typeValue : undefined,
+          priority: priorityValue !== "Priority" ? priorityValue : undefined,
+          status: statusValue !== "Status" ? statusValue : undefined,
+          customerName:
+            customerName != "CustomerName" ? customerName : undefined,
+          search: searchQuery || "",
+          page: page,
+          limit: 10,
+        },
+      });
 
       console.log("response", response);
 
@@ -134,18 +138,19 @@ export default function Page() {
     }
   };
 
-const fetchClients = async () => {
-  try {
-    const response = await axios.get<{ clients: Client[] }>(`${base_url}/viewAllClients`);
-    setClients(response.data.clients);
-  } catch (error) {
-    console.error("Error fetching clients", error);
-  }
-};
-
+  const fetchClients = async () => {
+    try {
+      const response = await axios.get<{ clients: Client[] }>(
+        `${base_url}/viewAllClients`
+      );
+      setClients(response.data.clients);
+    } catch (error) {
+      console.error("Error fetching clients", error);
+    }
+  };
 
   const handleReset = () => {
-    console.log("test")
+    console.log("test");
     setTypeValue("Type");
     setPriorityValue("Priority");
     setStatusValue("Status");
@@ -154,14 +159,13 @@ const fetchClients = async () => {
 
   return (
     <div className="">
-
       <div className="flex justify-between items-center mt-10 ml-8 mr-8">
         <div>
           <h1 className="text-3xl text-[#2A2C3E]">Tickets</h1>
         </div>
         <div className="flex justify-around items-center gap-2">
           <div>
-          <SearchBar setSearchQuery={setSearchQuery} />
+            <SearchBar setSearchQuery={setSearchQuery} />
           </div>
           <div>
             <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]">
@@ -170,10 +174,12 @@ const fetchClients = async () => {
             </Button>
           </div>
           <div>
+          <Link href="/SuperAdmin/TicketManagement/NewTicket">
             <Button className="flex rounded bg-[#5027D9] py-2 border-2 border-[#5027D9] px-4 text-sm text-white items-center gap-2">
               <Image src={Plus} alt="Plus Icon" width={22} height={22} />
               New Ticket
             </Button>
+            </Link>
           </div>
         </div>
       </div>

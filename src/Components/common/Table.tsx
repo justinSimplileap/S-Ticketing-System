@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import view from "../../../public/images/eye.svg";
 import { useRouter } from "next/navigation";
@@ -40,6 +40,11 @@ type TableProps = {
   tickets: Ticket[];
 };
 
+type User = {
+  role: string;
+};
+
+
 const Table: React.FC<TableProps> = ({ tickets }) => {
   console.log({ tickets });
   const pathname = usePathname();
@@ -47,7 +52,33 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
 
   const [viewingTicket, setViewingTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState("")
   const showCustomerName = pathname === "/SuperAdmin/TicketManagement";
+
+  useEffect(()=>{
+    fetchUser();
+  })
+  
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get<{ user: User }>(
+        `${base_url}/getUserDetails`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+      if(response){
+        console.log("res", response);
+        setRole(response.data.user.role)
+      }
+      
+    } catch (error) {
+      console.error('Error fetching tickets:', error);
+    }
+  }
+  
 
   const tableHead: (keyof TableRow)[] = showCustomerName
   ? [
@@ -115,7 +146,12 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
     if (selectedTicket) {
       setViewingTicket(selectedTicket);
       console.log(selectedTicket);
-      router.push(`/TicketManagement/ViewTicket/${selectedTicket.id}`);
+      if (role === "1"){
+        router.push(`/SuperAdmin/TicketManagement/ViewTicket/${selectedTicket.id}`)
+      }else{
+        router.push(`/TicketManagement/ViewTicket/${selectedTicket.id}`);
+      }
+      
     }
   };
 
@@ -124,7 +160,12 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
     if (selectedTicket) {
       setViewingTicket(selectedTicket);
       console.log(selectedTicket); 
-      router.push(`/TicketManagement/EditTicket/${selectedTicket.id}`);
+      if (role === "1"){
+        router.push(`/SuperAdmin/TicketManagement/EditTicket/${selectedTicket.id}`)
+      }else{
+        router.push(`/TicketManagement/EditTicket/${selectedTicket.id}`);
+      }
+     
     }
   };
 
