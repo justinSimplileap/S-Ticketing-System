@@ -51,6 +51,7 @@ export default function ClientComponent({
     "/SuperAdmin/TicketManagement",
     "/SuperAdmin/TicketManagement/NewTicket",
     /^\/SuperAdmin\/TicketManagement\/ViewTicket\/[^/]+$/,
+    /^\/SuperAdmin\/TicketManagement\/EditTicket\/[^/]+$/,
     /^\/ResetPassword\/[^/]+$/,
   ];
 
@@ -67,6 +68,8 @@ export default function ClientComponent({
     "/SuperAdmin/TicketManagement",
     "/SuperAdmin/TicketManagement/NewTicket",
     /^\/SuperAdmin\/TicketManagement\/ViewTicket\/[^/]+$/,
+    /^\/SuperAdmin\/TicketManagement\/EditTicket\/[^/]+$/,
+
   ];
 
   const dontShowTopBarRoutes = [
