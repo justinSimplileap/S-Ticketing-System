@@ -10,6 +10,7 @@ import Filterdropdowns from "../../../Components/common/Filterdropdowns";
 import axios from "axios";
 import { base_url } from "@/utils/constant";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 type Ticket = {
   id: number;
@@ -55,19 +56,25 @@ type Client = {
 };
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const initialType = searchParams.get('type') || "Type";
+  const initialPriority = searchParams.get('priority') || "Priority";
+  const initialStatus = searchParams.get('status') || "Status";
+
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [typeValue, setTypeValue] = useState("Type");
-  const [priorityValue, setPriorityValue] = useState("Priority");
-  const [statusValue, setStatusValue] = useState("Status");
-  // const [customerNameValue, setCustomerNameValue] = useState("")
+  const [typeValue, setTypeValue] = useState(initialType);
+  const [priorityValue, setPriorityValue] = useState(initialPriority);
+  const [statusValue, setStatusValue] = useState(initialStatus);
   const [customerName, setCustomerName] = useState("CustomerName");
   const [clients, setClients] = useState<Client[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
+
+
   useEffect(() => {
-    fetchTickets();
+    // fetchTickets();
     fetchClients();
   }, []);
 
@@ -125,6 +132,14 @@ export default function Page() {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          params: {
+            type: typeValue !== "Type" ? typeValue : undefined,
+            priority: priorityValue !== "Priority" ? priorityValue : undefined,
+            status: statusValue !== "Status" ? statusValue : undefined,
+            search: searchQuery || '',
+            // page: page,
+            limit: 10,
+          },
         }
       );
 
@@ -149,6 +164,32 @@ export default function Page() {
     }
   };
 
+  const exportTableToExcel = () => {
+    const table = document.getElementById('all-tickets-table');
+    if (!table) return;
+
+    let csvContent = "";
+    const rows = Array.from(table.querySelectorAll("tr"));
+
+    rows.forEach(row => {
+      const cols = Array.from(row.querySelectorAll("td, th"));
+      const rowData = cols.map(col => (col as HTMLElement).innerText).join(",");
+      csvContent += rowData + "\n";
+    });
+
+    const dataType = 'text/csv;charset=utf-8;';
+    const fileName = 'tickets.csv';
+    const downloadLink = document.createElement('a');
+
+    const blob = new Blob([csvContent], { type: dataType });
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
   const handleReset = () => {
     console.log("test");
     setTypeValue("Type");
@@ -168,7 +209,7 @@ export default function Page() {
             <SearchBar setSearchQuery={setSearchQuery} />
           </div>
           <div>
-            <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]">
+            <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]" onClick={exportTableToExcel}>
               <Image src={Folder} alt="Folder Icon" width={22} height={22} />
               Export report
             </Button>

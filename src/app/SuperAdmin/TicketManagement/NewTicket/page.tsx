@@ -257,7 +257,7 @@ export default function Page() {
         </div>
       </div> */}
 
-      <div className="p-10 mx-10 my-12 bg-[#F9F9F9] rounded-md h-screen shadow-md">
+      <div className="h-[100%] p-10 mx-10 my-12 bg-[#F9F9F9] rounded-md shadow-md">
         <div className="text-[#2A2C3E] text-2xl mb-6">New Ticket</div>
 
         <form className="space-y-6" onSubmit={handleFormSubmit}>
@@ -305,9 +305,11 @@ export default function Page() {
                   }`}
                 >
                   <option value="Select Priority">Choose Ticket Type</option>
-                  <option value="Type 1">Type 1</option>
-                  <option value="Type 2">Type 2</option>
-                  <option value="Type 3">Type 3</option>
+                  <option value="Incident">Incident</option>
+                  <option value="Problem">Problem</option>
+                  <option value="Change">Change</option>
+                  <option value="Service Request">Service Request</option>
+
                 </select>
                 {errors.ticketType && (
                   <p className="text-red-500 text-xs mt-1">

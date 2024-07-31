@@ -53,7 +53,7 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
   const [viewingTicket, setViewingTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("")
-  const showCustomerName = pathname === "/SuperAdmin/TicketManagement";
+  const showCustomerName = pathname === "/SuperAdmin/TicketManagement" || pathname === "/SuperAdmin";
 
   useEffect(()=>{
     fetchUser();

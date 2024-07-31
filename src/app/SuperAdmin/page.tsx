@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { base_url } from "@/utils/constant";
+import { useRouter } from "next/navigation";
 
 
 type Ticket = {
@@ -31,6 +32,8 @@ type Ticket = {
 
 
 export default function SuperAdminDashboard() {
+  const router = useRouter();
+
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [newTickets, setNewTickets] = useState<number>(0);
   const [openTickets, setOpenTickets] = useState<number>(0);
@@ -117,6 +120,38 @@ export default function SuperAdminDashboard() {
     }
   };
 
+  const handleCardClick = () => {
+    router.push('/SuperAdmin/TicketManagement?priority=High');
+  }
+
+  const handleCardClick1 = () => {
+    router.push('/SuperAdmin/TicketManagement?status=Open');
+  }
+
+  const handleCardClick2 = () => {
+    router.push('/SuperAdmin/TicketManagement?status=Open');
+  }
+
+  const handleCardClick3 = () => {
+    router.push('/SuperAdmin/TicketManagement?status=Closed');
+  }
+
+  const handleCardClick4 = () => {
+    router.push('/SuperAdmin/TicketManagement?type=Incident');
+  }
+
+  const handleCardClick5 = () => {
+    router.push('/SuperAdmin/TicketManagement?type=Problem');
+  }
+
+  const handleCardClick6 = () => {
+    router.push('/SuperAdmin/TicketManagement?type=Change');
+  }
+
+  const handleCardClick7 = () => {
+    router.push('/SuperAdmin/TicketManagement?type=Service Request');
+  }
+
   return (
     <div>
       {/* <div className="flex justify-between items-center shadow-md p-8 sticky top-0 z-50 bg-white">
@@ -138,7 +173,7 @@ export default function SuperAdminDashboard() {
           <div className="grid grid-cols-2 gap-5">
             {/* left side */}
             <div>
-              <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 mb-5">
+              <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 mb-5 cursor-pointer" onClick={handleCardClick}>
                 <div className="flex items-center gap-8">
                   <Image src={Circle} alt="Circle Icon" width={90} />
                   <div>
@@ -153,7 +188,7 @@ export default function SuperAdminDashboard() {
               </div>
 
               <div className="grid grid-cols-2 gap-5">
-                <div className="bg-[#F4F3FF] p-8 rounded-lg">
+                <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" onClick={handleCardClick1}>
                   <div className="grid grid-cols-2 pb-10">
                     <div>
                       <Image src={Circle} alt="Circle Icon" width={90} />
@@ -168,7 +203,7 @@ export default function SuperAdminDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-[#F4F3FF] p-8 rounded-lg">
+                <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" onClick={handleCardClick2}>
                   <div className="grid grid-cols-2 pb-10">
                     <div>
                       <Image src={Circle} alt="Circle Icon" width={90} />
@@ -178,12 +213,12 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
                   <div className="pl-5 grid gap-3">
-                    <div className="text-4xl text-[#5027D9]">{openTickets}</div>
+                    <div className="text-4xl text-[#5027D9]">{newTickets}</div>
                     <div className="text-[#696969]">Open Tickets</div>
                   </div>
                 </div>
 
-                <div className="bg-[#F4F3FF] p-8 rounded-lg">
+                <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" onClick={handleCardClick3}>
                   <div className="grid grid-cols-2 pb-10">
                     <div>
                       <Image src={Circle} alt="Circle Icon" width={90} />
@@ -200,7 +235,8 @@ export default function SuperAdminDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-[#F4F3FF] p-8 rounded-lg">
+                <Link href={"/SuperAdmin/TicketManagement"}>
+                <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" >
                   <div className="grid grid-cols-2 pb-10">
                     <div>
                       <Image src={Circle} alt="Circle Icon" width={90} />
@@ -214,13 +250,15 @@ export default function SuperAdminDashboard() {
                     <div className="text-[#696969]">Total Tickets</div>
                   </div>
                 </div>
+                </Link>
+
               </div>
             </div>
 
             {/* right side */}
 
             <div className="grid grid-cols-2 gap-5 h-fit">
-              <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 h-fit">
+              <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 h-fit" >
                 <div className="flex items-center gap-8">
                   <Image src={Circle} alt="Circle Icon" width={90} />
                   <div>
@@ -248,7 +286,7 @@ export default function SuperAdminDashboard() {
                       <div className="text-[#696969]">Team Members</div>
                     </div>
                   </div>
-                  <Image src={Arrow} alt="Arrow Icon" width={32} />
+                  {/* <Image src={Arrow} alt="Arrow Icon" width={32} /> */}
                 </div>
               </div>
 
@@ -274,28 +312,28 @@ export default function SuperAdminDashboard() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
+                        <tr onClick={handleCardClick4}  className="cursor-pointer">
                           <td className="py-3 text-left pl-5">01.</td>
                           <td className="py-2 text-left pl-5">Incident</td>
                           <td className="py-2 text-left pl-5">
                             {incidentTickets}
                           </td>
                         </tr>
-                        <tr>
+                        <tr  onClick={handleCardClick5}  className="cursor-pointer">
                           <td className="py-3 text-left pl-5">02.</td>
                           <td className="py-2 text-left pl-5">Problem</td>
                           <td className="py-2 text-left pl-5">
                             {problemTickets}
                           </td>
                         </tr>
-                        <tr>
+                        <tr  onClick={handleCardClick6} className="cursor-pointer">
                           <td className="py-3 text-left pl-5">03.</td>
                           <td className="py-2 text-left pl-5">Change</td>
                           <td className="py-2 text-left pl-5">
                             {changeTickets}
                           </td>
                         </tr>
-                        <tr>
+                        <tr  onClick={handleCardClick7}  className="cursor-pointer">
                           <td className="py-3 text-left pl-5">04.</td>
                           <td className="py-2 text-left pl-5">
                             Service Request

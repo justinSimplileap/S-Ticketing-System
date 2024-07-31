@@ -80,9 +80,11 @@ const DropdownFilters: React.FC<DropdownFiltersProps> = ({
           className="w-[100%] p-2 pl-3 pr-8 border-2 border-[#E8E8E8] rounded-md text-[#8E8E8E] appearance-none bg-white"
         >
           <option value="Type">Type</option>
-          <option value="Type 1">Type 1</option>
-          <option value="Type 2">Type 2</option>
-          <option value="Type 3">Type 3</option>
+          <option value="Incident">Incident</option>
+          <option value="Problem">Problem</option>
+          <option value="Change">Change</option>
+          <option value="Service Request">Service Request</option>
+
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
           <Image src={DropdownArrow} alt="drop" width={20} />
