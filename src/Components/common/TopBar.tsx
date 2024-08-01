@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import Image from "next/image";
 import Bell from "../../../public/images/bell.svg";
 import userBg from "../../../public/images/User.svg";
-import breadcrumbArrow from "../../../public/images/breadcrumbArrow.svg";
+import breadcrumbArrow from "../../../public/images/BreadcrumbArrow.svg";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";

@@ -16,12 +16,13 @@ import { usePathname } from "next/navigation";
 import { base_url } from "@/utils/constant";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
-
+import { useRouter } from "next/navigation";
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
 });
 
 export default function Page() {
+  const router = useRouter();
   const pathname = usePathname();
   const parts = pathname.split("/");
   const value = parts[parts.length - 1];
@@ -168,17 +169,18 @@ export default function Page() {
   };
 
   const handleCancel = () => {
-    setTicketType("Select Ticket Type");
-    setPriority("Select Priority");
-    setSubject("");
-    setRequestDetails("");
-    setSelectedFiles([]);
-    setErrors({
-      ticketType: false,
-      priority: false,
-      subject: false,
-      requestDetails: false,
-    });
+    // setTicketType("Select Ticket Type");
+    // setPriority("Select Priority");
+    // setSubject("");
+    // setRequestDetails("");
+    // setSelectedFiles([]);
+    // setErrors({
+    //   ticketType: false,
+    //   priority: false,
+    //   subject: false,
+    //   requestDetails: false,
+    // });
+    router.push("/TicketManagement");
   };
 
   const handleTextAreaChange = (html: any) => {

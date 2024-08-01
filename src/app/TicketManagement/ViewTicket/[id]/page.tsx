@@ -265,6 +265,7 @@ const Page: React.FC = () => {
       );
 
       toast.success("Comment Added successfully");
+      window.location.reload();
       console.log("Comment added successfully:", response.data);
 
       setNewComment("");

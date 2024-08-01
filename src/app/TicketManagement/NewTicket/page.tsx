@@ -14,12 +14,14 @@ import Loader from "@/Components/common/Loader";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { base_url } from "@/utils/constant";
+import { useRouter } from "next/navigation";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
 });
 
 export default function Page() {
+  const router = useRouter();
   const [ticketType, setTicketType] = useState("Select Ticket Type");
   const [priority, setPriority] = useState("Select Priority");
   const [subject, setSubject] = useState("");
@@ -36,7 +38,6 @@ export default function Page() {
     priority: false,
     subject: false,
     requestDetails: false,
-
   });
 
   const modules = {
@@ -112,17 +113,18 @@ export default function Page() {
   // };
 
   const handleCancel = () => {
-    setTicketType("Select Ticket Type");
-    setPriority("Select Priority");
-    setSubject("");
-    setRequestDetails("");
-    setSelectedFiles([]);
-    setErrors({
-      ticketType: false,
-      priority: false,
-      subject: false,
-      requestDetails: false,
-    });
+    // setTicketType("Select Ticket Type");
+    // setPriority("Select Priority");
+    // setSubject("");
+    // setRequestDetails("");
+    // setSelectedFiles([]);
+    // setErrors({
+    //   ticketType: false,
+    //   priority: false,
+    //   subject: false,
+    //   requestDetails: false,
+    // });
+    router.push("/TicketManagement");
   };
 
   const validateForm = () => {
@@ -173,19 +175,17 @@ export default function Page() {
       selectedFiles.forEach((file) => formData.append("files", file));
 
       try {
-        const response = await axios.post(
-          `${base_url}/addTickets`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Adjust as needed
-            },
-          }
-        );
-        toast.success("New Ticket Added Successfully");
-
-        handleCancel();
+        const response = await axios.post(`${base_url}/addTickets`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Adjust as needed
+          },
+        });
+        if (response) {
+          toast.success("New Ticket Added Successfully");
+          router.push("/TicketManagement");
+          handleCancel();
+        }
       } catch (error) {
         console.error("Error adding new ticket:", error);
       } finally {
@@ -197,29 +197,6 @@ export default function Page() {
   return (
     <div className="">
       <Toaster />
-      {/* <div className="flex items-center justify-between shadow-md p-8 sticky top-0 z-50 bg-white">
-        <div className="flex items-center gap-3">
-          <div className="text-[#2A2C3E] text-xl">
-            <Link href="/TicketManagement">Ticket Management </Link>
-          </div>
-          <div>
-            <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
-          </div>
-          <div className="text-[#2A2C3E] text-xl">New Ticket</div>
-          <div>
-            <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
-          </div>
-        </div>
-
-        <div className="flex gap-4 justify-center items-center">
-          <div>
-            <Image src={Bell} alt="Notification Bell" width={25} />
-          </div>
-          <div>
-            <Image src={userBg} alt="User" width={50} />
-          </div>
-        </div>
-      </div> */}
 
       <div className="p-10 mx-10 my-12 bg-[#F9F9F9] rounded-md h-screen shadow-md">
         <div className="text-[#2A2C3E] text-2xl mb-6">New Ticket</div>
@@ -241,9 +218,10 @@ export default function Page() {
                   }`}
                 >
                   <option value="Select Priority">Choose Ticket Type</option>
-                  <option value="Type 1">Type 1</option>
-                  <option value="Type 2">Type 2</option>
-                  <option value="Type 3">Type 3</option>
+                  <option value="Incident">Incident</option>
+                  <option value="Problem">Problem</option>
+                  <option value="Change">Change</option>
+                  <option value="Service Request">Service Request</option>
                 </select>
                 {errors.ticketType && (
                   <p className="text-red-500 text-xs mt-1">
