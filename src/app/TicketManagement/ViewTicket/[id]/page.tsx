@@ -18,6 +18,8 @@ import Ellipse from "../../../../../public/images/Ellipse262.svg";
 interface UploadedFile {
   filename: string;
   fileUrl: string;
+
+  
   uploadedOn: string;
 }
 
@@ -108,7 +110,7 @@ const Page: React.FC = () => {
   const fetchUser = async () => {
     try {
       const response = await axios.get<{ user: User }>(
-        `${base_url}/getUserDetails`,
+        `${base_url}/UserDetails`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -4,17 +4,17 @@ import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import axios, { AxiosResponse } from "axios";
-import TabThree from "../../../../Components/common/TabThree";
-import AttachmentTable from "../../../../Components/common/AttachmentTable";
-import NextBreadCrumb from "../../../../Components/common/NextBreadCrumb";
+// import TabThree from "../../../../Components/common/TabThree";
+// import AttachmentTable from "../../../Components/common/AttachmentTable";
+// import NextBreadCrumb from "../../../../Components/common/NextBreadCrumb";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import addticket from "../../../../../public/images/add.svg";
-import sendComment from "../../../../../public/images/sendComment.svg";
-import sendAttachment from "../../../../../public/images/Attachment.svg";
+import addticket from "../../../../../../public/images/add.svg";
+import sendComment from "../../../../../../public/images/sendComment.svg";
+import sendAttachment from "../../../../../../public/images/Attachment.svg";
 import { base_url } from "@/utils/constant";
-import edit from "../../../../../public/images/edit.svg";
-import close from "../../../../../public/images/close.svg";
-import Ellipse from "../../../../../public/images/Ellipse262.svg";
+import edit from "../../../../../../public/images/edit.svg";
+import close from "../../../../../../public/images/close.svg";
+import Ellipse from "../../../../../../public/images/Ellipse262.svg";
 import toast, { Toaster } from "react-hot-toast";
 interface UploadedFile {
   filename: string;
@@ -116,7 +116,7 @@ const ViewTicketPage: React.FC = () => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get<{ event: Event[] }>(
-        `${base_url}/EventDetails/${value}`,
+        `${base_url}/getEventDetails/${value}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -176,7 +176,7 @@ const ViewTicketPage: React.FC = () => {
   const fetchTickets = async () => {
     try {
       const response: AxiosResponse<any> = await axios.get(
-        `${base_url}/viewTicket/${value}`,
+        `${base_url}/ViewTickets/${value}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

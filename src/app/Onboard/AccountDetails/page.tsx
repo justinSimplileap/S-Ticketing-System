@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Profile from "../../../../public/images/Profile.svg";
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,33 @@ const AccountDetails: React.FC = () => {
     phone_number: '',
     email: ''
   });
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        const response = await axios.get('http://localhost:8000/getUserAccountDetails', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.status === 200) {
+          // Update the form data with the fetched user data
+          setFormData(response.data);
+        } else {
+          console.error('Failed to fetch user data:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const router = useRouter();
 
@@ -60,6 +87,7 @@ const AccountDetails: React.FC = () => {
       alert('An error occurred. Please try again.');
     }
   };
+
 
   const handleSkip = () => {
     router.push('/team/ManagerDashboard'); // Redirect to dashboard

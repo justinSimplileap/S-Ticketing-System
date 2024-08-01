@@ -33,7 +33,6 @@ const CustomerOne = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   
-
   useEffect(() => {
     const type = searchParams.get('type') || '';
     const priority = searchParams.get('priority') || '';
@@ -57,7 +56,7 @@ const CustomerOne = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: { type, priority, status, company_legal_name: search }, // Pass company_legal_name as a query parameter
+        params: { type, priority, status, company_legal_name: search },
       });
 
       const fetchedTickets = response.data.body;
@@ -66,7 +65,8 @@ const CustomerOne = () => {
       console.error('Error fetching tickets:', error);
     }
   };
-const handleSearch = () => {
+
+  const handleSearch = () => {
     fetchTickets(typeValue, priorityValue, statusValue, searchTerm);
   };
 
@@ -75,6 +75,7 @@ const handleSearch = () => {
       handleSearch();
     }
   };
+
   const handleReset = () => {
     setTypeValue('');
     setPriorityValue('');
@@ -87,37 +88,43 @@ const handleSearch = () => {
     fetchTickets(type, priority, status, searchTerm);
   };
 
-  const handleExport = () => {
-    // Logic for exporting reports
-    console.log('Exporting report...');
-  };
-  const exportTableToExcel = () => {
-    const table = document.getElementById('all-tickets-table');
-    if (!table) return;
-
-    let csvContent = "";
-    const rows = Array.from(table.querySelectorAll("tr"));
-
-    rows.forEach(row => {
-      const cols = Array.from(row.querySelectorAll("td, th"));
-      const rowData = cols.map(col => (col as HTMLElement).innerText).join(",");
-      csvContent += rowData + "\n";
-    });
-
-    const dataType = 'text/csv;charset=utf-8;';
-    const fileName = 'tickets.csv';
-    const downloadLink = document.createElement('a');
-
-    const blob = new Blob([csvContent], { type: dataType });
+  const exportTicketsToCSV = () => {
+    const csvRows = [
+      ['ID', 'User ID', 'Organization ID', 'Company Legal Name', 'Ticket Type', 'Priority', 'Status', 'Subject', 'Details', 'Details Images URL', 'Role', 'Created At', 'Updated At'],
+      ...tickets.map(ticket => [
+        ticket.id,
+        ticket.user_id,
+        ticket.organization_id,
+        ticket.company_legal_name,
+        ticket.ticket_type,
+        ticket.priority,
+        ticket.status,
+        ticket.subject,
+        ticket.details,
+        ticket.details_images_url,
+        ticket.role,
+        ticket.createdAt,
+        ticket.updatedAt
+      ])
+    ];
+  
+    // Convert rows to CSV format
+    const csvContent = csvRows.map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+  
+    // Create a Blob and a link to download it
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    downloadLink.href = url;
-    downloadLink.download = fileName;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-  }
-
-
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "tickets_report.csv");
+  
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  
+    // Clean up the URL object
+    URL.revokeObjectURL(url);
+  };
   return (
     <div>
       <div className='flex justify-between p-6 bg-[#FFFFFF] drop-shadow-md'>
@@ -144,15 +151,15 @@ const handleSearch = () => {
                 className='w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none border-slate-400'
               />
               <div className='absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none'>
-                <Image src={search} alt='Search Icon' width={20} height={20}   onClick={() => fetchTickets(typeValue, priorityValue, statusValue, searchTerm)}/>
+                <Image src={search} alt='Search Icon' width={20} height={20} onClick={() => fetchTickets(typeValue, priorityValue, statusValue, searchTerm)} />
               </div>
             </div>
             <button
               type='button'
-              className='flex items-center justify-center px-4 py-2  text-[#5027D9] rounded-lg focus:outline-none border border-[#5027D9]'
-              onClick={handleExport}
+              className='flex items-center justify-center px-4 py-2 text-[#5027D9] rounded-lg focus:outline-none border border-[#5027D9]'
+              onClick={exportTicketsToCSV}
             >
-              <Image src={folder} alt='Export Icon' width={20} height={20} className='mr-2 font-lato' onClick={exportTableToExcel} />
+              <Image src={folder} alt='Export Icon' width={20} height={20} className='mr-2 font-lato' />
               Export Report
             </button>
           </div>

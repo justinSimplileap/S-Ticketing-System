@@ -12,7 +12,7 @@ export default function Page() {
     <div className="">
    
       <div>
-
+    `````````````````````   `
       </div>
       <div className="mt-10 ml-8 mr-8">
         <h1 className="text-2xl text-[#1D1C2B] font-bold">Profile</h1>
@@ -21,6 +21,19 @@ export default function Page() {
      {/* Tabs starts */}
 
       <div className="p-2 m-8 bg-[#F9F9F9]">
+
+
+
+
+
+
+
+
++
+
+
+
+
        <TabTwo/>
       </div>
 

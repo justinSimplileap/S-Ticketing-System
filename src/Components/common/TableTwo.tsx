@@ -40,7 +40,7 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
   }
 
   const handleTicketClick = (id: number) => {
-    router.push(`/team/ViewTicket/${id}`);
+    router.push(`/TeamMember/TicketManagement/ViewTicket/${id}`);
   };
 
   const tableData: TableRow[] = tickets.map((ticket) => ({
@@ -88,7 +88,7 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
                       className={`inline-block px-3 py-1 rounded-full ${
                         row[heading] === "Closed"
                           ? "bg-[#F0FFF8] text-[#00974F]"
-                          : row[heading] === "Active"
+                          : row[heading] === "Open"
                           ? "bg-[#FFF9F9] text-[#D91A1A]"
                           : ""
                       }`}

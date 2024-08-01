@@ -1,242 +1,227 @@
-import React, { useState } from 'react';
-// import Profile from '';
+"use client";
+import React, { useState } from "react";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import { useForm, SubmitHandler, FieldErrors, UseFormRegister } from "react-hook-form";
 import Image from 'next/image';
+import ProfilePic from "../../../public/images/Profile.svg";
+import Close from "../../../public/images/closebutton.svg";
 import axios from 'axios';
+import toast, { Toaster } from "react-hot-toast";
+import AccountDetailsForm from "./AccountDetailsFrom";
+import { Button } from "@headlessui/react";
+import { base_url } from "@/utils/constant";
 
-const Tabs: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'editProfile' | 'security'>('editProfile');
+// Define types for form inputs
+type FormInputs = {
+  email: string;
+  companyName: string;
+  phoneNumber: string;
+  companyUrl: string;
+  companyAddress: string;
+  city: string;
+  country: string;
+  postalCode: string;
+  aboutCompany: string;
+  workDomain: string;
+};
 
-  const [profileFormData, setProfileFormData] = useState({
-    customer_name: '',
-    gender: '',
-    role: '',
-    position: '',
-    phone_number: '',
-    email: ''
-  });
+type SecurityInputs = {
+  currentPassword: string;
+  newPassword: string;
+};
 
-  const [passwordFormData, setPasswordFormData] = useState({
-    currentPassword: '',
-    password: ''
-  });
+// Define props for WorkDomainInput component
+type WorkDomainInputProps = {
+  register: UseFormRegister<FormInputs>;
+  errors: FieldErrors<FormInputs>;
+};
 
-  const [passwordError, setPasswordError] = useState<string | null>(null);
+const WorkDomainInput: React.FC<WorkDomainInputProps> = ({ register, errors }) => {
+  const [workDomains, setWorkDomains] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
 
-  // Handler for profile form changes
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setProfileFormData({
-      ...profileFormData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  // Handler for password form changes
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordFormData({
-      ...passwordFormData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  // Handler for profile form submission
-  const handleProfileSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const payload = {
-      customer_name: profileFormData.customer_name,
-      role: profileFormData.role,
-      position: profileFormData.position,
-      gender: profileFormData.gender,
-      phone_number: profileFormData.phone_number,
-      email: profileFormData.email
-    };
-
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token found');
-      }
-
-      const response = await axios.put('http://localhost:8000/updateProfile', payload, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.status === 200) {
-        alert('Profile updated successfully!');
-        // Reset form data
-        setProfileFormData({
-          customer_name: '',
-          gender: '',
-          role: '',
-          position: '',
-          phone_number: '',
-          email: ''
-        });
-      } else {
-        alert('Failed to update profile.');
-      }
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('An error occurred. Please try again.');
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputValue.trim()) {
+      e.preventDefault();
+      setWorkDomains([...workDomains, inputValue.trim()]);
+      setInputValue("");
     }
   };
 
-  // Handler for password form submission
-  const handlePasswordSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const payload = {
-      currentPassword: passwordFormData.currentPassword,
-      password: passwordFormData.password
-    };
-
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token found');
-      }
-
-      const response = await axios.put('http://localhost:8000/changePassword', payload, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.status === 200) {
-        alert('Password changed successfully!');
-        // Reset password form data
-        setPasswordFormData({
-          currentPassword: '',
-          password: ''
-        });
-        setPasswordError(null); // Clear any previous error messages
-      } else {
-        alert('Failed to change password.');
-      }
-    } catch (error) {
-      console.error('Error changing password:', error);
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        setPasswordError('Current password is incorrect.');
-      } else {
-        setPasswordError('An error occurred. Please try again.');
-      }
-    }
+  const handleRemove = (index: number) => {
+    setWorkDomains(workDomains.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="p-4">
-      <div className="flex space-x-4 mb-4">
-        <button
-          className={`px-4 py-2 rounded ${activeTab === 'editProfile' ? 'text-[#5027D9] border-b-4 border-[#5027D9]' : 'hover:text-[#5027D9] hover:border-b-4 hover:border-[#5027D9]'}`}
-          onClick={() => setActiveTab('editProfile')}
-        >
-          Edit Profile
-        </button>
-        <button
-          className={`px-4 py-2 rounded ${activeTab === 'security' ? 'text-[#5027D9] border-b-4 border-[#5027D9]' : 'hover:text-[#5027D9] hover:border-b-4 hover:border-[#5027D9]'}`}
-          onClick={() => setActiveTab('security')}
-        >
-          Security
-        </button>
+    <div className="w-full lg:px-2">
+      <label htmlFor="workDomain" className="block mt-6">
+        Work Domain
+      </label>
+      <div className="border-2 border-[#DFEAF2] rounded-md p-2 mt-2 bg-white h-40 cursor-pointer">
+        {workDomains.map((domain, index) => (
+          <span
+            key={index}
+            className="inline-block bg-[#E8E3FA] rounded-full lg:pl-5 lg:pr-7 lg:py-3 py-2 pl-3 pr-5 text-sm text-black mr-2 mb-2"
+          >
+            {domain}
+            <button
+              onClick={() => handleRemove(index)}
+              className="ml-5 text-black"
+            >
+              <Image src={Close} alt="Remove" width={10} />
+            </button>
+          </span>
+        ))}
+        <input
+          id="workDomain"
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="input-field p-2 mt-2 w-full border-none focus:outline-none"
+        />
       </div>
-
-      {activeTab === 'editProfile' && (
-        <div>
-          <div className="flex">
-            <div className="w-32 flex justify-center items-start">
-              {/* <Image src={Profile} alt="Profile" className="rounded-full object-cover" width={130} height={128} /> */}
-            </div>
-            <div className="w-3/4 ml-4">
-              <form onSubmit={handleProfileSubmit}>
-                {/* Profile Form */}
-                <div className="flex space-x-4 mb-4">
-                  <div className="w-1/2">
-                    <label htmlFor="customer_name" className="block text-[#232323] font-normal">Full Name<span className="text-red-500">*</span></label>
-                    <input type="text" id="customer_name" name="customer_name" className="w-full px-3 py-2 mt-2 border rounded-lg focus:outline-none" value={profileFormData.customer_name} onChange={handleProfileChange} />
-                  </div>
-                  <div className="w-1/2">
-                    <label htmlFor="gender" className="block text-[#232323] font-normal">Gender<span className="text-red-500">*</span></label>
-                    <input type="text" id="gender" name="gender" className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2" value={profileFormData.gender} onChange={handleProfileChange} />
-                  </div>
-                </div>
-                <div className="flex space-x-4 mb-4">
-                  <div className="w-1/2">
-                    <label htmlFor="role" className="block text-gray-700">Department<span className="text-red-500">*</span></label>
-                    <input type="text" id="role" name="role" className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2" value={profileFormData.role} onChange={handleProfileChange} />
-                  </div>
-                  <div className="w-1/2">
-                    <label htmlFor="position" className="block text-gray-700">Position<span className="text-red-500">*</span></label>
-                    <input type="text" id="position" name="position" className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2" value={profileFormData.position} onChange={handleProfileChange} />
-                  </div>
-                </div>
-                <div>
-                  <div className='mt-8'>
-                    <h2 className="text-lg font-semibold mb-4">Contact Details</h2>
-                  </div>
-                  <div className="flex space-x-4 mb-4">
-                    <div className="w-1/2">
-                      <label htmlFor="phone_number" className="block text-[#232323] font-normal">Phone Number</label>
-                      <input type="text" id="phone_number" name="phone_number" className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2" value={profileFormData.phone_number} onChange={handleProfileChange} />
-                    </div>
-                    <div className="w-1/2">
-                      <label htmlFor="email" className="block text-[#232323] font-normal">Email<span className="text-red-500">*</span></label>
-                      <input type="email" id="email" name="email" className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2" value={profileFormData.email} onChange={handleProfileChange} />
-                    </div>
-                  </div>
-                  <div className="flex justify-end">
-                    <button type="submit" className="px-5 py-3 bg-[#5027D9] text-white rounded-lg">Save details</button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'security' && (
-        <div className="p-4">
-          <form onSubmit={handlePasswordSubmit}>
-            <div className="mb-4">
-              <label htmlFor="currentPassword" className="block text-gray-700">Current Password<span className="text-red-500">*</span></label>
-              <input
-                type="password"
-                id="currentPassword"
-                name="currentPassword"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2"
-                value={passwordFormData.currentPassword}
-                onChange={handlePasswordChange}
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="password" className="block text-gray-700">New Password<span className="text-red-500">*</span></label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2"
-                value={passwordFormData.password}
-                onChange={handlePasswordChange}
-                required
-              />
-            </div>
-            {passwordError && (
-              <div className="mb-4 text-red-500">
-                {passwordError}
-              </div>
-            )}
-            <div className="flex justify-end">
-              <button type="submit" className="px-5 py-3 bg-[#5027D9] text-white rounded-lg">Save changes</button>
-            </div>
-          </form>
-        </div>
-      )}
+      <input
+        type="hidden"
+        {...register("workDomain", { required: true })}
+        value={workDomains.join(",")}
+      />
     </div>
   );
 };
 
-export default Tabs;
+const Example: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputs>();
+
+  const {
+    register: registerSecurity,
+    handleSubmit: handleSubmitSecurity,
+    formState: { errors: securityErrors },
+  } = useForm<SecurityInputs>();
+
+  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+    console.log(data);
+  };
+
+  const onSubmitSecurity: SubmitHandler<SecurityInputs> = async (data) => {
+    try {
+      const response = await axios.post(
+        `${base_url}/resetPassword`,
+        {
+          currentPassword: data.currentPassword,
+          newPassword: data.newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Reset password executed successfully");
+      }
+    } catch (error) {
+      toast.error("Error in resetting the password");
+      console.log("error in resetting the password");
+    }
+  };
+
+  const categories = [
+    {
+      name: "Edit Profile",
+      posts: [],
+    },
+    {
+      name: "Security",
+      posts: [],
+    },
+  ];
+
+  return (
+    <div className="w-full p-2">
+      <div className="w-full max-w">
+        <TabGroup>
+          <TabList className="flex gap-4">
+            {categories.map(({ name }) => (
+              <Tab
+                key={name}
+                className={({ selected }) =>
+                  `py-1 px-3 text-[#9291A5] focus:outline-none ${
+                    selected ? "border-b-4 border-[#5027D9] text-[#5027D9]" : ""
+                  }`
+                }
+              >
+                {name}
+              </Tab>
+            ))}
+          </TabList>
+          <TabPanels className="lg:m-5 mt-5">
+            {categories.map(({ name }) => (
+              <TabPanel key={name}>
+                {name === "Edit Profile" && (
+                  <AccountDetailsForm />
+                )}
+                {name === "Security" && (
+                  <div className="lg:w-[50%] bg-white lg:p-5 p-3 rounded-md">
+                    <div className="text-base lg:text-xl font-medium text-[#343A69]">Change Password</div>
+                    <form onSubmit={handleSubmitSecurity(onSubmitSecurity)} className="space-y-4 p-2">
+                      <div className="flex flex-wrap -mx-2">
+                        <div className="w-full px-2">
+                          <label htmlFor="currentPassword" className="block mt-6 lg:text-base text-sm text-[#6E6E6E]">
+                            Current Password <span className="text-red-600">*</span>
+                          </label>
+                          <input
+                            id="currentPassword"
+                            type="password"
+                            {...registerSecurity("currentPassword", { required: true })}
+                            className="input-field p-2 mt-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                          />
+                          {securityErrors.currentPassword && (
+                            <span role="alert" className="text-red-600">
+                              Current Password is required
+                            </span>
+                          )}
+                        </div>
+                        <div className="w-full px-2">
+                          <label htmlFor="newPassword" className="block mt-6 lg:text-base text-sm text-[#6E6E6E]">
+                            New Password <span className="text-red-600">*</span>
+                          </label>
+                          <input
+                            id="newPassword"
+                            type="password"
+                            {...registerSecurity("newPassword", { required: true })}
+                            className="input-field p-2 mt-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                          />
+                          {securityErrors.newPassword && (
+                            <span role="alert" className="text-red-600">
+                              New Password is required
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex justify-start lg:justify-end w-full lg:p-3">
+                        <button
+                          type="submit"
+                          className="btn-submit lg:ml-auto block rounded bg-[#5027D9] py-3 px-5 text-sm text-white"
+                        >
+                          Save changes
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </TabGroup>
+      </div>
+    </div>
+  );
+};
+
+export default Example;

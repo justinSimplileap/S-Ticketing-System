@@ -3,6 +3,7 @@
 import Sidebar from "@/Components/common/Sidebar";
 import PassSidebar from "@/Components/common/PassSidebar";
 import SidebarSuperAdmin from "../common/SidebarSuperAdmin";
+import TeamMemberSidebar from "../../Components/common/TeamMemberSidebar"
 import TopBar from "./TopBar";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -53,6 +54,12 @@ export default function ClientComponent({
     /^\/SuperAdmin\/TicketManagement\/ViewTicket\/[^/]+$/,
     /^\/SuperAdmin\/TicketManagement\/EditTicket\/[^/]+$/,
     /^\/ResetPassword\/[^/]+$/,
+    "/Onboard/AccountDetails",
+    "/TeamMember/Profile",
+    "/TeamMember/TicketManagement",
+    "/TeamMember/Dashboard",
+    /^\/TeamMember\/TicketManagement\/ViewTicket\/[^/]+$/,
+
   ];
 
   const passwordSidebarRoutes = [
@@ -69,6 +76,14 @@ export default function ClientComponent({
     "/SuperAdmin/TicketManagement/NewTicket",
     /^\/SuperAdmin\/TicketManagement\/ViewTicket\/[^/]+$/,
     /^\/SuperAdmin\/TicketManagement\/EditTicket\/[^/]+$/,
+
+  ];
+  const TeamMemberSidebarRoutes = [
+    "/TeamMember/Dashboard",
+    "/TeamMember/TicketManagement",
+    "/TeamMember/TicketManagement/ViewTicket",
+    "/TeamMember/Profile",
+    /^\/TeamMember\/TicketManagement\/ViewTicket\/[^/]+$/,
 
   ];
 
@@ -107,6 +122,14 @@ export default function ClientComponent({
           setIsSidebarExpanded={setIsSidebarExpanded}
         />
       )}
+
+{matchesRoute(TeamMemberSidebarRoutes) && (
+        <TeamMemberSidebar
+          isExpanded={isSidebarExpanded}
+          setIsSidebarExpanded={setIsSidebarExpanded}
+        />
+      )}
+        
 
       <div className="w-full">
         {!matchesRoute(dontShowTopBarRoutes) && (
