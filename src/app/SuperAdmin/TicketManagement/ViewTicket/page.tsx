@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
-import breadcrumbArrow from '../../../../public/images/BreadcrumbArrow.svg';
-import Bell from '../../../../public/images/bell.svg';
-import userBg from '../../../../public/images/User.svg';
+import breadcrumbArrow from '../../../../../public/images/BreadcrumbArrow.svg';
+import Bell from '../../../../../public/images/bell.svg';
+import userBg from '../../../../../public/images/User.svg';
 
 const Page: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
