@@ -19,16 +19,16 @@ export default function ClientComponent({
   const router = useRouter();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false); // Add state for sidebar expansion
   const [isLoading, setIsLoading] = useState(true);
-  const ResetPathName = window.location.pathname;
-  console.log("ResetPathName", ResetPathName);
+  // const ResetPathName = window.location.pathname;
+  // console.log("ResetPathName", ResetPathName);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const publicPaths = ["/login", "/reset", "/ResetPassword/[id]"];
     const currentPath = pathname.split("?")[0];
 
-    if (/^\/ResetPassword\/[^/]+$/.test(window.location.pathname)) {
-      router.push(`${ResetPathName}`);
+    if (/^\/ResetPassword\/[^/]+$/.test(pathname)) {
+      router.push(`${pathname}`);
     } else if (!token && !publicPaths.includes(currentPath)) {
       toast.error("You must be logged in to view this page.");
       router.push("/login");

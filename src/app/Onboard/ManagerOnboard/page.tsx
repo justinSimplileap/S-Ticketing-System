@@ -20,28 +20,28 @@ const LoginForm = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>(); // Specify the FormData type here
 
-    const onSubmit = async (data: FormData) => { // Explicitly type the data parameter
-        try {
-            const response = await axios.post(`${base_url}/login`, {
-                email: data.username,
-                password: data.password,
-            });
+    // const onSubmit = async (data: FormData) => { // Explicitly type the data parameter
+    //     try {
+    //         const response = await axios.post(`${base_url}/login`, {
+    //             email: data.username,
+    //             password: data.password,
+    //         });
 
-            if (response.status === 200) {
-                toast.success('Login successful!');
+    //         if (response.status === 200) {
+    //             toast.success('Login successful!');
                 
-                console.log('Login successful:', response.data);
+    //             console.log('Login successful:', response.data);
                 
-                localStorage.setItem('token', response.data.token);
+    //             localStorage.setItem('token', response.data.token);
                 
-                window.location.href = '/Dashboard'; 
-            }
-        } catch (error) {
-            toast.error('Error logging in. Please check your credentials.');
-            console.error('Error logging in:', error);
+    //             window.location.href = '/Dashboard'; 
+    //         }
+    //     } catch (error) {
+    //         toast.error('Error logging in. Please check your credentials.');
+    //         console.error('Error logging in:', error);
             
-        }
-    };
+    //     }
+    // };
      
     return (
 <div className="flex h-screen ">

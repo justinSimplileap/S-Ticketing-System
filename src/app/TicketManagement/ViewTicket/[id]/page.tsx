@@ -14,6 +14,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Loader from "@/Components/common/Loader";
 import Ellipse from "../../../../../public/images/Ellipse262.svg";
 
+
 interface UploadedFile {
   filename: string;
   fileUrl: string;
@@ -265,8 +266,9 @@ const Page: React.FC = () => {
       );
 
       toast.success("Comment Added successfully");
-      window.location.reload();
+      
       console.log("Comment added successfully:", response.data);
+      fetchComments();
 
       setNewComment("");
       setAttachments([]);
