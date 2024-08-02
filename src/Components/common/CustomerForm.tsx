@@ -64,9 +64,13 @@ const CustomerForm: React.FC = () => {
           work_domain: data.work_domain,
         },
       );
-      toast.success("Customer added successfully");
-      console.log("Form submitted successfully:", response.data);
-      location.reload();
+      if (response){
+        toast.success("Customer added successfully");
+        console.log("Form submitted successfully:", response.data);
+        location.reload();
+      }
+      
+      
     } catch (error) {
       console.error("Error submitting form:", error);
     }

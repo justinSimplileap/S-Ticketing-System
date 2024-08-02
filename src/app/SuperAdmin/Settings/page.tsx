@@ -272,11 +272,11 @@ export default function Settings() {
     setShowAddCustomerForm(true);
   };
 
-  const {
-    register: registerSecurity,
-    handleSubmit: handleSubmitSecurity,
-    formState: { errors: securityErrors },
-  } = useForm<SecurityInputs>();
+  // const {
+  //   register: registerSecurity,
+  //   handleSubmit: handleSubmitSecurity,
+  //   formState: { errors: securityErrors },
+  // } = useForm<SecurityInputs>();
 
   const handleAddClientMember = async (data: any) => {
     console.log("Data received from form submission:", data);
@@ -336,20 +336,27 @@ export default function Settings() {
   const handleAddMemberForm: SubmitHandler<addMemberInputs> = async (
     data: any
   ) => {
+    console.log("formdata1",data);
     try {
       const formData = {
-        customer_name: data.fullName,
+        customer_name: data.customer_name,
         gender: data.gender,
         phone_number: data.phone_number,
         email: data.email,
         designation: data.position,
-        // role: "Client Team",
+        password: data.password,
+        role: data.role,
       };
-      const response = await axios.post(`${base_url}/addTeamMember`, {
+      console.log("formdata", formData);
+      const response = await axios.post(`${base_url}/addTeamMember`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
+        
       });
+      if (response){
+        console.log("sadfasdfasd",response);
+      }
     } catch (error) {}
   };
 
@@ -1030,7 +1037,7 @@ export default function Settings() {
                 <div className="mt-7 mb-10">
                   <h2 className="text-xl font-semibold mb-4">Basic Details</h2>
                   <form
-                  // onSubmit={handleSubmit(handleAddMemberForm)}
+                  onSubmit={handleSubmit(handleAddMemberForm)}
                   >
                     <div className="flex py-5 items-center">
                       <div className="w-[20%]">
@@ -1043,14 +1050,14 @@ export default function Settings() {
                       </div>
                       <div className="grid grid-cols-2 gap-4 w-full">
                         <div>
-                          <label htmlFor="fullName" className="block text-sm">
+                          <label htmlFor="customer_name" className="block text-sm">
                             Full name
                           </label>
                           <input
-                            id="fullName"
+                            id="customer_name"
                             type="text"
                             className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                            {...registerMember("fullName", {
+                            {...register("customer_name", {
                               required: true,
                             })}
                           />
@@ -1063,20 +1070,7 @@ export default function Settings() {
                             id="gender"
                             type="text"
                             className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                            {...registerMember("gender", {
-                              required: true,
-                            })}
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="department" className="block text-sm">
-                            Department
-                          </label>
-                          <input
-                            id="department"
-                            type="text"
-                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                            {...registerMember("department", {
+                            {...register("gender", {
                               required: true,
                             })}
                           />
@@ -1089,7 +1083,7 @@ export default function Settings() {
                             id="position"
                             type="text"
                             className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                            {...registerMember("position", {
+                            {...register("position", {
                               required: true,
                             })}
                           />
@@ -1101,14 +1095,14 @@ export default function Settings() {
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="phoneNumber" className="block text-sm">
+                        <label htmlFor="phone_number" className="block text-sm">
                           Phone number
                         </label>
                         <input
-                          id="phoneNumber"
+                          id="phone_number"
                           type="text"
                           className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                          {...registerMember("phoneNumber", {
+                          {...register("phone_number", {
                             required: true,
                           })}
                         />
@@ -1121,7 +1115,7 @@ export default function Settings() {
                           id="email"
                           type="email"
                           className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                          {...registerMember("email", {
+                          {...register("email", {
                             required: true,
                           })}
                         />
@@ -1160,7 +1154,7 @@ export default function Settings() {
                             id="password"
                             type="text"
                             className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                            {...registerMember("password", {
+                            {...register("password", {
                               required: true,
                             })}
                           />
@@ -1217,7 +1211,6 @@ export default function Settings() {
                     </TabGroup>
                   </div>
 
-                  {/* Display Employees Based on Selected Tab */}
                   <div className="m-4">
                     {employees[selectedTab] &&
                     employees[selectedTab].length > 0 ? (
@@ -1252,11 +1245,6 @@ export default function Settings() {
               )}
             </TabPanel>
 
-            {/* Status management tab */}
-
-            {/* Priority management tab */}
-
-            {/* Profile settings tab */}
             <TabPanel className="p-10 bg-white">
               <h2 className="text-2xl font-semibold">Profile Settings</h2>
               <TabGroup>
@@ -1279,7 +1267,7 @@ export default function Settings() {
                         Change Password
                       </div>
                       <div className="w-1/2">
-                        <form onSubmit={handleSubmitSecurity(onSubmitSecurity)}>
+                        {/* <form onSubmit={handleSubmitSecurity(onSubmitSecurity)}>
                           <div className="mb-4 pb-7">
                             <label
                               htmlFor="currentPassword"
@@ -1329,7 +1317,7 @@ export default function Settings() {
                           >
                             Save changes
                           </button>
-                        </form>
+                        </form> */}
                       </div>
                     </div>
                   </TabPanel>
