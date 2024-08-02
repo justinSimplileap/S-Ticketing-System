@@ -30,6 +30,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { UUID } from "crypto";
 import SuperAdminDetails from "../../../Components/common/SuperAdminDetails";
 import { base_url } from "@/utils/constant";
+import { useRouter } from "next/navigation";
 
 const designations = ["Manager", "Developer", "Designer", "Analyst", "Intern"];
 const role = ["Team", "Admin", "Manager"];
@@ -138,6 +139,7 @@ export default function Settings() {
     fetchClients();
   }, []);
 
+  const router = useRouter();
   const [clients, setClients] = useState<Client[]>([]);
   const [clientTeam, setClientTeam] = useState<ClientTeamMember[]>([]);
   const [organizationId, setOrganizationId] = useState<string>("");
@@ -333,10 +335,8 @@ export default function Settings() {
     formState: { errors },
   } = useForm();
 
-  const handleAddMemberForm: SubmitHandler<addMemberInputs> = async (
-    data: any
-  ) => {
-    console.log("formdata1",data);
+  const handleAddMemberForm = async (data: any) => {
+    console.log("formdata1", data);
     try {
       const formData = {
         customer_name: data.customer_name,
@@ -352,12 +352,18 @@ export default function Settings() {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        
       });
-      if (response){
-        console.log("sadfasdfasd",response);
+      if (response) {
+        console.log("sadfasdfasd", response);
+        toast.success("team member added successfully");
+        // debugger
+        // router.refresh()
+        location.reload()
+
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error("failed to add team member");
+    }
   };
 
   const [superAdmin, setSuperAdmin] = useState(null);
@@ -470,19 +476,18 @@ export default function Settings() {
   };
 
   type addMemberInputs = {
-    fullName: string;
+    customer_name: string;
     gender: string;
-    department: string;
+    designation: string;
     password: string;
-    position: string;
-    phoneNumber: number;
+    // position: string;
+    phone_number: number;
     email: string;
     role: string[];
   };
 
   const {
     register: registerMember,
-    // handleSubmit,
     formState: { errors: memberErrors },
     setValue,
     getValues,
@@ -494,6 +499,7 @@ export default function Settings() {
 
   return (
     <div>
+      <Toaster />
       <div className="px-3 py-7">
         <TabGroup selectedIndex={selectedIndex} onChange={setSelectedIndex}>
           <TabList className="flex space-x-1 bg-white w-fit text-left p-3 px-7 cursor-pointer pb-0">
@@ -1012,8 +1018,7 @@ export default function Settings() {
               {showAddMemberForm ? (
                 <div className="flex justify-between items-center py-5">
                   <h2 className="text-2xl font-semibold">Add a new member</h2>
-                  <div className="flex gap-5">
-                  </div>
+                  <div className="flex gap-5"></div>
                 </div>
               ) : (
                 <div className="flex justify-between items-center py-7">
@@ -1036,9 +1041,7 @@ export default function Settings() {
               {showAddMemberForm ? (
                 <div className="mt-7 mb-10">
                   <h2 className="text-xl font-semibold mb-4">Basic Details</h2>
-                  <form
-                  onSubmit={handleSubmit(handleAddMemberForm)}
-                  >
+                  <form onSubmit={handleSubmit(handleAddMemberForm)}>
                     <div className="flex py-5 items-center">
                       <div className="w-[20%]">
                         <Image
@@ -1050,7 +1053,10 @@ export default function Settings() {
                       </div>
                       <div className="grid grid-cols-2 gap-4 w-full">
                         <div>
-                          <label htmlFor="customer_name" className="block text-sm">
+                          <label
+                            htmlFor="customer_name"
+                            className="block text-sm"
+                          >
                             Full name
                           </label>
                           <input
@@ -1066,27 +1072,51 @@ export default function Settings() {
                           <label htmlFor="gender" className="block text-sm">
                             Gender
                           </label>
-                          <input
+                          <select
+                            id="gender"
+                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                            {...register("gender", {
+                              required: true,
+                            })}
+                          >
+                            <option value="">Select a gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                          {/* <input
                             id="gender"
                             type="text"
                             className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
                             {...register("gender", {
                               required: true,
                             })}
-                          />
+                          /> */}
                         </div>
                         <div>
                           <label htmlFor="position" className="block text-sm">
                             Position
                           </label>
-                          <input
+                          {/* <input
                             id="position"
                             type="text"
                             className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
                             {...register("position", {
                               required: true,
                             })}
-                          />
+                          /> */}
+                          <select
+                            id="position"
+                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                            {...register("position", {
+                              required: true,
+                            })}
+                          >
+                            <option value="">Select a position</option>
+                            <option value="Super Admin">Super Admin</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Developer">Developer</option>
+                            <option value="Designer">Designer</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -1126,10 +1156,10 @@ export default function Settings() {
                     </div>
                     <div className="grid grid-cols-2 gap-20">
                       <div>
-                      <label htmlFor="password" className="block text-sm">
-                            Role of member
-                          </label>
-                      <select
+                        <label htmlFor="password" className="block text-sm">
+                          Role of member
+                        </label>
+                        <select
                           id="role"
                           {...register("role", {
                             required: true,
@@ -1144,40 +1174,36 @@ export default function Settings() {
                           ))}
                         </select>
                       </div>
-                        
 
-                        <div>
-                          <label htmlFor="password" className="block text-sm">
-                            Password
-                          </label>
-                          <input
-                            id="password"
-                            type="text"
-                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                            {...register("password", {
-                              required: true,
-                            })}
-                          />
-                        </div>
-                        
-                      
+                      <div>
+                        <label htmlFor="password" className="block text-sm">
+                          Password
+                        </label>
+                        <input
+                          id="password"
+                          type="text"
+                          className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                          {...register("password", {
+                            required: true,
+                          })}
+                        />
+                      </div>
                     </div>
                     <div className="pt-5">
-                    <Button
-                      type="button"
-                      className="rounded bg-transparent py-3 px-7 mr-5 text-sm text-[#5027D9] border-[#5027D9] border-2"
-                      onClick={handleCancelAddMember}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      className="rounded bg-[#5027D9] py-3 px-10 text-sm text-white"
-                    >
-                      Create member
-                    </Button>
+                      <Button
+                        type="button"
+                        className="rounded bg-transparent py-3 px-7 mr-5 text-sm text-[#5027D9] border-[#5027D9] border-2"
+                        onClick={handleCancelAddMember}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="rounded bg-[#5027D9] py-3 px-10 text-sm text-white"
+                      >
+                        Create member
+                      </Button>
                     </div>
-                    
                   </form>
                 </div>
               ) : (
