@@ -15,6 +15,7 @@ type FormInputs = {
   email: string;
   phone_number: string;
   company_url: string;
+  password: string;
   address: string;
   city: string;
   country: string;
@@ -52,6 +53,7 @@ const CustomerForm: React.FC = () => {
           customer_name: data.customer_name,
           company_legal_name: data.company_legal_name,
           company_url: data.company_url,
+          password: data.password,
           phone_number: data.phone_number,
           email: data.email,
           address: data.address,
@@ -110,7 +112,7 @@ const CustomerForm: React.FC = () => {
               </span>
             )}
           </div>
-          <div className="col-span-2">
+          <div className="">
             <label htmlFor="companyUrl" className="block text-sm ">
               Company URL
             </label>
@@ -123,6 +125,22 @@ const CustomerForm: React.FC = () => {
             {errors.company_url && (
               <span role="alert" className="text-red-600">
                 Company URL is required
+              </span>
+            )}
+          </div>
+          <div className="">
+            <label htmlFor="password" className="block text-sm ">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              {...register("password", { required: true })}
+              className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+            />
+            {errors.password && (
+              <span role="alert" className="text-red-600">
+                Customers password is required
               </span>
             )}
           </div>

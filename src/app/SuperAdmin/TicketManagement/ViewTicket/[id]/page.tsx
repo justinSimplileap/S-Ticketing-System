@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import axios, { AxiosResponse } from "axios";
 import { useRouter, usePathname } from "next/navigation";
@@ -13,6 +13,8 @@ import { base_url } from "@/utils/constant";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "@/Components/common/Loader";
 import Ellipse from "../../../../../../public/images/Ellipse262.svg";
+import close from "../../../../../../public/images/close.svg";
+import edit from "../../../../../../public/images/edit.svg";
 
 interface UploadedFile {
   filename: string;
@@ -31,6 +33,11 @@ interface Comment {
 
 type User = {
   company_legal_name: string;
+};
+
+type Member = {
+  id: number;
+  customer_name: string;
 };
 
 interface Event {
@@ -58,7 +65,7 @@ const Page: React.FC = () => {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [projectName, setProjectName] = useState("");
-
+  const [error, setError] = useState(null);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -67,6 +74,14 @@ const Page: React.FC = () => {
   const [commentedOn, setCommentedOn] = useState("");
   const [events, setEvents] = useState<Event[]>([]);
 
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [formStatus, setFormStatus] = useState<string>("");
+  const [formTotalHours, setFormTotalHours] = useState(totalHours);
+  const [formAdditionalNotes, setFormAdditionalNotes] = useState("");
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [teamMembers, setTeamMembers] = useState<Member[]>([]);
+  const [selectedPerson, setSelectedPerson] = useState<number | null>(null);
+  const [members, setMembers] = useState([]);
   const router = useRouter();
   const pathname = usePathname();
   const parts = pathname.split("/");
@@ -226,7 +241,7 @@ const Page: React.FC = () => {
     }
   };
 
-  // Render section Script for rendering html to normal
+ 
   const renderSections = (content: string) => {
     const sections = content.split(/<\/?h[1-6]>/g);
     return sections.map((section, index) => (
@@ -288,10 +303,82 @@ const Page: React.FC = () => {
     }
   };
 
+  const handleStatusChange = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    console.log("called");
+
+    try {
+      const response = await axios.put(
+        `${base_url}/updateTicket/${ticketId}`,
+        {
+          status: formStatus,
+          totalHours: formTotalHours,
+          additionalNotes: formAdditionalNotes,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        fetchTickets();
+        
+        setStatus(formStatus);
+        setTotalHours(formTotalHours);
+        setIsStatusModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error updating ticket status:", error);
+    }
+  };
+
+  const handleAssign = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const selectedMember = teamMembers.find(
+      (member) => member.id === selectedPerson
+    );
+    if (selectedMember) {
+      console.log("Assigned to:", selectedMember.customer_name);
+      
+      setAssignedTo(selectedMember.customer_name); 
+      setIsAssignModalOpen(false); 
+    }
+  };
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await axios.get(`${base_url}/users/Organisation`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setMembers(response.data);
+      } catch (error) {
+        // setError(error.response ? error.response.data.message : error.message);
+      }
+    };
+
+    fetchMembers();
+  }, []);
+
   return (
     <div className="">
       <Toaster />
       <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-semibold text-[#222222]">View Ticket</h1>
+          <button
+            className="bg-[#5027D9] text-white py-2 px-4 rounded"
+            onClick={() => setIsStatusModalOpen(true)}
+          >
+            Change status
+          </button>
+        </div>
         <div className="grid grid-cols-3 py-5">
           <div className="pb-5">
             <div className="text-base font-medium">Ticket ID</div>
@@ -348,6 +435,19 @@ const Page: React.FC = () => {
 
           <div className="">
             <div className="text-base font-medium">Assigned To</div>
+            <div>
+              <div className="flex space-x-3">
+                <p className="text-[#7D7D7D]">{assignedTo}</p>
+                <Image
+                  src={edit}
+                  alt="Edit Icon"
+                  width={20}
+                  height={20}
+                  onClick={() => setIsAssignModalOpen(true)}
+                  className="cursor-pointer"
+                />
+              </div>
+            </div>
             <div>
               <p className="text-base py-5 text-[#7D7D7D]">{assignedTo}</p>
             </div>
@@ -406,24 +506,36 @@ const Page: React.FC = () => {
                       <div>
                         {events.length > 0 ? (
                           <ul className="space-y-2">
-                          {events
-                            .sort((a, b) => {
-                              return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-                            })
-                            .map((event, index) => {
-                              const eventDate = new Date(event.createdAt).toLocaleString();
-                              return (
-                                <li
-                                  key={index}
-                                  className="text-[#5027D9] flex items-center space-x-2 cursor-pointer w-full"
-                                >
-                                  <Image src={Ellipse} alt="ellipse" width={15} height={15} />
-                                  <span>{event.event_details}</span>
-                                  <span className="text-gray-400">on {eventDate}</span>
-                                </li>
-                              );
-                            })}
-                        </ul>
+                            {events
+                              .sort((a, b) => {
+                                return (
+                                  new Date(b.createdAt).getTime() -
+                                  new Date(a.createdAt).getTime()
+                                );
+                              })
+                              .map((event, index) => {
+                                const eventDate = new Date(
+                                  event.createdAt
+                                ).toLocaleString();
+                                return (
+                                  <li
+                                    key={index}
+                                    className="text-[#5027D9] flex items-center space-x-2 cursor-pointer w-full"
+                                  >
+                                    <Image
+                                      src={Ellipse}
+                                      alt="ellipse"
+                                      width={15}
+                                      height={15}
+                                    />
+                                    <span>{event.event_details}</span>
+                                    <span className="text-gray-400">
+                                      on {eventDate}
+                                    </span>
+                                  </li>
+                                );
+                              })}
+                          </ul>
                         ) : (
                           <p className="text-gray-500">No events available.</p>
                         )}
@@ -589,6 +701,155 @@ const Page: React.FC = () => {
           </TabPanels>
         </TabGroup>
       </div>
+
+      {/* change status popup */}
+
+      <Dialog
+        open={isStatusModalOpen}
+        onClose={() => setIsStatusModalOpen(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black opacity-50 w-full"></div>
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel className="bg-white p-8 rounded shadow-lg z-50 w-[43em]">
+            <div className="flex justify-between items-center mb-10">
+              <DialogTitle className="font-bold text-xl text-[#222222]">
+                Change status
+              </DialogTitle>
+              <button
+                onClick={() => setIsStatusModalOpen(false)}
+                className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-300"
+              >
+                <Image src={close} alt="Close Icon" width={16} height={16} />
+              </button>
+            </div>
+            <form onSubmit={handleStatusChange}>
+              <div className="mb-4">
+                <label htmlFor="status" className="block text-gray-700">
+                  Choose status*
+                </label>
+                <select
+                  id="status"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2 text-gray-700"
+                  value={formStatus}
+                  onChange={(e) => setFormStatus(e.target.value)}
+                >
+                  <option value="Open">Open</option>
+                  <option value="Closed">Closed</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="totalHours"
+                  className="block text-gray-700 mt-4"
+                >
+                  Enter total hours logged*
+                </label>
+                <input
+                  type="text"
+                  id="totalHours"
+                  name="totalHours"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none"
+                  value={formTotalHours}
+                  onChange={(e) => setFormTotalHours(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="additionalNotes"
+                  className="block text-gray-700"
+                >
+                  Additional notes
+                </label>
+                <textarea
+                  id="additionalNotes"
+                  name="additionalNotes"
+                  rows={3}
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none"
+                  value={formAdditionalNotes}
+                  onChange={(e) => setFormAdditionalNotes(e.target.value)}
+                ></textarea>
+              </div>
+              <div className="flex justify-end mt-20">
+                <button
+                  type="button"
+                  onClick={() => setIsStatusModalOpen(false)}
+                  className="mr-2 px-5 py-2 text-[#5027D9] border-2 border-[#5027D9] rounded-lg"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-[#5027D9] text-white rounded-lg text-sm"
+                >
+                  Change Status
+                </button>
+              </div>
+            </form>
+          </DialogPanel>
+        </div>
+      </Dialog>
+
+      {/* assign team member popup */}
+
+      <Dialog
+        open={isAssignModalOpen}
+        onClose={() => setIsAssignModalOpen(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black opacity-50 w-full"></div>
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel className="bg-white p-8 rounded shadow-lg z-50 w-[43em]">
+            <div className="flex justify-between items-center mb-10">
+              <DialogTitle className="font-bold text-xl text-[#222222]">
+                Assign
+              </DialogTitle>
+              <Image
+                src={close}
+                alt="Close Icon"
+                width={20}
+                height={20}
+                onClick={() => setIsAssignModalOpen(false)}
+                className="cursor-pointer"
+              />
+            </div>
+            <form onSubmit={handleAssign}>
+              <div className="flex items-center justify-center">
+                <select
+                  id="dropdown"
+                  className="block w-full p-4 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  value={selectedPerson || ""}
+                  onChange={(e) => setSelectedPerson(Number(e.target.value))}
+                >
+                  <option value="" disabled>
+                    Select a person
+                  </option>
+                  {teamMembers.map((member) => (
+                    <option key={member.id} value={member.id}>
+                      {member.customer_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mt-10 flex justify-center space-x-10">
+                <button
+                  type="button"
+                  className="bg-[#E4E4E4] text-[#000000] px-8 py-3 rounded-md"
+                  onClick={() => setIsAssignModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-[#5027D9] text-[#FFFFFF] px-8 py-3 rounded-md"
+                >
+                  Assign
+                </button>
+              </div>
+            </form>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </div>
   );
 };

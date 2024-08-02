@@ -32,6 +32,7 @@ import SuperAdminDetails from "../../../Components/common/SuperAdminDetails";
 import { base_url } from "@/utils/constant";
 
 const designations = ["Manager", "Developer", "Designer", "Analyst", "Intern"];
+const role = ["Team", "Admin", "Manager"];
 
 const tabClasses = ({ selected }: { selected: boolean }) =>
   `px-7 text-left w-fit pb-4 text-sm font-medium focus:outline-none border-b-2 ${
@@ -272,10 +273,10 @@ export default function Settings() {
   };
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+    register: registerSecurity,
+    handleSubmit: handleSubmitSecurity,
+    formState: { errors: securityErrors },
+  } = useForm<SecurityInputs>();
 
   const handleAddClientMember = async (data: any) => {
     console.log("Data received from form submission:", data);
@@ -284,6 +285,7 @@ export default function Settings() {
         organization_id: organizationId,
         customer_name: data.customer_name,
         company_legal_name: data.company_legal_name,
+        password: data.password,
         gender: data.gender,
         phone_number: data.phone_number,
         email: data.email,
@@ -325,6 +327,32 @@ export default function Settings() {
     }
   };
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleAddMemberForm: SubmitHandler<addMemberInputs> = async (
+    data: any
+  ) => {
+    try {
+      const formData = {
+        customer_name: data.fullName,
+        gender: data.gender,
+        phone_number: data.phone_number,
+        email: data.email,
+        designation: data.position,
+        // role: "Client Team",
+      };
+      const response = await axios.post(`${base_url}/addTeamMember`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+    } catch (error) {}
+  };
+
   const [superAdmin, setSuperAdmin] = useState(null);
 
   useEffect(() => {
@@ -346,9 +374,9 @@ export default function Settings() {
 
   const Department: { [key: string]: string } = {
     "Super Admin": "Admin",
-    "Manager": "Manager",
-    "Developer": "Developer",
-    "Designer": "Designer",
+    Manager: "Manager",
+    Developer: "Developer",
+    Designer: "Designer",
   };
   const departmentTabs = ["Admin", "Manager", "Developer", "Designer"];
 
@@ -394,11 +422,13 @@ export default function Settings() {
   }, []);
 
   const handlePositionSelect = (position: string) => {
-    if (selectedPositions.includes(position)) {
-      setSelectedPositions(selectedPositions.filter((pos) => pos !== position));
-    } else {
-      setSelectedPositions([...selectedPositions, position]);
-    }
+    const currentPositions = getValues("role") || [];
+    const newPositions = currentPositions.includes(position)
+      ? currentPositions.filter((pos) => pos !== position)
+      : [...currentPositions, position];
+
+    setSelectedPositions(newPositions);
+    setValue("role", newPositions);
   };
 
   const handleTabClick = (department: string) => {
@@ -432,11 +462,24 @@ export default function Settings() {
     newPassword: string;
   };
 
+  type addMemberInputs = {
+    fullName: string;
+    gender: string;
+    department: string;
+    password: string;
+    position: string;
+    phoneNumber: number;
+    email: string;
+    role: string[];
+  };
+
   const {
-    register: registerSecurity,
-    handleSubmit: handleSubmitSecurity,
-    formState: { errors: securityErrors },
-  } = useForm<SecurityInputs>();
+    register: registerMember,
+    // handleSubmit,
+    formState: { errors: memberErrors },
+    setValue,
+    getValues,
+  } = useForm<addMemberInputs>();
 
   const onSubmitSecurity: SubmitHandler<SecurityInputs> = (data) => {
     console.log(data);
@@ -450,8 +493,8 @@ export default function Settings() {
             {[
               "Customer Management",
               "Organisation Management",
-              "Status Management",
-              "Priority Management",
+              // "Status Management",
+              // "Priority Management",
               "Profile Settings",
             ].map((tab, index) => (
               <Tab as="div" key={index} className={tabClasses}>
@@ -684,6 +727,29 @@ export default function Settings() {
                                     </span>
                                   )}
                                 </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="password"
+                                    className="block text-sm "
+                                  >
+                                    Password
+                                  </label>
+                                  <input
+                                    id="password"
+                                    type="text"
+                                    {...register("password", {
+                                      required: true,
+                                    })}
+                                    className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                                  />
+                                  {errors.company_legal_name && (
+                                    <span className="text-red-600">
+                                      Customer Members password is required
+                                    </span>
+                                  )}
+                                </div>
+
                                 <div>
                                   <label
                                     htmlFor="designation"
@@ -857,12 +923,6 @@ export default function Settings() {
                             >
                               Cancel
                             </Button>
-                            {/* <Button
-                              type="submit"
-                              className="rounded bg-[#5027D9] py-3 px-10 text-sm text-white"
-                            >
-                              Create Customer
-                            </Button> */}
                           </div>
                         </div>
                         <CustomerForm />
@@ -880,9 +940,6 @@ export default function Settings() {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
                               Company URL
                             </th>
-                            {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                              Area of Work
-                            </th> */}
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
                               Phone
                             </th>
@@ -917,9 +974,6 @@ export default function Settings() {
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {client.company_url}
                               </td>
-                              {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {client.area_of_work}
-                              </td> */}
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {client.phone_number}
                               </td>
@@ -952,20 +1006,6 @@ export default function Settings() {
                 <div className="flex justify-between items-center py-5">
                   <h2 className="text-2xl font-semibold">Add a new member</h2>
                   <div className="flex gap-5">
-                    <Button
-                      type="button"
-                      className="rounded bg-transparent py-3 px-7 text-sm text-[#5027D9] border-[#5027D9] border-2"
-                      onClick={handleCancelAddMember}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      className="rounded bg-[#5027D9] py-3 px-10 text-sm text-white"
-                      onClick={handleAddMemberClick}
-                    >
-                      Create member
-                    </Button>
                   </div>
                 </div>
               ) : (
@@ -989,112 +1029,162 @@ export default function Settings() {
               {showAddMemberForm ? (
                 <div className="mt-7 mb-10">
                   <h2 className="text-xl font-semibold mb-4">Basic Details</h2>
-                  <div className="flex py-5 items-center">
-                    <div className="w-[20%]">
-                      <Image
-                        src={ProfilePic}
-                        alt="Profile Pic"
-                        className="pr-3"
-                        width={150}
-                      />
+                  <form
+                  // onSubmit={handleSubmit(handleAddMemberForm)}
+                  >
+                    <div className="flex py-5 items-center">
+                      <div className="w-[20%]">
+                        <Image
+                          src={ProfilePic}
+                          alt="Profile Pic"
+                          className="pr-3"
+                          width={150}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 w-full">
+                        <div>
+                          <label htmlFor="fullName" className="block text-sm">
+                            Full name
+                          </label>
+                          <input
+                            id="fullName"
+                            type="text"
+                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                            {...registerMember("fullName", {
+                              required: true,
+                            })}
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="gender" className="block text-sm">
+                            Gender
+                          </label>
+                          <input
+                            id="gender"
+                            type="text"
+                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                            {...registerMember("gender", {
+                              required: true,
+                            })}
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="department" className="block text-sm">
+                            Department
+                          </label>
+                          <input
+                            id="department"
+                            type="text"
+                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                            {...registerMember("department", {
+                              required: true,
+                            })}
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="position" className="block text-sm">
+                            Position
+                          </label>
+                          <input
+                            id="position"
+                            type="text"
+                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                            {...registerMember("position", {
+                              required: true,
+                            })}
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 w-full">
+                    <div className="text-xl font-semibold py-7">
+                      Contact details
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="customerName" className="block text-sm">
-                          Full name
+                        <label htmlFor="phoneNumber" className="block text-sm">
+                          Phone number
                         </label>
                         <input
-                          id="customerName"
+                          id="phoneNumber"
                           type="text"
                           className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                          {...registerMember("phoneNumber", {
+                            required: true,
+                          })}
                         />
                       </div>
                       <div>
-                        <label htmlFor="companyName" className="block text-sm">
-                          Gender
+                        <label htmlFor="email" className="block text-sm">
+                          Email *
                         </label>
                         <input
-                          id="companyName"
-                          type="text"
+                          id="email"
+                          type="email"
                           className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                          {...registerMember("email", {
+                            required: true,
+                          })}
                         />
                       </div>
+                    </div>
+                    <div className="text-xl font-semibold py-7">
+                      Permission settings
+                    </div>
+                    <div className="grid grid-cols-2 gap-20">
                       <div>
-                        <label htmlFor="department" className="block text-sm">
-                          Department
-                        </label>
-                        <input
-                          id="department"
-                          type="text"
+                      <label htmlFor="password" className="block text-sm">
+                            Role of member
+                          </label>
+                      <select
+                          id="role"
+                          {...register("role", {
+                            required: true,
+                          })}
                           className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                        />
+                        >
+                          <option value="">Select Role</option>
+                          {role.map((role, index) => (
+                            <option key={index} value={role}>
+                              {role}
+                            </option>
+                          ))}
+                        </select>
                       </div>
-                      <div>
-                        <label htmlFor="position" className="block text-sm">
-                          Position
-                        </label>
-                        <input
-                          id="position"
-                          type="text"
-                          className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                        />
-                      </div>
+                        
+
+                        <div>
+                          <label htmlFor="password" className="block text-sm">
+                            Password
+                          </label>
+                          <input
+                            id="password"
+                            type="text"
+                            className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+                            {...registerMember("password", {
+                              required: true,
+                            })}
+                          />
+                        </div>
+                        
+                      
                     </div>
-                  </div>
-                  <div className="text-xl font-semibold py-7">
-                    Contact details
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="phoneNumber" className="block text-sm">
-                        Phone number
-                      </label>
-                      <input
-                        id="phoneNumber"
-                        type="text"
-                        className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                      />
+                    <div className="pt-5">
+                    <Button
+                      type="button"
+                      className="rounded bg-transparent py-3 px-7 mr-5 text-sm text-[#5027D9] border-[#5027D9] border-2"
+                      onClick={handleCancelAddMember}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      className="rounded bg-[#5027D9] py-3 px-10 text-sm text-white"
+                    >
+                      Create member
+                    </Button>
                     </div>
-                    <div>
-                      <label htmlFor="email" className="block text-sm">
-                        Email *
-                      </label>
-                      <input
-                        id="email"
-                        type="email"
-                        className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                      />
-                    </div>
-                  </div>
-                  <div className="text-xl font-semibold py-7">
-                    Permission settings
-                  </div>
-                  <div className="flex gap-20">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="manager"
-                        checked={selectedPositions.includes("Manager")}
-                        onChange={() => handlePositionSelect("Manager")}
-                        className="form-checkbox h-5 w-5 text-[#5027D9]"
-                      />
-                      <label htmlFor="manager" className="ml-2">
-                        Manager
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="admin"
-                        checked={selectedPositions.includes("Admin")}
-                        onChange={() => handlePositionSelect("Admin")}
-                        className="form-checkbox h-5 w-5 text-[#5027D9]"
-                      />
-                      <label htmlFor="admin" className="ml-2">
-                        Admin
-                      </label>
-                    </div>
-                  </div>
+                    
+                  </form>
                 </div>
               ) : (
                 <div className="flex mt-5 mb-10">
@@ -1163,225 +1253,8 @@ export default function Settings() {
             </TabPanel>
 
             {/* Status management tab */}
-            <TabPanel className="p-10 bg-white">
-              <div className="flex justify-between items-center pb-7">
-                <h2 className="text-2xl font-semibold">Status Management</h2>
-                <div className="flex gap-5">
-                  {/* <SearchBar /> */}
-                  <div className="flex gap-5">
-                    <div>
-                      <Button
-                        type="button"
-                        className="rounded bg-[#5027D9] py-2.5 px-14 text-sm text-white items-center gap-2 flex"
-                        // onClick={handleAddMemberClick}
-                      >
-                        Save
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="w-[35%]">
-                  <select
-                    name="statusScale"
-                    id="statusScale"
-                    className="form-select border-2 border-[#8E8E8E] text-[#8E8E8E] focus:outline-none rounded-md p-3 w-full  bg-no-repeat bg-right appearance-none"
-                    style={{
-                      backgroundImage: `url(${DropdownBlack.src})`,
-                      backgroundSize: "20px",
-                      backgroundPosition: "right 0.5rem center",
-                    }}
-                  >
-                    <option value="">Choose status scale level (1-3)</option>
-                    <option value="1-2">On 1-2</option>
-                    <option value="1-3">On 1-3</option>
-                    <option value="1-4">On 1-4</option>
-                    <option value="1-5">On 1-5</option>
-                    <option value="1-6">On 1-6</option>
-                  </select>
-                </div>
-
-                <div className="w-[65%] bg-[#FBFBFB] px-8 py-4">
-                  <table className="min-w-full bg-white">
-                    <thead className="border-b-4 border-[#FBFBFB] text-left text-[#9291A5]">
-                      <tr>
-                        <th className="px-4 py-2 font-medium">Status Name</th>
-                        <th className="px-4 py-2 font-medium">Color</th>
-                        <th className="px-4 py-2 font-medium">Preview</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="bg-white">
-                        <td className="px-4 py-2">Closed</td>
-                        <td className="px-4 py-2">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-4 h-4 rounded-full ml-4"
-                              style={{ backgroundColor: "#3498db" }}
-                            ></div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-2">Closed</td>
-                      </tr>
-                      <tr className="bg-[#FBFBFB]">
-                        <td className="px-4 py-2">Active</td>
-                        <td className="px-4 py-2">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-4 h-4 rounded-full  ml-4"
-                              style={{ backgroundColor: "#2ecc71" }}
-                            ></div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-2">Active</td>
-                      </tr>
-                      <tr className="bg-white">
-                        <td className="px-4 py-2">For review</td>
-                        <td className="px-4 py-2">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-4 h-4 rounded-full  ml-4"
-                              style={{ backgroundColor: "#e74c3c" }}
-                            ></div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-2">Blue</td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <div className="pt-3 pl-2 flex">
-                    <Image src={info} alt="" />
-                    <p className="text-[#979797] text-sm pl-1">
-                      Click on status name to edit
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </TabPanel>
 
             {/* Priority management tab */}
-            <TabPanel className="p-10 bg-white">
-              <div className="flex justify-between items-center pb-7">
-                <h2 className="text-2xl font-semibold">Priority Management</h2>
-                <div className="flex gap-5">
-                  {/* <SearchBar /> */}
-                  <div className="flex gap-5">
-                    <div>
-                      <Button
-                        type="button"
-                        className="rounded bg-[#5027D9] py-2.5 px-14 text-sm text-white items-center gap-2 flex"
-                        // onClick={handleAddMemberClick}
-                      >
-                        Save
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-[35%]">
-                  <select
-                    name="statusScale"
-                    id="statusScale"
-                    className="form-select border-2 border-[#8E8E8E] text-[#8E8E8E] focus:outline-none rounded-md p-3 w-full  bg-no-repeat bg-right appearance-none"
-                    style={{
-                      backgroundImage: `url(${DropdownBlack.src})`,
-                      backgroundSize: "20px",
-                      backgroundPosition: "right 0.5rem center",
-                    }}
-                  >
-                    <option value="">Choose status scale level (1-3)</option>
-                    <option value="1-2">On 1-2</option>
-                    <option value="1-3">On 1-3</option>
-                    <option value="1-4">On 1-4</option>
-                    <option value="1-5">On 1-5</option>
-                    <option value="1-6">On 1-6</option>
-                  </select>
-                </div>
-
-                <div className="w-[65%] bg-[#FBFBFB] px-8 py-4">
-                  <table className="min-w-full bg-white">
-                    <thead className="border-b-4 border-[#FBFBFB] text-left text-[#9291A5]">
-                      <tr>
-                        <th className="px-4 py-2 font-medium">Priority Name</th>
-                        <th className="px-4 py-2 font-medium">Color</th>
-                        <th className="px-4 py-2 font-medium">Preview</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="bg-white">
-                        <td className="px-4 py-2">Low</td>
-                        <td className="px-4 py-2">
-                          <select name="color" id="color">
-                            <option value="red">
-                              <div className="flex items-center gap-2">
-                                <div
-                                  className="w-4 h-4 rounded-full ml-4 bg-[#3498db]"
-                                  // style={{ backgroundColor: "#3498db" }}
-                                >
-                                  blue
-                                </div>
-                              </div>
-                            </option>
-                            <option value="green">
-                              <div>
-                                <Image
-                                  src={green}
-                                  alt=""
-                                  width={100}
-                                  height={100}
-                                />
-                              </div>
-                            </option>
-                          </select>
-                          {/* <div className="flex items-center gap-2">
-                            <div
-                              className="w-4 h-4 rounded-full ml-4"
-                              style={{ backgroundColor: "#3498db" }}
-                            ></div>
-                          </div> */}
-                        </td>
-                        <td className="px-4 py-2">Low</td>
-                      </tr>
-                      <tr className="bg-[#FBFBFB]">
-                        <td className="px-4 py-2">Mid</td>
-                        <td className="px-4 py-2">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-4 h-4 rounded-full  ml-4"
-                              style={{ backgroundColor: "#2ecc71" }}
-                            ></div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-2">Mid</td>
-                      </tr>
-                      <tr className="bg-white">
-                        <td className="px-4 py-2">High</td>
-                        <td className="px-4 py-2">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-4 h-4 rounded-full  ml-4"
-                              style={{ backgroundColor: "#e74c3c" }}
-                            ></div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-2">High</td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <div className="pt-3 pl-2 flex">
-                    <Image src={info} alt="" />
-                    <p className="text-[#979797] text-sm pl-1">
-                      Click on priority name to edit
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </TabPanel>
 
             {/* Profile settings tab */}
             <TabPanel className="p-10 bg-white">
