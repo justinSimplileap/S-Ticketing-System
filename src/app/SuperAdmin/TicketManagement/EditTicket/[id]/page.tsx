@@ -2,12 +2,8 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import addticket from "../../../../../../public/images/add.svg";
-import Bell from "../../../../../public/images/bell.svg";
-import userBg from "../../../../../public/images/User.svg";
-import breadcrumbArrow from "../../../../../public/images/BreadcrumbArrow.svg";
 import DropdownArrow from "../../../../../../public/images/dropdown-arrow_svgrepo.com.svg";
 import Delete from "../../../../../../public/images/deleteTicket.svg";
-import Link from "next/link";
 import { Button } from "@headlessui/react";
 import axios, { AxiosResponse } from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -31,7 +27,7 @@ export default function Page() {
   const [subject, setSubject] = useState("");
   const [requestDetails, setRequestDetails] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  //   const [ticketFile, setTicketFile] = useState<File>([]);
+
   const [ticketFilename, setTicketFilename] = useState<string>("");
   const [editorHtml, setEditorHtml] = useState("");
   const [customers, setCustomers] = useState<string[]>([]);
