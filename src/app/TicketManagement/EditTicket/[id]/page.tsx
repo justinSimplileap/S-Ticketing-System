@@ -291,7 +291,7 @@ export default function Page() {
       <Toaster />
 
       <div className="p-10 mx-10 my-12 bg-[#F9F9F9] rounded-md h-screen shadow-md">
-        <div className="text-[#2A2C3E] text-2xl mb-6">Edit Ticket</div>
+        <div className="text-sidebarBackground text-2xl mb-6">Edit Ticket</div>
 
         <form className="space-y-6" onSubmit={handleFormSubmit}>
           <div className="grid grid-cols-2 gap-3">

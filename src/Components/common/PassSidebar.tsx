@@ -31,7 +31,7 @@ const PassSidebar = () => {
   // Define the paths where you want to show PassSidebar
 
   return (
-    <div className="flex flex-col gap-10 w-[15%] min-h-screen bg-[#2A2C3E] p-8 sticky">
+    <div className="flex flex-col gap-10 w-[15%] min-h-screen bg-sidebarBackground p-8 sticky">
       <div className="flex justify-center items-center p-5">
         <Image src={logoWhite} alt="logo" height={80} width={150} />
       </div>

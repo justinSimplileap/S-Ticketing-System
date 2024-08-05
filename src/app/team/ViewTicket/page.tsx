@@ -82,15 +82,15 @@ const ViewTicketPage: React.FC = () => {
                     {/* Ticket Info */}
                     <div className="grid grid-cols-3 gap-8 mb-8">
                         <div>
-                            <p className="text-[#2A2C3E] font-medium">Ticket ID:</p>
+                            <p className="text-sidebarBackground font-medium">Ticket ID:</p>
                             <p className="text-[#7D7D7D]">{ticket.id}</p>
                         </div>
                         <div>
-                            <p className="text-[#2A2C3E] font-medium">Ticket Type:</p>
+                            <p className="text-sidebarBackground font-medium">Ticket Type:</p>
                             <p className="text-[#7D7D7D]">{ticket.type}</p>
                         </div>
                         <div>
-                            <p className="text-[#2A2C3E] font-medium">Created On:</p>
+                            <p className="text-sidebarBackground font-medium">Created On:</p>
                             <p className="text-[#7D7D7D]">{ticket.createdOn}</p>
                         </div>
                     </div>
@@ -98,15 +98,15 @@ const ViewTicketPage: React.FC = () => {
                     {/* Ticket Details */}
                     <div className="grid grid-cols-3 gap-8 mb-8">
                         <div>
-                            <p className="text-[#2A2C3E] font-medium">Priority:</p>
+                            <p className="text-sidebarBackground font-medium">Priority:</p>
                             <p className="text-[#7D7D7D]">{ticket.priority}</p>
                         </div>
                         <div>
-                            <p className="text-[#2A2C3E] font-medium">Status:</p>
+                            <p className="text-sidebarBackground font-medium">Status:</p>
                             <p className="text-[#7D7D7D]">{ticket.status}</p>
                         </div>
                         <div>
-                            <p className="text-[#2A2C3E] font-medium">Total Hours Logged:</p>
+                            <p className="text-sidebarBackground font-medium">Total Hours Logged:</p>
                             <p className="text-[#7D7D7D]">{ticket.totalHours}</p>
                         </div>
                     </div>
@@ -114,11 +114,11 @@ const ViewTicketPage: React.FC = () => {
                     {/* Raised By & Assigned To */}
                     <div className="grid grid-cols-3 ">
                         <div>
-                            <p className="text-[#2A2C3E] font-medium">Raised By:</p>
+                            <p className="text-sidebarBackground font-medium">Raised By:</p>
                             <p className="text-[#7D7D7D]">{ticket.raisedBy}</p>
                         </div>
                         <div>
-                            <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
+                            <p className="text-sidebarBackground font-medium">Assigned To:</p>
                             <div className='flex space-x-3'>
                                 <p className="text-[#7D7D7D]">{ticket.assignedTo}</p>
                                 <Image onClick={() => setIsModalOpen1(true)} src={edit} alt="Small Image" width={20} height={20} /></div>
@@ -129,11 +129,11 @@ const ViewTicketPage: React.FC = () => {
             <div className='p-8'>
                 <div className="bg-[#F9F9F9] p-6 drop-shadow-md">
                     <div className='flex flex-col'>
-                        <p className="text-[#2A2C3E] font-medium">Subject</p>
+                        <p className="text-sidebarBackground font-medium">Subject</p>
                         <p className="text-[#7D7D7D] mt-2">{ticket.subject}</p>
                     </div>
                     <div className='flex flex-col mt-6'>
-                        <p className="text-[#2A2C3E] font-medium">Request Details</p>
+                        <p className="text-sidebarBackground font-medium">Request Details</p>
                         <p className="text-[#7D7D7D] font-normal mt-2">{ticket.requestDetails}</p>
                     </div>
                 </div>

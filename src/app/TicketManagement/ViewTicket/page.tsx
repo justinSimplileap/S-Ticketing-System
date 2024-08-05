@@ -19,13 +19,13 @@ const Page: React.FC = () => {
     <div className="">
       <div className="flex items-center justify-between shadow-md p-8 sticky top-0 z-50 bg-white">
         <div className="flex items-center gap-3">
-          <div className="text-[#2A2C3E] text-xl">
+          <div className="text-sidebarBackground text-xl">
             <Link href="/TicketManagement">Ticket Management </Link>
           </div>
           <div>
             <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
           </div>
-          <div className="text-[#2A2C3E] text-xl">View Ticket</div>
+          <div className="text-sidebarBackground text-xl">View Ticket</div>
           <div>
             <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
           </div>
@@ -42,7 +42,7 @@ const Page: React.FC = () => {
       </div>
 
       <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
-        <div className="text-[#2A2C3E] text-2xl mb-6">View Ticket</div>
+        <div className="text-sidebarBackground text-2xl mb-6">View Ticket</div>
 
         <div className="grid grid-cols-3 py-5">
           <div className="pb-5">

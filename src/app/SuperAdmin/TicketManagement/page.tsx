@@ -202,7 +202,7 @@ export default function Page() {
     <div className="">
       <div className="flex justify-between items-center mt-10 ml-8 mr-8">
         <div>
-          <h1 className="text-3xl text-[#2A2C3E]">Tickets</h1>
+          <h1 className="text-3xl text-sidebarBackground">Tickets</h1>
         </div>
         <div className="flex justify-around items-center gap-2">
           <div>

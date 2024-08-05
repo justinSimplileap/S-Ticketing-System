@@ -130,7 +130,7 @@ const DashboardPage: React.FC = () => {
           <ButtonPurple />
       </div>
       <div className="ml-8 mr-8 shadow-lg rounded-md">
-        <h1 className="text-3xl p-7 text-[#2A2C3E]">Summary</h1>
+        <h1 className="text-3xl p-7 text-sidebarBackground">Summary</h1>
         <div className="grid grid-cols-3 gap-5 mr-7">
           <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer" onClick={handleCardClick1}>
             <div className="grid grid-cols-2 pb-10">
@@ -180,7 +180,7 @@ const DashboardPage: React.FC = () => {
       </div>
       <div className="m-8 flex flex-col gap-5">
         <div className="flex p-7 justify-between">
-          <div className="text-3xl text-[#2A2C3E]">Recent Tickets</div>
+          <div className="text-3xl text-sidebarBackground">Recent Tickets</div>
           <div className="text-2xl text-[#696969] flex gap-3 justify-center items-center">
             <div>
               <Link href="/TicketManagement">View All Tickets </Link>

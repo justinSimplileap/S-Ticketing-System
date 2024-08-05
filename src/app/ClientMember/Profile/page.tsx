@@ -5,7 +5,7 @@ export default function Profile() {
   return (
     <div className="">
       <div className="lg:mt-7 lg:mx-8 mx-5 my-8">
-        <h1 className="text-3xl text-[#2A2C3E]">Profile</h1>
+        <h1 className="text-3xl text-sidebarBackground">Profile</h1>
       </div>
 
       {/* Tabs starts */}
