@@ -1,10 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { useForm, SubmitHandler, FieldErrors, UseFormRegister } from "react-hook-form";
-import Image from 'next/image';
+import {
+  useForm,
+  SubmitHandler,
+  FieldErrors,
+  UseFormRegister,
+} from "react-hook-form";
+import Image from "next/image";
 import Profile from "../../../public/images/Profile.svg";
 import Close from "../../../public/images/closebutton.svg";
-import axios from 'axios';
+import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { base_url } from "@/utils/constant";
@@ -26,17 +31,23 @@ type FormInputs = {
 };
 const CustomerForm: React.FC = () => {
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors }, setValue, } = useForm<FormInputs>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<FormInputs>();
   const [workDomains, setWorkDomains] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
-  const [profile_url, setprofile_url] = useState<globalThis.File | null>(null);
+  const [profileImage, setProfileImage] = useState<globalThis.File | null>(null);
+
 
   const handleProfileImageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      setprofile_url(file);
+      setProfileImage(file);
     }
   };
 
@@ -57,35 +68,35 @@ const CustomerForm: React.FC = () => {
     setValue("work_domain", newWorkDomains.join(","), { shouldValidate: true });
   };
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    console.log(data);
+
     try {
-      console.log(data);
+      const formData = new FormData();
+
+      if (profileImage) {
+        formData.append("files", profileImage);
+      }
+
+      formData.append("customer_name", data.customer_name);
+      formData.append("company_legal_name", data.company_legal_name);
+      formData.append("company_url", data.company_url);
+      formData.append("password", data.password);
+      formData.append("phone_number", data.phone_number.toString());
+      formData.append("email", data.email);
+      formData.append("address", data.address);
+      formData.append("postal_code", data.postal_code);
+      formData.append("country", data.country);
+      formData.append("city", data.city);
+      formData.append("about_company", data.about_company);
+      formData.append("work_domain", data.work_domain);
+
       const response = await axios.post(
         `${base_url}/addCustomer`,
-        
-
-        {
-          profile_url: data.profile_url ? data.profile_url : undefined,
-          customer_name: data.customer_name,
-          company_legal_name: data.company_legal_name,
-          company_url: data.company_url,
-          password: data.password,
-          phone_number: data.phone_number,
-          email: data.email,
-          address: data.address,
-          postal_code: data.postal_code,
-          country: data.country,
-          city: data.city,
-          about_company: data.about_company,
-          work_domain: data.work_domain,
-        },
+        formData,
       );
-      if (response){
-        toast.success("Customer added successfully");
-        console.log("Form submitted successfully:", response.data);
-        // location.reload();
-      }
-      
-      
+
+      toast.success("Customer Added successfully");
+      location.reload();
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -95,29 +106,29 @@ const CustomerForm: React.FC = () => {
       <Toaster />
       <div className="text-xl font-semibold">Basic Details</div>
       <div className="flex py-5 items-center">
-      <div className="w-[20%]">
-            <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
-              <Image
-                src={profile_url ? URL.createObjectURL(profile_url) : Profile}
-                alt="Profile Pic"
-                layout="fill"
-                objectFit="cover"
-                onClick={() => {
-                  const uploadInput = document.getElementById("uploadImage");
-                  if (uploadInput) {
-                    uploadInput.click();
-                  }
-                }}
-              />
-            </div>
-            <input
-              id="uploadImage"
-              type="file"
-              accept="image/*"
-              onChange={handleProfileImageChange}
-              className="hidden"
+        <div className="w-[20%]">
+          <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+            <Image
+              src={profileImage ? URL.createObjectURL(profileImage) : Profile}
+              alt="Profile Pic"
+              layout="fill"
+              objectFit="cover"
+              onClick={() => {
+                const uploadInput = document.getElementById("uploadImage");
+                if (uploadInput) {
+                  uploadInput.click();
+                }
+              }}
             />
           </div>
+          <input
+            id="uploadImage"
+            type="file"
+            accept="image/*"
+            onChange={handleProfileImageChange}
+            className="hidden"
+          />
+        </div>
         <div className="grid grid-cols-2 gap-4 w-full">
           <div>
             <label htmlFor="customerName" className="block text-sm ">
@@ -186,7 +197,10 @@ const CustomerForm: React.FC = () => {
         </div>
       </div>
       <div className="text-xl font-semibold py-7">Contact Details</div>
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid grid-cols-2 gap-4"
+      >
         <div>
           <label htmlFor="phoneNumber" className="block text-sm ">
             Phone Number
@@ -299,44 +313,44 @@ const CustomerForm: React.FC = () => {
           )}
         </div>
         <div className="col-span-2">
-            <label htmlFor="workDomain" className="block mt-6">
-              Work Domain
-            </label>
-            <div className="border-2 border-[#DFEAF2] rounded-md p-2 mt-2 bg-white h-40 cursor-pointer">
-              {workDomains.map((domain, index) => (
-                <span
-                  key={index}
-                  className="inline-block bg-[#E8E3FA] rounded-full pl-5 pr-7 py-3 text-sm text-black mr-2 mb-2"
+          <label htmlFor="workDomain" className="block mt-6">
+            Work Domain
+          </label>
+          <div className="border-2 border-[#DFEAF2] rounded-md p-2 mt-2 bg-white h-40 cursor-pointer">
+            {workDomains.map((domain, index) => (
+              <span
+                key={index}
+                className="inline-block bg-[#E8E3FA] rounded-full pl-5 pr-7 py-3 text-sm text-black mr-2 mb-2"
+              >
+                {domain}
+                <button
+                  onClick={() => handleRemove(index)}
+                  className="ml-5 text-black"
                 >
-                  {domain}
-                  <button
-                    onClick={() => handleRemove(index)}
-                    className="ml-5 text-black"
-                  >
-                    <Image src={Close} alt="Remove" width={10} />
-                  </button>
-                </span>
-              ))}
-              <input
-                id="workDomain"
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="input-field p-2 mt-2 w-full border-none focus:outline-none"
-              />
-            </div>
-            <input
-              type="hidden"
-              {...register("work_domain", { required: true })}
-              value={workDomains.join(",")}
-            />
-            {errors.work_domain && (
-              <span role="alert" className="text-red-600">
-                Work Domain is required
+                  <Image src={Close} alt="Remove" width={10} />
+                </button>
               </span>
-            )}
+            ))}
+            <input
+              id="workDomain"
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="input-field p-2 mt-2 w-full border-none focus:outline-none"
+            />
           </div>
+          <input
+            type="hidden"
+            {...register("work_domain", { required: true })}
+            value={workDomains.join(",")}
+          />
+          {errors.work_domain && (
+            <span role="alert" className="text-red-600">
+              Work Domain is required
+            </span>
+          )}
+        </div>
         <div className="flex justify-end w-full mt-6 col-span-2">
           <button
             type="submit"
