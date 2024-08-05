@@ -117,6 +117,12 @@ const AccountDetailsForm: React.FC = () => {
         break;
 
     }
+    switch (role) {
+      case '2':
+        router.push('/Manager/Dashboard');
+        break;
+
+    }
   };
 
   const renderSkipButton =

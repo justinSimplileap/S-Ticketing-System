@@ -68,9 +68,9 @@ const LoginForm = () => {
         } else if (responseData?.user?.role === "4" && responseData?.user?.onBoarded === true){
           router.push("/Dashboard")
         } else if (responseData?.user?.role === "2" && responseData?.user?.onBoarded === false){
-          router.push("/Onboard/AccountDetails")
+          router.push("/AccountDetails")
         } else if (responseData?.user?.role === "2" && responseData?.user?.onBoarded === true){
-          router.push("/team/ManagerDashboard")
+          router.push("/Manager/Dashboard")
         } else if (responseData?.user?.role === "3" && responseData?.user?.onBoarded === true){
           router.push("/TeamMember/Dashboard")
         } else if (responseData?.user?.role === "3" && responseData?.user?.onBoarded === false){
