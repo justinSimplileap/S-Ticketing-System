@@ -31,6 +31,7 @@ import { UUID } from "crypto";
 import SuperAdminDetails from "../../../Components/common/SuperAdminDetails";
 import { base_url } from "@/utils/constant";
 import { useRouter } from "next/navigation";
+import AddClientTeamMemberForm from "@/Components/common/AddClientTeamMemberForm";
 
 const designations = ["Manager", "Developer", "Designer", "Analyst", "Intern"];
 const role = ["Team", "Admin", "Manager"];
@@ -57,6 +58,7 @@ interface Customer {
   postal_code: string;
   about_company: string;
   work_domain: string;
+  profile_url: string ;
 }
 
 interface Client {
@@ -124,6 +126,7 @@ const convertClientToCustomer = (client: Client): Customer => {
     postal_code: client.postal_code || "",
     about_company: client.about_company || "",
     work_domain: client.work_domain || "",
+    profile_url: client.profile_url || "",
   };
 };
 
@@ -143,7 +146,9 @@ export default function Settings() {
   const [clients, setClients] = useState<Client[]>([]);
   const [clientTeam, setClientTeam] = useState<ClientTeamMember[]>([]);
   const [organizationId, setOrganizationId] = useState<string>("");
-  const [profileImage, setProfileImage] = useState<globalThis.File | null>(null);
+  const [profileImage, setProfileImage] = useState<globalThis.File | null>(
+    null
+  );
 
   const handleProfileImageChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -153,6 +158,8 @@ export default function Settings() {
       setProfileImage(file);
     }
   };
+
+  
 
   const fetchClients = async () => {
     try {
@@ -220,6 +227,9 @@ export default function Settings() {
   const [selectedUserWorkDomain, setSelectedUserWorkDomain] = useState<
     string | null
   >(null);
+  const [selectedUserProfilePic, setSelectedUserProfilePic] = useState<
+    string | null
+  >(null);
   // const [selectedUserCompanyName, setSelectedUserCompanyName] = useState<string | null>(null);
 
   const [employees, setEmployees] = useState<{ [key: string]: Employee[] }>({
@@ -252,6 +262,7 @@ export default function Settings() {
     setSelectedUserPostalCode(customer.postal_code);
     setSelectedUserAbout(customer.about_company);
     setSelectedUserWorkDomain(customer.work_domain);
+    setSelectedUserProfilePic(customer.profile_url);
     setOrganizationId(customer.organization_id);
 
     console.log("this is selected", customer);
@@ -347,33 +358,74 @@ export default function Settings() {
 
   const handleAddMemberForm = async (data: any) => {
     console.log("formdata1", data);
+  
     try {
-      const formData = {
-        customer_name: data.customer_name,
-        gender: data.gender,
-        phone_number: data.phone_number,
-        email: data.email,
-        designation: data.position,
-        password: data.password,
-        role: data.role,
-      };
+      const formData = new FormData();
+  
+      // Append profile image if it exists
+      if (profileImage) {
+        formData.append("profileImage", profileImage);
+      }
+  
+      // Append other form data
+      formData.append("customer_name", data.customer_name);
+      formData.append("gender", data.gender);
+      formData.append("phone_number", data.phone_number.toString());
+      formData.append("email", data.email);
+      formData.append("designation", data.position);
+      formData.append("password", data.password);
+      formData.append("role", data.role);
+  
       console.log("formdata", formData);
+  
+      // Post the form data
       const response = await axios.post(`${base_url}/addTeamMember`, formData, {
         headers: {
+          "Content-Type": "multipart/form-data", // Required for FormData
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+  
       if (response) {
-        console.log("sadfasdfasd", response);
-        toast.success("team member added successfully");
-        // debugger
-        // router.refresh()
-        location.reload();
+        console.log("Response", response);
+        toast.success("Team member added successfully");
+        location.reload(); // Refresh page or update state as needed
       }
     } catch (error) {
-      toast.error("failed to add team member");
+      console.error("Error adding team member:", error);
+      toast.error("Failed to add team member");
     }
   };
+
+  // const handleAddMemberForm = async (data: any) => {
+  //   console.log("formdata1", data);
+  //   try {
+  //     const formData = {
+  //       customer_name: data.customer_name,
+  //       gender: data.gender,
+  //       phone_number: data.phone_number,
+  //       email: data.email,
+  //       designation: data.position,
+  //       password: data.password,
+  //       role: data.role,
+  //     };
+  //     console.log("formdata", formData);
+  //     const response = await axios.post(`${base_url}/addTeamMember`, formData, {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       },
+  //     });
+  //     if (response) {
+  //       console.log("sadfasdfasd", response);
+  //       toast.success("team member added successfully");
+  //       // debugger
+  //       // router.refresh()
+  //       location.reload();
+  //     }
+  //   } catch (error) {
+  //     toast.error("failed to add team member");
+  //   }
+  // };
 
   const [superAdmin, setSuperAdmin] = useState(null);
 
@@ -501,37 +553,36 @@ export default function Settings() {
     currentPassword: string;
     newPassword: string;
   };
-  
 
-    const {
-      register: registerSecurity,
-      handleSubmit: handleSubmitSecurity,
-      formState: { errors: securityErrors },
-    } = useForm<SecurityInputs>();
-  
-    const onSubmitSecurity: SubmitHandler<SecurityInputs> = async (data) => {
-  
-      try {
-        const response = await axios.post(
-          `${base_url}/resetPassword`,
-          {
-            currentPassword: data.currentPassword,
-            newPassword: data.newPassword,
+  const {
+    register: registerSecurity,
+    handleSubmit: handleSubmitSecurity,
+    formState: { errors: securityErrors },
+  } = useForm<SecurityInputs>();
+
+  const onSubmitSecurity: SubmitHandler<SecurityInputs> = async (data) => {
+
+    try {
+      const response = await axios.post(
+        `${base_url}/resetPassword`,
+        {
+          currentPassword: data.currentPassword,
+          newPassword: data.newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-  
-        console.log("Password changed:", response.data);
-        toast.success("Password changed successfully!");
-      } catch (error) {
-        console.error("Error changing password:", error);
-        toast.error("Failed to change password.");
-      }
-    };
+        }
+      );
+
+      console.log("Password changed:", response.data);
+      toast.success("Password changed successfully!");
+    } catch (error) {
+      console.error("Error changing password:", error);
+      toast.error("Failed to change password.");
+    }
+  };
 
   return (
     <div>
@@ -654,6 +705,7 @@ export default function Settings() {
                               selectedUserPostalCode={selectedUserPostalCode}
                               selectedUserAbout={selectedUserAbout}
                               selectedUserWorkDomain={selectedUserWorkDomain}
+                              selectedUserProfilePic={selectedUserProfilePic}
                             />
                           )}
                         </div>
@@ -662,10 +714,13 @@ export default function Settings() {
 
                         <div>
                           <Toaster />
-                          <h2 className="text-xl font-semibold mb-4">
+                          {/* <h2 className="text-xl font-semibold mb-4">
                             Basic Details
-                          </h2>
-                          <form onSubmit={handleSubmit(handleAddClientMember)}>
+                          </h2> */}
+                          <AddClientTeamMemberForm
+                            organizationId={organizationId}
+                          />
+                          {/* <form onSubmit={handleSubmit(handleAddClientMember)}>
                             <div className="flex py-5">
                               <div className="w-[20%] pt-10">
                                 <Image
@@ -839,10 +894,10 @@ export default function Settings() {
                                   width={20}
                                   height={20}
                                 />
-                                Add Member
+                                Add Members
                               </Button>
                             </div>
-                          </form>
+                          </form> */}
                         </div>
                       ) : (
                         <div>
@@ -1080,11 +1135,31 @@ export default function Settings() {
                   <form onSubmit={handleSubmit(handleAddMemberForm)}>
                     <div className="flex py-5 items-center">
                       <div className="w-[20%]">
-                        <Image
-                          src={ProfilePic}
-                          alt="Profile Pic"
-                          className="pr-3"
-                          width={150}
+                        <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+                          <Image
+                            src={
+                              profileImage
+                                ? URL.createObjectURL(profileImage)
+                                : ProfilePic
+                            }
+                            alt="Profile Pic"
+                            layout="fill"
+                            objectFit="cover"
+                            onClick={() => {
+                              const uploadInput =
+                                document.getElementById("uploadImage");
+                              if (uploadInput) {
+                                uploadInput.click();
+                              }
+                            }}
+                          />
+                        </div>
+                        <input
+                          id="uploadImage"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleProfileImageChange}
+                          className="hidden"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4 w-full">
@@ -1324,7 +1399,7 @@ export default function Settings() {
                     </div>
                   </TabPanel>
                   <TabPanel>
-                    <div className="pt-7 pl-7">
+                    {/* <div className="pt-7 pl-7">
                       <div className="text-xl pb-7 font-medium text-[#333B69]">
                         Change Password
                       </div>
@@ -1381,7 +1456,7 @@ export default function Settings() {
                           </button>
                         </form>
                       </div>
-                    </div>
+                    </div> */}
                   </TabPanel>
                 </TabPanels>
               </TabGroup>

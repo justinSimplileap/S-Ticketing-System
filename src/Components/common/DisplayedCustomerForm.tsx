@@ -40,10 +40,12 @@ interface DisplayedCustomerFormProps {
   selectedUserPostalCode: string | null;
   selectedUserAbout: string | null;
   selectedUserWorkDomain: string | null;
+  selectedUserProfilePic: string | null;
 }
 const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
   selectedUserId,
   selectedUserName,
+  selectedUserProfilePic,
   selectedUserEmail,
   selectedUserPhone,
   selectedUserUrl,
@@ -90,44 +92,69 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
     setWorkDomains(newWorkDomains);
     setValue("work_domain", newWorkDomains.join(","), { shouldValidate: true });
   };
-  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    try {
-      console.log(data);
-      if (!selectedUserId) {
-        toast.error("User ID is missing.");
-        return;
-      }
-      const response = await axios.put(
-        `${base_url}/updateCustomer`,
-        {
-          id: selectedUserId,
-          customer_name: data.customer_name,
-          company_legal_name: data.company_legal_name,
-          company_url: data.company_url,
-          phone_number: data.phone_number,
-          email: data.email,
-          address: data.address,
-          postal_code: data.postal_code,
-          country: data.country,
-          city: data.city,
-          about_company: data.about_company,
-          work_domain: data.work_domain,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      toast.success("Customer updated successfully");
-      console.log("Customer updated successfully:", response.data);
-      location.reload();
-    } catch (error) {
-      console.error("Error updating customer:", error);
-      toast.error("Failed to update customer");
+
+
+  const [profileImage, setProfileImage] = useState<globalThis.File | null>(null);
+
+
+  const handleProfileImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setProfileImage(file);
     }
   };
 
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+  try {
+    console.log(data);
+    
+    if (!selectedUserId) {
+      toast.error("User ID is missing.");
+      return;
+    }
+
+    const formData = new FormData();
+
+    // Append existing data to the FormData object
+    formData.append("id", selectedUserId.toString());
+    formData.append("customer_name", data.customer_name);
+    formData.append("company_legal_name", data.company_legal_name);
+    formData.append("company_url", data.company_url);
+    formData.append("phone_number", data.phone_number.toString());
+    formData.append("email", data.email);
+    formData.append("address", data.address);
+    formData.append("postal_code", data.postal_code);
+    formData.append("country", data.country);
+    formData.append("city", data.city);
+    formData.append("about_company", data.about_company);
+    formData.append("work_domain", data.work_domain);
+
+    // Append the profile image if it exists
+    if (profileImage) {
+      formData.append("profileImage", profileImage);
+    }
+
+    const response = await axios.put(
+      `${base_url}/updateCustomer`,
+      formData,
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem("token")}`,
+          'Content-Type': 'multipart/form-data', // Specify that the request body is FormData
+        },
+      }
+    );
+
+    toast.success("Customer updated successfully");
+    console.log("Customer updated successfully:", response.data);
+    location.reload();
+  } catch (error) {
+    console.error("Error updating customer:", error);
+    toast.error("Failed to update customer");
+  }
+};
 
   const onDelete = async () => {
     try {
@@ -166,8 +193,32 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
         </div>
       </div>
       <div className="flex py-5 items-center">
-        <div className="w-[20%]">
-          <Image src={Profile} alt="Profile Pic" className="pr-3" />
+      <div className="w-[20%]">
+          <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+            <Image
+             src={
+              profileImage
+                ? URL.createObjectURL(profileImage)
+                : (selectedUserProfilePic || Profile) 
+            }
+              alt="Profile Pic"
+              layout="fill"
+              objectFit="cover"
+              onClick={() => {
+                const uploadInput = document.getElementById("uploadImage");
+                if (uploadInput) {
+                  uploadInput.click();
+                }
+              }}
+            />
+          </div>
+          <input
+            id="uploadImage"
+            type="file"
+            accept="image/*"
+            onChange={handleProfileImageChange}
+            className="hidden"
+          />
         </div>
         <div className="grid grid-cols-2 gap-4 w-full">
           <div>

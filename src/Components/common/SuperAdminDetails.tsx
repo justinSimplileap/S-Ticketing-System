@@ -28,8 +28,11 @@ type FormInputs = {
   about_company: string;
   work_domain: string;
 };
+
+
 type SuperAdminDetailsProps = {
   superAdmin: {
+    profile_url: string;
     customer_name: string;
     company_legal_name: string;
     email: string;
@@ -43,6 +46,8 @@ type SuperAdminDetailsProps = {
     work_domain: string;
   } | null;
 };
+
+
 const SuperAdminDetails: React.FC<SuperAdminDetailsProps> = ({
   superAdmin,
 }) => {
@@ -55,6 +60,8 @@ const SuperAdminDetails: React.FC<SuperAdminDetailsProps> = ({
   } = useForm<FormInputs>();
   const [workDomains, setWorkDomains] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+
+
   useEffect(() => {
     if (superAdmin) {
       setValue("customer_name", superAdmin.customer_name);
@@ -71,6 +78,8 @@ const SuperAdminDetails: React.FC<SuperAdminDetailsProps> = ({
         ? superAdmin.work_domain.split(",")
         : [];
       setWorkDomains(domains);
+      setProfileImage(null); 
+
       setValue("work_domain", domains.join(","));
     }
   }, [superAdmin, setValue]);
@@ -92,24 +101,77 @@ const SuperAdminDetails: React.FC<SuperAdminDetailsProps> = ({
   };
 
 
+  const [profileImage, setProfileImage] = useState<globalThis.File | null>(null);
+
+
+  const handleProfileImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setProfileImage(file);
+    }
+  };
+
+
+  // const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+  //   try {
+  //     const response = await axios.put(
+  //       `${base_url}/updateSuperAdmin`, 
+  //       data,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`, 
+  //         },
+  //       }
+  //     );
+      
+  //     toast.success(response.data.message);
+  //     // window.location.reload();
+  //   } catch (error) {
+  //     console.error("Failed to update Super Admin", error);
+  //     toast.error("Failed to update Super Admin");
+  //   }
+  // };
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     try {
+      const formData = new FormData();
+
+      formData.append("customer_name", data.customer_name);
+      formData.append("company_legal_name", data.company_legal_name);
+      formData.append("company_url", data.company_url);
+      // formData.append("password", data.password);
+      formData.append("phone_number", data.phone_number.toString());
+      formData.append("email", data.email);
+      formData.append("address", data.address);
+      formData.append("postal_code", data.postal_code);
+      formData.append("country", data.country);
+      formData.append("city", data.city);
+      formData.append("about_company", data.about_company);
+      formData.append("work_domain", data.work_domain);
+
+      if (profileImage) {
+        formData.append("files", profileImage);
+      }
+
       const response = await axios.put(
-        `${base_url}/updateSuperAdmin`, 
-        data,
+        `${base_url}/updateSuperAdmin`,
+        formData,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, 
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      
-      toast.success(response.data.message);
-      // window.location.reload();
+
+      toast.success("Customer added successfully");
+      // Optionally reload or navigate
+      // location.reload();
+      // router.push('/some-page');
     } catch (error) {
-      console.error("Failed to update Super Admin", error);
-      toast.error("Failed to update Super Admin");
+      console.error("Error submitting form:", error);
+      toast.error("Failed to add customer");
     }
   };
 
@@ -120,8 +182,28 @@ const SuperAdminDetails: React.FC<SuperAdminDetailsProps> = ({
       <Toaster />
       <div className="text-xl font-semibold">Basic Details</div>
       <div className="flex py-5 items-center">
-        <div className="w-[20%]">
-          <Image src={Profile} alt="Profile Pic" className="pr-3" />
+      <div className="w-[20%]">
+          <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+            <Image
+              src={profileImage ? URL.createObjectURL(profileImage) : (superAdmin?.profile_url || Profile.src)}
+              alt="Profile Pic"
+              layout="fill"
+              objectFit="cover"
+              onClick={() => {
+                const uploadInput = document.getElementById("uploadImage");
+                if (uploadInput) {
+                  uploadInput.click();
+                }
+              }}
+            />
+          </div>
+          <input
+            id="uploadImage"
+            type="file"
+            accept="image/*"
+            onChange={handleProfileImageChange}
+            className="hidden"
+          />
         </div>
         <div className="grid grid-cols-2 gap-4 w-full">
           <div>

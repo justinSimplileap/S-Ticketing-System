@@ -67,6 +67,8 @@ const CustomerForm: React.FC = () => {
     setWorkDomains(newWorkDomains);
     setValue("work_domain", newWorkDomains.join(","), { shouldValidate: true });
   };
+
+  
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     console.log(data);
 

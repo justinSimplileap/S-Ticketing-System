@@ -8,7 +8,6 @@ import Profile from "../../../public/images/Profile.svg";
 import Close from "../../../public/images/close.svg";
 import toast, { Toaster } from "react-hot-toast";
 
-import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { File } from "buffer";
 import { base_url } from "@/utils/constant";
