@@ -13,6 +13,12 @@ import { useRouter } from "next/navigation";
 import HighPriorityTickets from "../../../public/images/HighPriorityTickets.svg"
 import Customers from "../../../public/images/Customers.svg"
 import Departments from "../../../public/images/Departments.svg"
+import NewTickets from "../../../public/images/NewTickets.svg"
+import Open from "../../../public/images/Open.svg"
+import Closed from "../../../public/images/Closed.svg"
+import Totaltickets from "../../../public/images/Totaltickets.svg"
+import teamMembers from "../../../public/images/teamMembers.svg"
+
 
 type Ticket = {
   id: number;
@@ -193,7 +199,7 @@ export default function SuperAdminDashboard() {
                 <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" onClick={handleCardClick1}>
                   <div className="grid grid-cols-2 pb-10">
                     <div>
-                      <Image src={Circle} alt="Circle Icon" width={90} />
+                      <Image src={NewTickets} alt="Circle Icon" width={90} />
                     </div>
                     <div className="flex justify-end items-end">
                       <Image src={Arrow} alt="Arrow Icon" width={32} />
@@ -208,7 +214,7 @@ export default function SuperAdminDashboard() {
                 <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" onClick={handleCardClick2}>
                   <div className="grid grid-cols-2 pb-10">
                     <div>
-                      <Image src={Circle} alt="Circle Icon" width={90} />
+                      <Image src={Open} alt="Circle Icon" width={90} />
                     </div>
                     <div className="flex justify-end items-end">
                       <Image src={Arrow} alt="Arrow Icon" width={32} />
@@ -223,7 +229,7 @@ export default function SuperAdminDashboard() {
                 <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" onClick={handleCardClick3}>
                   <div className="grid grid-cols-2 pb-10">
                     <div>
-                      <Image src={Circle} alt="Circle Icon" width={90} />
+                      <Image src={Closed} alt="Circle Icon" width={90} />
                     </div>
                     <div className="flex justify-end items-end">
                       <Image src={Arrow} alt="Arrow Icon" width={32} />
@@ -241,7 +247,7 @@ export default function SuperAdminDashboard() {
                 <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" >
                   <div className="grid grid-cols-2 pb-10">
                     <div>
-                      <Image src={Circle} alt="Circle Icon" width={90} />
+                      <Image src={Totaltickets} alt="Circle Icon" width={90} />
                     </div>
                     <div className="flex justify-end items-end">
                       <Image src={Arrow} alt="Arrow Icon" width={32} />
@@ -282,7 +288,7 @@ export default function SuperAdminDashboard() {
               <div className="col-span-2 h-fit">
                 <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8">
                   <div className="flex items-center gap-8">
-                    <Image src={Circle} alt="Circle Icon" width={90} />
+                    <Image src={teamMembers} alt="Circle Icon" width={90} />
                     <div>
                       <div className="text-4xl text-[#5027D9]">10</div>
                       <div className="text-[#696969]">Team Members</div>
