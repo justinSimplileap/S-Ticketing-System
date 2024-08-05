@@ -1399,7 +1399,7 @@ export default function Settings() {
                     </div>
                   </TabPanel>
                   <TabPanel>
-                    {/* <div className="pt-7 pl-7">
+                    <div className="pt-7 pl-7">
                       <div className="text-xl pb-7 font-medium text-[#333B69]">
                         Change Password
                       </div>
@@ -1456,7 +1456,7 @@ export default function Settings() {
                           </button>
                         </form>
                       </div>
-                    </div> */}
+                    </div>
                   </TabPanel>
                 </TabPanels>
               </TabGroup>
