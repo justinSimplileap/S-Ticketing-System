@@ -16,6 +16,7 @@ import Sidebar from "../../../Components/common/Sidebar";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { base_url } from '@/utils/constant';
 
 type Ticket = {
   id: number;
@@ -50,7 +51,7 @@ const Manager: React.FC = () => {
           throw new Error('No token found');
         }
 
-        const response = await axios.get<{ body: Ticket[] }>('http://localhost:8000/allTickets', {
+        const response = await axios.get<{ body: Ticket[] }>(`${base_url}/allTickets`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

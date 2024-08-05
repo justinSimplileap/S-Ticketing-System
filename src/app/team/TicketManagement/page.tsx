@@ -7,6 +7,7 @@ import folder from '../../../../public/images/folder.svg';
 import TableTwo from '../../../Components/common/TableTwo';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
+import { base_url } from '@/utils/constant';
 
 type Ticket = {
   id: number;
@@ -52,7 +53,7 @@ const CustomerOne = () => {
         throw new Error('No token found');
       }
 
-      const response = await axios.get<{ body: Ticket[] }>(`http://localhost:8000/allTickets`, {
+      const response = await axios.get<{ body: Ticket[] }>(`${base_url}/allTickets`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

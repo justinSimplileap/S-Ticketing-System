@@ -10,7 +10,9 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { base_url } from "@/utils/constant";
 import { useRouter } from "next/navigation";
-
+import HighPriorityTickets from "../../../public/images/HighPriorityTickets.svg"
+import Customers from "../../../public/images/Customers.svg"
+import Departments from "../../../public/images/Departments.svg"
 
 type Ticket = {
   id: number;
@@ -175,7 +177,7 @@ export default function SuperAdminDashboard() {
             <div>
               <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 mb-5 cursor-pointer" onClick={handleCardClick}>
                 <div className="flex items-center gap-8">
-                  <Image src={Circle} alt="Circle Icon" width={90} />
+                  <Image src={HighPriorityTickets} alt="Circle Icon" width={90} />
                   <div>
                     <div className="text-4xl text-[#5027D9]">
                       {highPriorityTickets}
@@ -260,7 +262,7 @@ export default function SuperAdminDashboard() {
             <div className="grid grid-cols-2 gap-5 h-fit">
               <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 h-fit" >
                 <div className="flex items-center gap-8">
-                  <Image src={Circle} alt="Circle Icon" width={90} />
+                  <Image src={Customers} alt="Circle Icon" width={90} />
                   <div>
                     <div className="text-4xl text-[#5027D9]">3</div>
                     <div className="text-[#696969]">Customers </div>
@@ -270,7 +272,7 @@ export default function SuperAdminDashboard() {
 
               <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 h-fit">
                 <div className="flex items-center gap-8">
-                  <Image src={Circle} alt="Circle Icon" width={90} />
+                  <Image src={Departments} alt="Circle Icon" width={90} />
                   <div>
                     <div className="text-4xl text-[#5027D9]">3</div>
                     <div className="text-[#696969]">Depart-ments</div>

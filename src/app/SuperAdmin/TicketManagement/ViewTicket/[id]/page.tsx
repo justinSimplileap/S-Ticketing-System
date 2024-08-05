@@ -87,6 +87,21 @@ const Page: React.FC = () => {
   const parts = pathname.split("/");
   const value = parts[parts.length - 1];
 
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+
+  const handleHoursChange = (e: any) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    setHours(value);
+  };
+
+  const handleMinutesChange = (e: any) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value >= 0 && value < 60) {
+      setMinutes(value);
+    }
+  };
+
   const tabClasses = ({ selected }: { selected: boolean }) =>
     `px-4 py-2 text-sm font-medium focus:outline-none ${
       selected ? "text-[#5027D9] border-b-2 border-[#5027D9]" : "text-gray-500"
@@ -170,6 +185,7 @@ const Page: React.FC = () => {
 
       if (response.data) {
         const ticketDetails = response.data.ticketDetails[0];
+        console.log("these are details n", ticketDetails);
         const user = response.data.user;
 
         setTicketId(ticketDetails.id);
@@ -177,6 +193,8 @@ const Page: React.FC = () => {
         setCreatedOn(new Date(ticketDetails.createdAt).toLocaleDateString());
         setPriority(ticketDetails.priority);
         setStatus(ticketDetails.status);
+        setTotalHours(ticketDetails.hours_logged);
+        setAssignedTo(ticketDetails.assigned_to);
         setRaisedBy(user.customer_name);
         setSubject(ticketDetails.subject);
         setDescription(ticketDetails.details);
@@ -241,7 +259,6 @@ const Page: React.FC = () => {
     }
   };
 
- 
   const renderSections = (content: string) => {
     const sections = content.split(/<\/?h[1-6]>/g);
     return sections.map((section, index) => (
@@ -303,18 +320,21 @@ const Page: React.FC = () => {
     }
   };
 
-  const handleStatusChange = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const updateTicket = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log("called");
+
+    const formattedHours = hours.padStart(2, "0");
+    const formattedMinutes = minutes.padStart(2, "0");
+    const combinedValue = `${formattedHours}HRS${formattedMinutes}MINS`;
+    console.log("Formatted Value to Save:", combinedValue);
 
     try {
       const response = await axios.put(
         `${base_url}/updateTicket/${ticketId}`,
         {
           status: formStatus,
-          totalHours: formTotalHours,
+          totalHours: combinedValue,
           additionalNotes: formAdditionalNotes,
         },
         {
@@ -326,26 +346,57 @@ const Page: React.FC = () => {
 
       if (response.status === 200) {
         fetchTickets();
-        
         setStatus(formStatus);
         setTotalHours(formTotalHours);
         setIsStatusModalOpen(false);
       }
+
+      toast.success("Ticket updated successfully");
     } catch (error) {
       console.error("Error updating ticket status:", error);
+      toast.error("Failed to update ticket");
     }
   };
 
-  const handleAssign = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleAssign = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (selectedPerson === null) {
+      alert("Please select a team member.");
+      return;
+    }
+
     const selectedMember = teamMembers.find(
       (member) => member.id === selectedPerson
     );
+
     if (selectedMember) {
       console.log("Assigned to:", selectedMember.customer_name);
-      
-      setAssignedTo(selectedMember.customer_name); 
-      setIsAssignModalOpen(false); 
+
+      setAssignedTo(selectedMember.customer_name);
+      setIsAssignModalOpen(false);
+
+      try {
+        const response = await axios.put(
+          `${base_url}/updateTicket/${ticketId}`,
+          {
+            assignedTo: selectedMember.customer_name,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        console.log("Ticket updated:", response.data);
+        toast.success("Ticket updated successfully!");
+      } catch (error) {
+        console.error("Error updating ticket:", error);
+        toast.error("Failed to update the ticket.");
+      }
+    } else {
+      alert("Selected member not found.");
     }
   };
 
@@ -357,9 +408,10 @@ const Page: React.FC = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setMembers(response.data);
+
+        setTeamMembers(response.data);
       } catch (error) {
-        // setError(error.response ? error.response.data.message : error.message);
+        console.error("Error fetching members:", error);
       }
     };
 
@@ -437,7 +489,7 @@ const Page: React.FC = () => {
             <div className="text-base font-medium">Assigned To</div>
             <div>
               <div className="flex space-x-3">
-                <p className="text-[#7D7D7D]">{assignedTo}</p>
+                <p className="text-base py-5 text-[#7D7D7D]">{assignedTo}</p>
                 <Image
                   src={edit}
                   alt="Edit Icon"
@@ -447,9 +499,6 @@ const Page: React.FC = () => {
                   className="cursor-pointer"
                 />
               </div>
-            </div>
-            <div>
-              <p className="text-base py-5 text-[#7D7D7D]">{assignedTo}</p>
             </div>
           </div>
           <div className="">
@@ -723,7 +772,7 @@ const Page: React.FC = () => {
                 <Image src={close} alt="Close Icon" width={16} height={16} />
               </button>
             </div>
-            <form onSubmit={handleStatusChange}>
+            <form onSubmit={updateTicket}>
               <div className="mb-4">
                 <label htmlFor="status" className="block text-gray-700">
                   Choose status*
@@ -747,11 +796,21 @@ const Page: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  id="totalHours"
-                  name="totalHours"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none"
-                  value={formTotalHours}
-                  onChange={(e) => setFormTotalHours(e.target.value)}
+                  id="hours"
+                  name="hours"
+                  className="w-1/2 px-3 py-2 border rounded-lg focus:outline-none"
+                  value={hours}
+                  onChange={handleHoursChange}
+                  placeholder="Hours"
+                />
+                <input
+                  type="text"
+                  id="minutes"
+                  name="minutes"
+                  className="w-1/2 px-3 py-2 border rounded-lg focus:outline-none"
+                  value={minutes}
+                  onChange={handleMinutesChange}
+                  placeholder="Minutes"
                 />
               </div>
               <div className="mb-4">
@@ -822,8 +881,9 @@ const Page: React.FC = () => {
                   onChange={(e) => setSelectedPerson(Number(e.target.value))}
                 >
                   <option value="" disabled>
-                    Select a person
+                    Select a team Member
                   </option>
+
                   {teamMembers.map((member) => (
                     <option key={member.id} value={member.id}>
                       {member.customer_name}

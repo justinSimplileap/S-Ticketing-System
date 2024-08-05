@@ -328,7 +328,7 @@ const ViewTicketPage: React.FC = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/updateTicket/${ticketId}`,
+        `${base_url}/updateTicket/${ticketId}`,
         {
           status: formStatus,
           totalHours: formTotalHours,

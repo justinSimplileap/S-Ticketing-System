@@ -22,12 +22,24 @@ type FormInputs = {
   postal_code: string;
   about_company: string;
   work_domain: string;
+  profile_url: File | null;
 };
 const CustomerForm: React.FC = () => {
   const router = useRouter();
   const { register, handleSubmit, formState: { errors }, setValue, } = useForm<FormInputs>();
   const [workDomains, setWorkDomains] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [profile_url, setprofile_url] = useState<globalThis.File | null>(null);
+
+  const handleProfileImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setprofile_url(file);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
@@ -49,7 +61,10 @@ const CustomerForm: React.FC = () => {
       console.log(data);
       const response = await axios.post(
         `${base_url}/addCustomer`,
+        
+
         {
+          profile_url: data.profile_url ? data.profile_url : undefined,
           customer_name: data.customer_name,
           company_legal_name: data.company_legal_name,
           company_url: data.company_url,
@@ -67,7 +82,7 @@ const CustomerForm: React.FC = () => {
       if (response){
         toast.success("Customer added successfully");
         console.log("Form submitted successfully:", response.data);
-        location.reload();
+        // location.reload();
       }
       
       
@@ -80,9 +95,29 @@ const CustomerForm: React.FC = () => {
       <Toaster />
       <div className="text-xl font-semibold">Basic Details</div>
       <div className="flex py-5 items-center">
-        <div className="w-[20%]">
-          <Image src={Profile} alt="Profile Pic" className="pr-3"  />
-        </div>
+      <div className="w-[20%]">
+            <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+              <Image
+                src={profile_url ? URL.createObjectURL(profile_url) : Profile}
+                alt="Profile Pic"
+                layout="fill"
+                objectFit="cover"
+                onClick={() => {
+                  const uploadInput = document.getElementById("uploadImage");
+                  if (uploadInput) {
+                    uploadInput.click();
+                  }
+                }}
+              />
+            </div>
+            <input
+              id="uploadImage"
+              type="file"
+              accept="image/*"
+              onChange={handleProfileImageChange}
+              className="hidden"
+            />
+          </div>
         <div className="grid grid-cols-2 gap-4 w-full">
           <div>
             <label htmlFor="customerName" className="block text-sm ">

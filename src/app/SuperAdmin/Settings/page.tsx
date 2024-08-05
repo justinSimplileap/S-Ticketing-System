@@ -143,6 +143,16 @@ export default function Settings() {
   const [clients, setClients] = useState<Client[]>([]);
   const [clientTeam, setClientTeam] = useState<ClientTeamMember[]>([]);
   const [organizationId, setOrganizationId] = useState<string>("");
+  const [profileImage, setProfileImage] = useState<globalThis.File | null>(null);
+
+  const handleProfileImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setProfileImage(file);
+    }
+  };
 
   const fetchClients = async () => {
     try {
@@ -358,8 +368,7 @@ export default function Settings() {
         toast.success("team member added successfully");
         // debugger
         // router.refresh()
-        location.reload()
-
+        location.reload();
       }
     } catch (error) {
       toast.error("failed to add team member");
@@ -412,7 +421,7 @@ export default function Settings() {
               name: employee.customer_name,
               role: employee.designation,
               designation: employee.designation,
-              imageUrl: employee.profile_url || ProfilePic, // Use default image if profile_url is null
+              imageUrl: employee.profile_url || ProfilePic,
             };
 
             if (!acc[department]) {
@@ -470,11 +479,6 @@ export default function Settings() {
     },
   ];
 
-  type SecurityInputs = {
-    currentPassword: string;
-    newPassword: string;
-  };
-
   type addMemberInputs = {
     customer_name: string;
     gender: string;
@@ -493,9 +497,41 @@ export default function Settings() {
     getValues,
   } = useForm<addMemberInputs>();
 
-  const onSubmitSecurity: SubmitHandler<SecurityInputs> = (data) => {
-    console.log(data);
+  type SecurityInputs = {
+    currentPassword: string;
+    newPassword: string;
   };
+  
+
+    const {
+      register: registerSecurity,
+      handleSubmit: handleSubmitSecurity,
+      formState: { errors: securityErrors },
+    } = useForm<SecurityInputs>();
+  
+    const onSubmitSecurity: SubmitHandler<SecurityInputs> = async (data) => {
+  
+      try {
+        const response = await axios.post(
+          `${base_url}/resetPassword`,
+          {
+            currentPassword: data.currentPassword,
+            newPassword: data.newPassword,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+  
+        console.log("Password changed:", response.data);
+        toast.success("Password changed successfully!");
+      } catch (error) {
+        console.error("Error changing password:", error);
+        toast.error("Failed to change password.");
+      }
+    };
 
   return (
     <div>
@@ -1293,7 +1329,7 @@ export default function Settings() {
                         Change Password
                       </div>
                       <div className="w-1/2">
-                        {/* <form onSubmit={handleSubmitSecurity(onSubmitSecurity)}>
+                        <form onSubmit={handleSubmitSecurity(onSubmitSecurity)}>
                           <div className="mb-4 pb-7">
                             <label
                               htmlFor="currentPassword"
@@ -1343,7 +1379,7 @@ export default function Settings() {
                           >
                             Save changes
                           </button>
-                        </form> */}
+                        </form>
                       </div>
                     </div>
                   </TabPanel>

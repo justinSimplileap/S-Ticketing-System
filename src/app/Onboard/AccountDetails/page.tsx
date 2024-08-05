@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Profile from "../../../../public/images/Profile.svg";
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { base_url } from '@/utils/constant';
 
 const AccountDetails: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ const AccountDetails: React.FC = () => {
           throw new Error('No token found');
         }
 
-        const response = await axios.get('http://localhost:8000/getUserAccountDetails', {
+        const response = await axios.get(`${base_url}/getUserAccountDetails`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -69,7 +70,7 @@ const AccountDetails: React.FC = () => {
         throw new Error('No token found');
       }
 
-      const response = await axios.put('http://localhost:8000/AccountDetails', payload, {
+      const response = await axios.put(`${base_url}/AccountDetails`, payload, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`

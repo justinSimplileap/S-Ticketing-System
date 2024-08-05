@@ -194,7 +194,7 @@ const AccountDetailsForm: React.FC = () => {
       formData.append("work_domain", data.workDomain);
 
       const response = await axios.put(
-        "http://localhost:8000/updateAccountDetails",
+        `${base_url}/updateAccountDetails`,
         formData,
         {
           headers: {
