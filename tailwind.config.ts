@@ -16,9 +16,6 @@ const config: Config = {
       fontFamily:{
         lato: ['Lato', 'sans-serif'],
       },
-      colors: {
-        [#2A2C3E]: '#2A2C3E',
-      }
     },
   },
   plugins: [],
