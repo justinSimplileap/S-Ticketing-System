@@ -33,7 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-10 w-[15%] min-h-screen bg-sidebarBackground p-8 sticky">
+    <div className="flex flex-col gap-10 w-[15%] min-h-screen bg-[#2A2C3E] p-8 sticky">
       <div className="fixed">
         <div className="pb-10">
           <Image src={logoWhite} alt="logo" height={80} width={150} />
