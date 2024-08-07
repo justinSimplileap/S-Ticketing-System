@@ -1,19 +1,21 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import Image from 'next/image';
-import Link from 'next/link';
-import Bell from '../../../public/images/bell.svg';
-import Arrow from '../../../public/images/Arrow 2.svg';
-import ButtonPurple from '../../Components/common/ButtonPurple';
-import Table from '../../Components/common/Table';
-import WarningIcon from "../../../public/images/WarningIcon.svg"
-import OpenTickets from "../../../public/images/OpenTickets.svg"
-import ClosedTickets from "../../../public/images/closedTicket.svg"
-import { useRouter } from 'next/navigation';
-import { base_url } from '@/utils/constant';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Image from "next/image";
+import Link from "next/link";
+import Bell from "../../../public/images/bell.svg";
+import Arrow from "../../../public/images/Arrow 2.svg";
+import ButtonPurple from "../../Components/common/ButtonPurple";
+import Table from "../../Components/common/Table";
+import WarningIcon from "../../../public/images/WarningIcon.svg";
+import OpenTickets from "../../../public/images/OpenTickets.svg";
+import ClosedTickets from "../../../public/images/closedTicket.svg";
+import { useRouter } from "next/navigation";
+import { base_url } from "@/utils/constant";
+import { Button } from "@headlessui/react";
+import Plus from "../../../public/images/Plus.svg"
 
 type Ticket = {
   id: number;
@@ -42,8 +44,8 @@ const DashboardPage: React.FC = () => {
   const [newTickets, setNewTickets] = useState<number>(0);
   const [openTickets, setOpenTickets] = useState<number>(0);
   const [closedTickets, setClosedTickets] = useState<number>(0);
-  const [highPriorityTickets, setHighPriorityTickets] = useState<number>(0)
-  const [profilePicture, setProfilePicture] = useState('')
+  const [highPriorityTickets, setHighPriorityTickets] = useState<number>(0);
+  const [profilePicture, setProfilePicture] = useState("");
 
   useEffect(() => {
     fetchTickets();
@@ -51,41 +53,40 @@ const DashboardPage: React.FC = () => {
   }, []);
 
   const fetchTickets = async () => {
-    
     try {
       const response = await axios.get<{ tickets: Ticket[] }>(
         `${base_url}/viewAllTickets`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
 
       if (!response.data.tickets) {
-        throw new Error('No tickets found');
+        throw new Error("No tickets found");
       }
 
       const activeTickets = response.data.tickets.filter(
-        (ticket) => ticket.status === 'Open'
+        (ticket) => ticket.status === "Open"
       );
 
       const closedTickets = response.data.tickets.filter(
-        (ticket) => ticket.status === 'Closed'
-      )
+        (ticket) => ticket.status === "Closed"
+      );
 
       const highPriorityTickets = response.data.tickets.filter(
-        (ticket) => ticket.priority === 'High'
-      )
+        (ticket) => ticket.priority === "High"
+      );
 
       setOpenTickets(activeTickets.length);
       setNewTickets(response.data.tickets.length);
-      setClosedTickets(closedTickets.length)
+      setClosedTickets(closedTickets.length);
       setTickets(response.data.tickets);
       setHighPriorityTickets(highPriorityTickets.length);
     } catch (error) {
-      console.error('Error fetching tickets:', error);
-      toast.error('Failed to fetch tickets');
+      console.error("Error fetching tickets:", error);
+      toast.error("Failed to fetch tickets");
     }
   };
 
@@ -95,46 +96,54 @@ const DashboardPage: React.FC = () => {
         `${base_url}/getUserDetails`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      if(response){
-        setProfilePicture(response.data.user.profile_url)
+      if (response) {
+        setProfilePicture(response.data.user.profile_url);
       }
-      
     } catch (error) {
-      console.error('Error fetching tickets:', error);
+      console.error("Error fetching tickets:", error);
     }
-  }
+  };
 
   const handleCardClick1 = () => {
-    router.push('/TicketManagement?priority=High');
-  }
+    router.push("/TicketManagement?priority=High");
+  };
 
   const handleCardClick2 = () => {
-    router.push('/TicketManagement?status=Open');
-  }
+    router.push("/TicketManagement?status=Open");
+  };
 
   const handleCardClick3 = () => {
-    router.push('/TicketManagement?status=Closed');
-  }
+    router.push("/TicketManagement?status=Closed");
+  };
 
   const handleButtonClick = () => {
-    router.push("/TicketManagement/NewTicket")
-  }
+    router.push("/TicketManagement/NewTicket");
+  };
 
   return (
     <div className="">
-      <div onClick={handleButtonClick}>
-          <ButtonPurple />
+      <div
+        
+        className="lg:flex lg:justify-end p-5 lg:p-8"
+      >
+        <Button className="flex rounded bg-[#5027D9] py-2 px-4 text-sm text-white items-center gap-2 w-full lg:w-max justify-center" onClick={handleButtonClick}>
+          <Image src={Plus} alt="add" width={22} height={22} />
+          New Ticket
+        </Button>
       </div>
       <div className="ml-8 mr-8 shadow-lg rounded-md">
         <h1 className="text-3xl p-7 text-[#2A2C3E]">Summary</h1>
         <div className="grid grid-cols-3 gap-5 mr-7">
-          <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer" onClick={handleCardClick1}>
+          <div
+            className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer"
+            onClick={handleCardClick1}
+          >
             <div className="grid grid-cols-2 pb-10">
-              <div >
+              <div>
                 <Image src={WarningIcon} alt="hhh" width={80} />
               </div>
               <div className="flex justify-end items-end">
@@ -142,12 +151,17 @@ const DashboardPage: React.FC = () => {
               </div>
             </div>
             <div className="pl-5 grid gap-3">
-              <div className="text-4xl text-[#5027D9]">{highPriorityTickets}</div>
+              <div className="text-4xl text-[#5027D9]">
+                {highPriorityTickets}
+              </div>
               <div className="text-[#696969]">High Priority Tickets</div>
             </div>
           </div>
 
-          <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer" onClick={handleCardClick2}>
+          <div
+            className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer"
+            onClick={handleCardClick2}
+          >
             <div className="grid grid-cols-2 pb-10">
               <div>
                 <Image src={OpenTickets} alt="hhh" width={80} />
@@ -162,7 +176,10 @@ const DashboardPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer" onClick={handleCardClick3}>
+          <div
+            className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer"
+            onClick={handleCardClick3}
+          >
             <div className="grid grid-cols-2 pb-10">
               <div>
                 <Image src={ClosedTickets} alt="hhh" width={80} />
