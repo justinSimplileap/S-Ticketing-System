@@ -15,11 +15,14 @@ import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { base_url } from "@/utils/constant";
 
+import { useRouter } from "next/navigation";
+
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
 });
 
 export default function Page() {
+  const router = useRouter();
   const [customer, setCustomer] = useState("Select customer name");
   const [ticketType, setTicketType] = useState("Select Ticket Type");
   const [priority, setPriority] = useState("Select Priority");
@@ -198,6 +201,7 @@ export default function Page() {
         });
 
         toast.success("New Ticket Added Successfully");
+        router.push("/SuperAdmin/TicketManagement")
 
         handleCancel();
       } catch (error) {

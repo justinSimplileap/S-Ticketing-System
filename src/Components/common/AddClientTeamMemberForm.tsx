@@ -14,10 +14,12 @@ import Plus from "../../../public/images/Plus.svg";
 
 interface AddClientTeamMemberFormProps {
   organizationId: string;
+  company_legal_name: string;
 }
 
 const AddClientTeamMemberForm: React.FC<AddClientTeamMemberFormProps> = ({
   organizationId,
+  company_legal_name,
 }) => {
   const [profileImage, setProfileImage] = useState<globalThis.File | null>(
     null
@@ -45,37 +47,6 @@ const AddClientTeamMemberForm: React.FC<AddClientTeamMemberFormProps> = ({
     handleSubmit,
     formState: { errors },
   } = useForm();
-  //   const handleAddClientMember = async (data: any) => {
-  //     console.log("Data received from form submission:", data);
-  //     try {
-  //       const formData = {
-  //         organization_id: organizationId,
-  //         customer_name: data.customer_name,
-  //         company_legal_name: data.company_legal_name,
-  //         password: data.password,
-  //         gender: data.gender,
-  //         phone_number: data.phone_number,
-  //         email: data.email,
-  //         designation: data.designation,
-  //         role: "Client Team",
-  //       };
-
-  //       console.log("Form data to be sent to server:", formData);
-
-  //       const response = await axios.post(
-  //         `${base_url}/addClientTeamMember`,
-  //         formData
-  //       );
-
-  //       if (response) {
-  //         toast.success("Client member added successfully");
-  //         location.reload();
-  //       }
-  //     } catch (error) {
-  //       console.error("Error adding team member:", error);
-  //       toast.error("Failed to add team member");
-  //     }
-  //   };
 
   const handleAddClientMember = async (data: any) => {
     console.log("Data received from form submission:", data);
@@ -223,6 +194,8 @@ const AddClientTeamMemberForm: React.FC<AddClientTeamMemberFormProps> = ({
               <input
                 id="customerCompany"
                 type="text"
+                defaultValue={company_legal_name}
+                disabled
                 {...register("company_legal_name", {
                   required: true,
                 })}

@@ -58,7 +58,7 @@ interface Customer {
   postal_code: string;
   about_company: string;
   work_domain: string;
-  profile_url: string ;
+  profile_url: string;
 }
 
 interface Client {
@@ -146,6 +146,8 @@ export default function Settings() {
   const [clients, setClients] = useState<Client[]>([]);
   const [clientTeam, setClientTeam] = useState<ClientTeamMember[]>([]);
   const [organizationId, setOrganizationId] = useState<string>("");
+  const [company_legal_name, setCompany_legal_name] = useState<string>("");
+
   const [profileImage, setProfileImage] = useState<globalThis.File | null>(
     null
   );
@@ -158,8 +160,6 @@ export default function Settings() {
       setProfileImage(file);
     }
   };
-
-  
 
   const fetchClients = async () => {
     try {
@@ -264,6 +264,8 @@ export default function Settings() {
     setSelectedUserWorkDomain(customer.work_domain);
     setSelectedUserProfilePic(customer.profile_url);
     setOrganizationId(customer.organization_id);
+    setCompany_legal_name(customer.company_legal_name);
+
 
     console.log("this is selected", customer);
     console.log("customer id", customer.id);
@@ -358,15 +360,15 @@ export default function Settings() {
 
   const handleAddMemberForm = async (data: any) => {
     console.log("formdata1", data);
-  
+
     try {
       const formData = new FormData();
-  
+
       // Append profile image if it exists
       if (profileImage) {
         formData.append("profileImage", profileImage);
       }
-  
+
       // Append other form data
       formData.append("customer_name", data.customer_name);
       formData.append("gender", data.gender);
@@ -375,9 +377,9 @@ export default function Settings() {
       formData.append("designation", data.position);
       formData.append("password", data.password);
       formData.append("role", data.role);
-  
+
       console.log("formdata", formData);
-  
+
       // Post the form data
       const response = await axios.post(`${base_url}/addTeamMember`, formData, {
         headers: {
@@ -385,7 +387,7 @@ export default function Settings() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-  
+
       if (response) {
         console.log("Response", response);
         toast.success("Team member added successfully");
@@ -561,7 +563,6 @@ export default function Settings() {
   } = useForm<SecurityInputs>();
 
   const onSubmitSecurity: SubmitHandler<SecurityInputs> = async (data) => {
-
     try {
       const response = await axios.post(
         `${base_url}/resetPassword`,
@@ -710,194 +711,13 @@ export default function Settings() {
                           )}
                         </div>
                       ) : showAddMemberForm ? (
-                        // form to add a new client member
-
                         <div>
                           <Toaster />
-                          {/* <h2 className="text-xl font-semibold mb-4">
-                            Basic Details
-                          </h2> */}
+
                           <AddClientTeamMemberForm
                             organizationId={organizationId}
+                            company_legal_name={company_legal_name}
                           />
-                          {/* <form onSubmit={handleSubmit(handleAddClientMember)}>
-                            <div className="flex py-5">
-                              <div className="w-[20%] pt-10">
-                                <Image
-                                  src={ProfilePic}
-                                  alt="Profile Pic"
-                                  className="pr-3"
-                                />
-                              </div>
-                              <div className="grid grid-cols-2 gap-4 w-full">
-                                <div>
-                                  <label
-                                    htmlFor="customerName"
-                                    className="block text-sm "
-                                  >
-                                    Customer Name
-                                  </label>
-                                  <input
-                                    id="customerName"
-                                    type="text"
-                                    {...register("customer_name", {
-                                      required: true,
-                                    })}
-                                    className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                                  />
-                                  {errors.customer_name && (
-                                    <span className="text-red-600">
-                                      Customer Name is required
-                                    </span>
-                                  )}
-                                </div>
-                                <div>
-                                  <label
-                                    htmlFor="companyName"
-                                    className="block text-sm  "
-                                  >
-                                    Gender
-                                  </label>
-                                  <input
-                                    id="companyName"
-                                    type="text"
-                                    {...register("gender", { required: true })}
-                                    className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                                  />
-                                  {errors.gender && (
-                                    <span className="text-red-600">
-                                      Gender is required
-                                    </span>
-                                  )}
-                                </div>
-                                <div>
-                                  <label
-                                    htmlFor="companyUrl"
-                                    className="block text-sm "
-                                  >
-                                    Phone number
-                                  </label>
-                                  <input
-                                    id="phoneNumber"
-                                    type="number"
-                                    {...register("phone_number", {
-                                      required: true,
-                                    })}
-                                    className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                                  />
-                                  {errors.phone_number && (
-                                    <span className="text-red-600">
-                                      Phone Number is required
-                                    </span>
-                                  )}
-                                </div>
-                                <div>
-                                  <label
-                                    htmlFor="companyUrl"
-                                    className="block text-sm "
-                                  >
-                                    Email
-                                  </label>
-                                  <input
-                                    id="email"
-                                    type="email"
-                                    {...register("email", { required: true })}
-                                    className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                                  />
-                                  {errors.email && (
-                                    <span className="text-red-600">
-                                      Email is required
-                                    </span>
-                                  )}
-                                </div>
-                                <div>
-                                  <label
-                                    htmlFor="companyUrl"
-                                    className="block text-sm "
-                                  >
-                                    Customer Company
-                                  </label>
-                                  <input
-                                    id="customerCompany"
-                                    type="text"
-                                    {...register("company_legal_name", {
-                                      required: true,
-                                    })}
-                                    className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                                  />
-                                  {errors.company_legal_name && (
-                                    <span className="text-red-600">
-                                      Customer Company is required
-                                    </span>
-                                  )}
-                                </div>
-
-                                <div>
-                                  <label
-                                    htmlFor="password"
-                                    className="block text-sm "
-                                  >
-                                    Password
-                                  </label>
-                                  <input
-                                    id="password"
-                                    type="text"
-                                    {...register("password", {
-                                      required: true,
-                                    })}
-                                    className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                                  />
-                                  {errors.company_legal_name && (
-                                    <span className="text-red-600">
-                                      Customer Members password is required
-                                    </span>
-                                  )}
-                                </div>
-
-                                <div>
-                                  <label
-                                    htmlFor="designation"
-                                    className="block text-sm "
-                                  >
-                                    Designation
-                                  </label>
-                                  <select
-                                    id="designation"
-                                    {...register("designation", {
-                                      required: true,
-                                    })}
-                                    className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
-                                  >
-                                    <option value="">Select Designation</option>
-                                    {designations.map((designation, index) => (
-                                      <option key={index} value={designation}>
-                                        {designation}
-                                      </option>
-                                    ))}
-                                  </select>
-                                  {errors.designation && (
-                                    <span className="text-red-600">
-                                      Designation is required
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex justify-end">
-                              <Button
-                                type="submit"
-                                className="rounded bg-[#5027D9] py-3 px-7 text-sm text-white flex items-center gap-2"
-                              >
-                                <Image
-                                  src={Plus}
-                                  alt="add"
-                                  width={20}
-                                  height={20}
-                                />
-                                Add Members
-                              </Button>
-                            </div>
-                          </form> */}
                         </div>
                       ) : (
                         <div>

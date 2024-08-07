@@ -12,12 +12,15 @@ import { usePathname } from "next/navigation";
 import { base_url } from "@/utils/constant";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
 });
 
 export default function Page() {
+  const router = useRouter();
+
   const pathname = usePathname();
   const parts = pathname.split("/");
   const value = parts[parts.length - 1];
@@ -174,18 +177,18 @@ export default function Page() {
   };
 
   const handleCancel = () => {
-    setTicketType("Select Ticket Type");
-    setPriority("Select Priority");
-    setSubject("");
-    setRequestDetails("");
-    setSelectedFiles([]);
-    setErrors({
-      customer: false,
-      ticketType: false,
-      priority: false,
-      subject: false,
-      requestDetails: false,
-    });
+    // setTicketType("Select Ticket Type");
+    // setPriority("Select Priority");
+    // setSubject("");
+    // setRequestDetails("");
+    // setSelectedFiles([]);
+    // setErrors({
+    //   ticketType: false,
+    //   priority: false,
+    //   subject: false,
+    //   requestDetails: false,
+    // });
+    router.push("/TicketManagement");
   };
 
   const handleTextAreaChange = (html: any) => {
@@ -257,7 +260,7 @@ export default function Page() {
           }
         );
         toast.success("Ticket Updated Successfully");
-
+        router.push("/SuperAdmin/TicketManagement")
         handleCancel();
       } catch (error) {
         console.error("Error adding new ticket:", error);
@@ -368,9 +371,10 @@ export default function Page() {
                   }`}
                 >
                   <option value="Select Priority">Choose Ticket Type</option>
-                  <option value="Type 1">Type 1</option>
-                  <option value="Type 2">Type 2</option>
-                  <option value="Type 3">Type 3</option>
+                  <option value="Incident">Incident</option>
+                  <option value="Problem">Problem</option>
+                  <option value="Change">Change</option>
+                  <option value="Service Request">Service Request</option>
                 </select>
                 {errors.ticketType && (
                   <p className="text-red-500 text-xs mt-1">

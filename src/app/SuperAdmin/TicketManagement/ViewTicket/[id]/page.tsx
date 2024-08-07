@@ -298,7 +298,7 @@ const Page: React.FC = () => {
 
       toast.success("Comment Added successfully");
       console.log("Comment added successfully:", response.data);
-
+      location.reload()
       setNewComment("");
       setAttachments([]);
     } catch (error) {
