@@ -163,7 +163,7 @@ export default function SuperAdminDashboard() {
   return (
     <div>
       {/* <div className="flex justify-between items-center shadow-md p-8 sticky top-0 z-50 bg-white">
-        <div className="text-sidebarBackground text-xl">Dashboard</div>
+        <div className="text-[#2A2C3E] text-xl">Dashboard</div>
         <div className="flex gap-4 justify-center items-center">
           <div>
             <Image src={Bell} alt="Notification Bell" width={25} />
@@ -363,7 +363,7 @@ export default function SuperAdminDashboard() {
 
       <div className="m-8 flex flex-col gap-5">
         <div className="flex p-7 justify-between">
-          <div className="text-3xl text-sidebarBackground">Recent Tickets</div>
+          <div className="text-3xl text-[#2A2C3E]">Recent Tickets</div>
           <div className="text-2xl text-[#696969] flex gap-3 justify-center items-center">
             <div>
               <Link href="/AllTickets">View All Tickets </Link>

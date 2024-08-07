@@ -120,7 +120,7 @@ const Member: React.FC = () => {
     <div>
       <div className='p-6'>
         <div className="shadow-lg rounded-md">
-          <h1 className="p-7 text-sidebarBackground text-2xl font-bold font-lato">Summary</h1>
+          <h1 className="p-7 text-[#2A2C3E] text-2xl font-bold font-lato">Summary</h1>
           <div className="grid grid-cols-3 gap-4 pl-5 pr-5">
             <div className="bg-[#F7F7F7] p-8 rounded-md mb-7" onClick={handleCardClick1}>
               <div className="grid grid-cols-2 pb-10">

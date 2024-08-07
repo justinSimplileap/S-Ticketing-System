@@ -71,7 +71,7 @@
 //   return (
 //     <div className="">
 //       <div className="flex justify-between items-center shadow-md p-8 sticky top-0 z-50 bg-white">
-//         <div className="text-sidebarBackground text-xl">Ticket Management</div>
+//         <div className="text-[#2A2C3E] text-xl">Ticket Management</div>
 //         <div className="flex gap-4 justify-center items-center">
 //           <div>
 //             <Image src={Bell} alt="Notification Bell" width={25} />
@@ -84,7 +84,7 @@
 
 //       <div className="flex justify-between items-center mt-10 ml-8 mr-8">
 //         <div>
-//           <h1 className="text-3xl text-sidebarBackground">Tickets</h1>
+//           <h1 className="text-3xl text-[#2A2C3E]">Tickets</h1>
 //         </div>
 //         <div className="flex justify-around items-center gap-2">
 //           <div>

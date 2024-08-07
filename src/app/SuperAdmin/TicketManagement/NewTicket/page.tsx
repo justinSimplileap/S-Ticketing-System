@@ -235,13 +235,13 @@ export default function Page() {
       <Toaster />
       {/* <div className="flex items-center justify-between shadow-md p-8 sticky top-0 z-50 bg-white">
         <div className="flex items-center gap-3">
-          <div className="text-sidebarBackground text-xl">
+          <div className="text-[#2A2C3E] text-xl">
             <Link href="/TicketManagement">Ticket Management </Link>
           </div>
           <div>
             <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
           </div>
-          <div className="text-sidebarBackground text-xl">New Ticket</div>
+          <div className="text-[#2A2C3E] text-xl">New Ticket</div>
           <div>
             <Image src={breadcrumbArrow} alt="breadcrumb" width={25} />
           </div>
@@ -258,7 +258,7 @@ export default function Page() {
       </div> */}
 
       <div className="h-[100%] p-10 mx-10 my-12 bg-[#F9F9F9] rounded-md shadow-md">
-        <div className="text-sidebarBackground text-2xl mb-6">New Ticket</div>
+        <div className="text-[#2A2C3E] text-2xl mb-6">New Ticket</div>
 
         <form className="space-y-6" onSubmit={handleFormSubmit}>
           <div className="relative">

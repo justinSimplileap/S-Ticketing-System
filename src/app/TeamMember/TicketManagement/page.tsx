@@ -204,7 +204,7 @@ function TicketManagementPage() {
     <div className="">
       <div className="lg:flex justify-between items-center mt-5 lg:mt-10 lg:mx-8 mx-5">
         <div>
-          <h1 className="text-3xl text-sidebarBackground mb-7 lg:mg-0">Tickets</h1>
+          <h1 className="text-3xl text-[#2A2C3E] mb-7 lg:mg-0">Tickets</h1>
         </div>
         <div className="lg:flex justify-around items-center gap-2">
           <div>

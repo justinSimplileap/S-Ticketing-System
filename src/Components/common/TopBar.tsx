@@ -73,7 +73,7 @@ const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <div className="flex justify-between items-center shadow-md px-8 py-5 sticky top-0 z-50 bg-sidebarBackground lg:bg-white w-[100%] ">
+    <div className="flex justify-between items-center shadow-md px-8 py-5 sticky top-0 z-50 bg-[#2A2C3E] lg:bg-white w-[100%] ">
       <div className="flex gap-2 items-center text-[#17192b] text-xl ">
         <Image
           src={Hamburger}

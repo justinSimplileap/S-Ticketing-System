@@ -17,7 +17,7 @@ const config: Config = {
         lato: ['Lato', 'sans-serif'],
       },
       colors: {
-        sidebarBackground: '#2A2C3E',
+        [#2A2C3E]: '#2A2C3E',
       }
     },
   },
