@@ -83,7 +83,7 @@ const Page: React.FC = () => {
   useEffect(() => {
     fetchTickets();
     fetchComments();
-    fetchUser();
+    // fetchUser();
     fetchEvents();
   }, []);
 
@@ -107,23 +107,23 @@ const Page: React.FC = () => {
     }
   };
 
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get<{ user: User }>(
-        `${base_url}/UserDetails`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (response) {
-        setProjectName(response.data.user.company_legal_name);
-      }
-    } catch (error) {
-      console.error("Error fetching tickets:", error);
-    }
-  };
+  // const fetchUser = async () => {
+  //   try {
+  //     const response = await axios.get<{ user: User }>(
+  //       `${base_url}/UserDetails`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     );
+  //     if (response) {
+  //       setProjectName(response.data.user.company_legal_name);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching tickets:", error);
+  //   }
+  // };
 
   const fetchComments = async () => {
     try {
@@ -168,6 +168,9 @@ const Page: React.FC = () => {
         setRaisedBy(user.customer_name);
         setSubject(ticketDetails.subject);
         setDescription(ticketDetails.details);
+        setAssignedTo(ticketDetails.assigned_to)
+        setProjectName(ticketDetails.company_legal_name)
+        setTotalHours(ticketDetails.hours_logged)
 
         const uploadedFiles = ticketDetails.details_images_url.map(
           (url: string) => {
