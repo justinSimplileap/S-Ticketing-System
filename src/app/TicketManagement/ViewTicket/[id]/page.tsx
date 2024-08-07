@@ -543,12 +543,12 @@ const Page: React.FC = () => {
             <TabPanel className="p-7 bg-white">
               <div className="flex justify-between items-center mb-4">
                 <div className="font-semibold">All Uploaded Files</div>
-                <div className="flex items-center gap-2 cursor-pointer">
+                {/* <div className="flex items-center gap-2 cursor-pointer">
                   <div>
                     <Image src={addticket} alt="Add new" width={20} />
                   </div>
                   <div className="text-[#5027D9] text-lg">Add new</div>
-                </div>
+                </div> */}
               </div>
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
