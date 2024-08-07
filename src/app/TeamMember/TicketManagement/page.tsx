@@ -95,7 +95,7 @@ function TicketManagementPage() {
       }
 
       const response = await axios.get<{ tickets: Ticket[], totalPages: number, currentPage: number }>(
-        `${base_url}/filtertickets`,
+        `${base_url}/filterticketsmember`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
