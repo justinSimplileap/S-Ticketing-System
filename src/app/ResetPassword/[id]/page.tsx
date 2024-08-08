@@ -1,14 +1,15 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Head from 'next/head';
 import Image from 'next/image';
 import logo from "../../../../public/images/logo.svg";
 import cover from "../../../../public/images/cover.png";
 import reset from "../../../../public/images/reset.svg";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import axios from 'axios';
 import { base_url } from '@/utils/constant';
+import Loader from '@/Components/common/Loader';
 
 // Define the interface for form data
 interface FormData {
@@ -17,6 +18,8 @@ interface FormData {
 }
 
 const ResetPasswordForm = () => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const pathname = usePathname();
   const parts = pathname.split("/");
   const value = parts[parts.length - 1];
@@ -24,6 +27,7 @@ const ResetPasswordForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
+    // setLoading(true)
     console.log(data);
     if (data.newPassword !== data.confirmPassword) {
       alert('Passwords do not match');
@@ -35,8 +39,12 @@ const ResetPasswordForm = () => {
         email: value,  
         newPassword: data.newPassword,
       });
+      if (response.status==200){
+        setLoading(true);
+        router.push("/login")
+      }
 
-      console.log(response);
+      // console.log(response);
       
     } catch (error) {
       console.error('Failed to change password:', error);
@@ -96,6 +104,7 @@ const ResetPasswordForm = () => {
             </button>
           </div>
         </form>
+        {loading && <Loader />}
       </div>
     </div>
   );
