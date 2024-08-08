@@ -196,10 +196,11 @@ const ViewTicketPage: React.FC = () => {
         setCreatedOn(new Date(response.data.body[0].createdAt).toLocaleDateString());
         setPriority(response.data.body[0].priority);
         setStatus(response.data.body[0].status);
-        
-        setRaisedBy(response.data.body[0].company_legal_name);
+        setAssignedTo(ticketDetails.assigned_to)
+        setRaisedBy(response.data.body[0].customer_name);
         setSubject(response.data.body[0].subject);
         setDescription(response.data.body[0].details);
+        setProjectName(ticketDetails.company_legal_name)
 
         const filesData = response.data.body[0].details_images_url.map(
           (url: string) => {
@@ -420,24 +421,41 @@ const ViewTicketPage: React.FC = () => {
           </div>
 
           {/* Raised By & Assigned To */}
+          {/* <div className="grid grid-cols-3">
           <div className="grid grid-cols-3">
+            <div>
+              <p className="text-[#2A2C3E] font-medium">Raised By:</p>
+              <p className="text-[#7D7D7D]">{customer_name}</p>
+            </div>
+            </div>
+            <div className="grid grid-cols-3">
+            <div>
+              <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
+              <p className="text-[#7D7D7D]">{assignedTo}</p>
+            </div>
+            
+          </div>
+          <div className="grid grid-cols-3">
+            <div>
+              <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
+              <p className="text-[#7D7D7D]">{assignedTo}</p>
+            </div>
+            
+          </div>
+          
+          </div> */}
+           <div className="grid grid-cols-3 gap-8 mb-8">
             <div>
               <p className="text-[#2A2C3E] font-medium">Raised By:</p>
               <p className="text-[#7D7D7D]">{customer_name}</p>
             </div>
             <div>
               <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
-              <div className='flex space-x-3'>
-                <p className="text-[#7D7D7D]">{assignedTo}</p>
-                <Image
-                  src={edit}
-                  alt="Edit Icon"
-                  width={20}
-                  height={20}
-                  onClick={() => setIsAssignModalOpen(true)}
-                  className="cursor-pointer"
-                />
-              </div>
+              <p className="text-[#7D7D7D]">{assignedTo}</p>
+            </div>
+            <div>
+              <p className="text-[#2A2C3E] font-medium">Project Name</p>
+              <p className="text-[#7D7D7D]">{projectName}</p>
             </div>
           </div>
         </div>
@@ -451,7 +469,7 @@ const ViewTicketPage: React.FC = () => {
           </div>
           <div className='flex flex-col mt-6'>
             <p className="text-[#2A2C3E] font-medium">Request Details</p>
-            <p className="text-[#7D7D7D] font-normal mt-2">{description}</p>
+            <p className="text-[#7D7D7D] font-normal mt-2"> {renderSections(description)}</p>
           </div>
         </div>
       </div>
