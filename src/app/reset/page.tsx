@@ -10,6 +10,7 @@ import reset from "../../../public/images/reset.svg"
 import Simplileap from "../../../public/images/simplileap_black_logo_2023 1.svg"
 import axios from 'axios';
 import { base_url } from '@/utils/constant';
+import toast, { Toaster } from 'react-hot-toast';
 // Define the interface for form data
 interface FormData {
   email: string
@@ -22,6 +23,11 @@ const LoginForm = () => {
     console.log(data)
     try {
       const response = await axios.post(`${base_url}/sendResetLink`, { email: data.email });
+      if(response){
+        toast.success("Please check your email.")
+      }else{
+        toast.error("user not found!!")
+      }
       console.log(response.data);
   
     } catch (error) {
@@ -31,7 +37,9 @@ const LoginForm = () => {
   };
 
   return (
+    
     <div className="h-screen flex md:flex-row flex-col ">
+      <Toaster />
       <div className="relative w-1/2 h-screen hidden md:block">
         <Image src={cover} alt="Background" layout="fill" objectFit="cover" className="absolute" />
         <div className="absolute top-10 w-full flex justify-center">
