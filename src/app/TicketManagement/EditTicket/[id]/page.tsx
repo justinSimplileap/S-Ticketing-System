@@ -290,11 +290,11 @@ export default function Page() {
     <div className="">
       <Toaster />
 
-      <div className="p-10 mx-10 my-12 bg-[#F9F9F9] rounded-md h-screen shadow-md">
+      <div className="md:p-10 md:mx-10 md:my-12 p-3 bg-[#F9F9F9] rounded-md h-screen shadow-md">
         <div className="text-[#2A2C3E] text-2xl mb-6">Edit Ticket</div>
 
         <form className="space-y-6" onSubmit={handleFormSubmit}>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid md:grid-cols-2 gap-3">
             <div className="">
               <label htmlFor="ticketType" className="block text-[#5E626C] pb-2">
                 Ticket Type <span className="text-red-600 text-md">*</span>
@@ -305,14 +305,15 @@ export default function Page() {
                   name="ticketType"
                   value={ticketType}
                   onChange={handleTicketTypeChange}
-                  className={`mt-1 text-[#5E626C] w-full p-2 px-3 bg-white rounded-md appearance-none focus:outline-none ${
+                  className={`mt-1 text-[#5E626C] w-full md:p-2 p-1 px-3 bg-white rounded-md appearance-none focus:outline-none ${
                     errors.priority ? "border-red-500" : "border-gray-300"
                   }`}
                 >
                   <option value="Select Priority">Choose Ticket Type</option>
-                  <option value="Type 1">Type 1</option>
-                  <option value="Type 2">Type 2</option>
-                  <option value="Type 3">Type 3</option>
+                  <option value="Incident">Incident</option>
+                  <option value="Problem">Problem</option>
+                  <option value="Change">Change</option>
+                  <option value="Service Request">Service Request</option>
                 </select>
                 {errors.ticketType && (
                   <p className="text-red-500 text-xs mt-1">
@@ -428,18 +429,18 @@ export default function Page() {
           </div>
 
           <div className="rounded-md bg-[#F0ECFB] p-8">
-            <div className="flex justify-between items-center ">
+            <div className="flex justify-between items-center gap-12 md:gap-0">
               <div>
-                <h1 className="text-md font-medium text-lg">Attach files</h1>
+                <h1 className="text-md font-medium text-lg whitespace-nowrap">Attach files</h1>
               </div>
               <div
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={handleAddNewClick}
               >
-                <div>
+                <div className="w-[30px] sm:w-[100px] md:w-[35px]">
                   <Image src={addticket} alt="Add new" width={20} />
                 </div>
-                <div className="text-[#5027D9] text-lg">Add new</div>
+                <div className="text-[#5027D9] text-lg whitespace-nowrap">Add new</div>
               </div>
             </div>
             <input
@@ -491,12 +492,12 @@ export default function Page() {
               )}
             </div>
           </div>
-          <div className="flex gap-5 justify-end">
+          <div className="md:flex grid gap-5 md:justify-end">
             <div>
               <Button
                 type="button"
                 onClick={handleCancel}
-                className="flex rounded bg-transparent py-3 px-7 text-sm text-[#5027D9] items-center gap-2 border-[#5027D9] border-2"
+                className="flex rounded bg-transparent py-3 px-7 text-sm text-[#5027D9] items-center gap-2 border-[#5027D9] border-2 w-full justify-center"
               >
                 Cancel
               </Button>
@@ -504,7 +505,7 @@ export default function Page() {
             <div>
               <Button
                 type="submit"
-                className="flex rounded bg-[#5027D9] py-3 px-7 text-sm text-white items-center gap-2"
+                className="flex rounded bg-[#5027D9] py-3 px-7 text-sm text-white items-center gap-2 w-full text-center justify-center"
               >
                 Update ticket
               </Button>

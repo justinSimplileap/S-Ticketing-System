@@ -262,11 +262,15 @@ const AccountDetailsForm: React.FC = () => {
     null
   );
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
-  const [fetchedProfileImage, setFetchedProfileImage] = useState<string | null>(null);
+  const [fetchedProfileImage, setFetchedProfileImage] = useState<string | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
 
   const [role, setRole] = useState<string>("");
-  const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
@@ -361,7 +365,7 @@ const AccountDetailsForm: React.FC = () => {
     ) : (
       <button
         type="submit"
-        className="btn-submit ml-auto block rounded bg-[#5027D9] py-4 px-14 text-sm text-white"
+        className="btn-submit md:ml-auto ml-0 block rounded bg-[#5027D9] py-4 px-14 text-sm text-white"
       >
         Save Details
       </button>
@@ -440,25 +444,34 @@ const AccountDetailsForm: React.FC = () => {
   };
 
   return (
-    <div className="p-5 pt-0">
+    <div className="md:p-5 p-1 pt-0">
       <Toaster />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="text-xl font-semibold">Basic Details</div>
-        <div className="flex py-5 items-center">
-          <div className="w-[20%]">
-            <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+        <div className="text-xl md:font-semibold font-medium">
+          Basic Details
+        </div>
+        <div className="flex flex-col md:flex-row py-5 items-center">
+          <div className="w-full md:w-[20%] mb-4 md:mb-0">
+            <div className="relative md:w-20 w-full h-20 rounded-full overflow-hidden cursor-pointer">
               <label
                 htmlFor="profileImage"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 pl-5 pb-4 md:pl-0 md:pb-0"
               >
                 Profile Image
               </label>
               <Image
-                src={profileImageUrl ? profileImageUrl : fetchedProfileImage ? fetchedProfileImage : Profile}
+                src={
+                  profileImageUrl
+                    ? profileImageUrl
+                    : fetchedProfileImage
+                    ? fetchedProfileImage
+                    : Profile
+                }
                 id="profileImage"
                 alt="Profile Pic"
                 layout="fill"
                 objectFit="cover"
+                className="md:pt-0 pt-5 w-[50%] md:w-0"
                 onClick={() => {
                   const uploadInput = document.getElementById("uploadImage");
                   if (uploadInput) {
@@ -475,7 +488,7 @@ const AccountDetailsForm: React.FC = () => {
               className="hidden"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4 w-full">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="customerName" className="block text-sm">
                 Customer Name <span className="text-red-500 text-base">*</span>
@@ -509,7 +522,7 @@ const AccountDetailsForm: React.FC = () => {
                 </span>
               )}
             </div>
-            <div className="col-span-2">
+            <div className="col-span-1 md:col-span-2">
               <label htmlFor="companyUrl" className="block text-sm">
                 Company URL
               </label>
@@ -536,7 +549,7 @@ const AccountDetailsForm: React.FC = () => {
 
         <div className="text-xl font-semibold py-7">Contact Details</div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <label htmlFor="phoneNumber" className="block text-sm">
               Phone Number
@@ -645,7 +658,7 @@ const AccountDetailsForm: React.FC = () => {
               </span>
             )}
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <label htmlFor="aboutCompany" className="block text-sm">
               About Company
             </label>
@@ -660,7 +673,7 @@ const AccountDetailsForm: React.FC = () => {
               </span>
             )}
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1 md:col-span-2">
             <label htmlFor="workDomain" className="block mt-6">
               Work Domain
             </label>
@@ -699,10 +712,9 @@ const AccountDetailsForm: React.FC = () => {
               </span>
             )}
           </div>
-          <div className="flex justify-end w-full mt-6 col-span-2">
-            <div className="flex justify-between items-center gap-14">
+          <div className="flex md:justify-end justify-center w-full mt-6 col-span-1 md:col-span-2">
+            <div className="flex md:justify-between items-center gap-14">
               {renderSkipButton}
-
               {saveOrNextButton}
             </div>
           </div>

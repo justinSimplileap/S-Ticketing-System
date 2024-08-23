@@ -13,7 +13,7 @@ export default function SearchBar({ setSearchQuery }: SearchBarProps) {
   return (
     <div className="">
       <div className="flex justify-around items-center gap-2">
-        <div className="flex justify-between border-2 border-[#8E8E8E] rounded p-2 focus:outline-none px-4 w-[25em] text-sm">
+        <div className="flex justify-between border-2 border-[#8E8E8E] rounded p-2 focus:outline-none px-4 md:w-[25em] w-[100%] text-sm">
           <input
             type="text"
             placeholder="Search"

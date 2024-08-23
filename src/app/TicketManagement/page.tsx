@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Image from "next/image";
 import Bell from "../../../public/images/bell.svg";
@@ -64,9 +64,9 @@ type Client = {
 function TicketManagementPage() {
   const searchParams = useSearchParams();
 
-  const initialType = searchParams.get('type') || "Type";
-  const initialPriority = searchParams.get('priority') || "Priority";
-  const initialStatus = searchParams.get('status') || "Status";
+  const initialType = searchParams.get("type") || "Type";
+  const initialPriority = searchParams.get("priority") || "Priority";
+  const initialStatus = searchParams.get("status") || "Status";
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [typeValue, setTypeValue] = useState(initialType);
   const [priorityValue, setPriorityValue] = useState(initialPriority);
@@ -75,7 +75,7 @@ function TicketManagementPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [customerName, setCustomerName] =useState("CustomerName")
+  const [customerName, setCustomerName] = useState("CustomerName");
   const [clients, setClients] = useState<Client[]>([]);
 
   useEffect(() => {
@@ -89,27 +89,29 @@ function TicketManagementPage() {
 
   const fetchTickets = async (page = 1) => {
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
       if (!token) {
         throw new Error("No token found");
       }
 
-      const response = await axios.get<{ tickets: Ticket[], totalPages: number, currentPage: number }>(
-        `${base_url}/filtertickets`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            type: typeValue !== "Type" ? typeValue : undefined,
-            priority: priorityValue !== "Priority" ? priorityValue : undefined,
-            status: statusValue !== "Status" ? statusValue : undefined,
-            search: searchQuery || '',
-            page: page,
-            limit: 10,
-          },
-        }
-      );
+      const response = await axios.get<{
+        tickets: Ticket[];
+        totalPages: number;
+        currentPage: number;
+      }>(`${base_url}/filtertickets`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          type: typeValue !== "Type" ? typeValue : undefined,
+          priority: priorityValue !== "Priority" ? priorityValue : undefined,
+          status: statusValue !== "Status" ? statusValue : undefined,
+          search: searchQuery || "",
+          page: page,
+          limit: 10,
+        },
+      });
 
       console.log("response", response);
 
@@ -127,7 +129,8 @@ function TicketManagementPage() {
 
   const fetchUser = async () => {
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
       if (!token) {
         throw new Error("No token found");
       }
@@ -163,21 +166,23 @@ function TicketManagementPage() {
   };
 
   const exportTableToExcel = () => {
-    const table = document.getElementById('all-tickets-table');
+    const table = document.getElementById("all-tickets-table");
     if (!table) return;
 
     let csvContent = "";
     const rows = Array.from(table.querySelectorAll("tr"));
-       
-    rows.forEach(row => {
+
+    rows.forEach((row) => {
       const cols = Array.from(row.querySelectorAll("td, th"));
-      const rowData = cols.map(col => (col as HTMLElement).innerText).join(",");
+      const rowData = cols
+        .map((col) => (col as HTMLElement).innerText)
+        .join(",");
       csvContent += rowData + "\n";
     });
 
-    const dataType = 'text/csv;charset=utf-8;';
-    const fileName = 'tickets.csv';
-    const downloadLink = document.createElement('a');
+    const dataType = "text/csv;charset=utf-8;";
+    const fileName = "tickets.csv";
+    const downloadLink = document.createElement("a");
 
     const blob = new Blob([csvContent], { type: dataType });
     const url = URL.createObjectURL(blob);
@@ -186,28 +191,31 @@ function TicketManagementPage() {
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
-  }
+  };
 
   return (
     <div className="">
-      <div className="lg:flex justify-between items-center mt-5 lg:mt-10 lg:mx-8 mx-5">
+      <div className="md:flex justify-between items-center mt-5 lg:mt-10 lg:mx-8 md:mx-5 mx-3">
         <div>
-          <h1 className="text-3xl text-[#2A2C3E] mb-7 lg:mg-0">Tickets</h1>
+          <h1 className="md:text-3xl text-2xl text-[#2A2C3E] mb-7 lg:mb-0">Tickets</h1>
         </div>
-        <div className="lg:flex justify-around items-center gap-2">
+        <div className="md:flex grid md:justify-between items-center gap-2">
           <div>
             <SearchBar setSearchQuery={setSearchQuery} />
           </div>
           <div>
-            <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]" onClick={exportTableToExcel}>
-              <Image src={Folder} alt="Folder Icon" width={22} height={22} />
+            <Button
+              className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9] min-w-full"
+              onClick={exportTableToExcel}
+            >
+              <Image src={Folder} alt="Folder Icon" width={22} height={22} className="w-[18px] sm:w-[100px] md:w-[20px]"/>
               Export report
             </Button>
           </div>
           <div>
             <Link href="/TicketManagement/NewTicket">
-              <Button className="flex rounded bg-[#5027D9] py-2 border-2 border-[#5027D9] px-4 text-sm text-white items-center gap-2">
-                <Image src={Plus} alt="Plus Icon" width={22} height={22} />
+              <Button className="flex rounded bg-[#5027D9] py-2 border-2 border-[#5027D9] px-4 text-sm text-white items-center gap-2 min-w-full">
+                <Image src={Plus} alt="Plus Icon" width={22} height={22} className="w-[18px] sm:w-[100px] md:w-[20px]"/>
                 New Ticket
               </Button>
             </Link>
@@ -215,8 +223,8 @@ function TicketManagementPage() {
         </div>
       </div>
 
-      <div className="py-7 px-5 font-semibold rounded-md m-8 bg-[#F9F9F9]">
-        <p>Filter ticket by</p>
+      <div className="md:py-7 md:px-5 md:font-semibold rounded-md md:my-8 md:mx-8 my-6 mx-3 bg-[#F9F9F9]">
+        <div className="text-lg">Filter ticket by</div>
         <Filterdropdowns
           typeValue={typeValue}
           setTypeValue={setTypeValue}
@@ -231,9 +239,9 @@ function TicketManagementPage() {
           clients={clients}
         />
       </div>
-      <div className="mx-8">
+      <div className="md:mx-8 mx-4">
         <Table tickets={tickets} />
-        <TablePagination 
+        <TablePagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}

@@ -67,7 +67,7 @@ export default function Profile() {
 
       {/* Tabs starts */}
 
-      <div className="p-2 lg:m-8 m-4 bg-[#F9F9F9] lg:rounded-md">
+      <div className="md:p-2 p-0 md:m-8 m-1 bg-[#F9F9F9] lg:rounded-md">
         <Tabs />
       </div>
     </div>

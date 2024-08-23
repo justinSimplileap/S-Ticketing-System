@@ -54,7 +54,7 @@ const WorkDomainInput: React.FC<WorkDomainInputProps> = ({ register, errors }) =
   };
 
   return (
-    <div className="w-full lg:px-2">
+    <div className="w-full md:px-2">
       <label htmlFor="workDomain" className="block mt-6">
         Work Domain
       </label>
@@ -149,15 +149,15 @@ const Example: React.FC = () => {
   ];
 
   return (
-    <div className="w-full p-2">
+    <div className="w-full md:p-2 p-0">
       <div className="w-full max-w">
         <TabGroup>
-          <TabList className="flex gap-4">
+          <TabList className="flex md:gap-4 gap-2">
             {categories.map(({ name }) => (
               <Tab
                 key={name}
                 className={({ selected }) =>
-                  `py-1 px-3 text-[#9291A5] focus:outline-none ${
+                  `py-1 md:px-3 px-1 text-sm md:text-lg text-[#9291A5] focus:outline-none ${
                     selected ? "border-b-4 border-[#5027D9] text-[#5027D9]" : ""
                   }`
                 }

@@ -15,7 +15,7 @@ import ClosedTickets from "../../../public/images/closedTicket.svg";
 import { useRouter } from "next/navigation";
 import { base_url } from "@/utils/constant";
 import { Button } from "@headlessui/react";
-import Plus from "../../../public/images/Plus.svg"
+import Plus from "../../../public/images/Plus.svg";
 
 type Ticket = {
   id: number;
@@ -126,31 +126,53 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="">
-      <div
-        
-        className="lg:flex lg:justify-end p-5 lg:p-8"
-      >
-        <Button className="flex rounded bg-[#5027D9] py-2 px-4 text-sm text-white items-center gap-2 w-full lg:w-max justify-center" onClick={handleButtonClick}>
+      <div className="lg:flex lg:justify-end md:p-5 p-2 lg:p-8">
+        <Button
+          className="flex rounded bg-[#5027D9] py-2 px-4 text-sm text-white items-center gap-2 w-full lg:w-max justify-center"
+          onClick={handleButtonClick}
+        >
           <Image src={Plus} alt="add" width={22} height={22} />
           New Ticket
         </Button>
       </div>
-      <div className="ml-8 mr-8 shadow-lg rounded-md">
-        <h1 className="text-3xl p-7 text-[#2A2C3E]">Summary</h1>
-        <div className="grid grid-cols-3 gap-5 mr-7">
+      <div className="md:ml-8 ml-3 md:mr-8 mr-3 shadow-lg rounded-md">
+        <h1 className="md:text-3xl text-2xl p-7 text-[#2A2C3E]">Summary</h1>
+        <div className="grid md:grid-cols-3 gap-5 md:mr-7 mr-0">
           <div
-            className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer"
+            className="bg-[#F7F7F7] md:p-8 p-2 rounded-md md:ml-7 md:mb-7  mb-2  cursor-pointer"
             onClick={handleCardClick1}
           >
-            <div className="grid grid-cols-2 pb-10">
+            <div className="grid md:grid-cols-2 grid-cols-3 md:pb-10 md:pt-0 pb-5 pt-5 gap-10">
               <div>
-                <Image src={WarningIcon} alt="hhh" width={80} />
+                <Image
+                  src={WarningIcon}
+                  alt="hhh"
+                  width={80}
+                  className="w-[60px] sm:w-[100px] md:w-[100px]"
+                />
               </div>
-              <div className="flex justify-end items-end">
-                <Image src={Arrow} alt="hhh" width={32} />
+              <div className="hidden md:flex md:justify-end items-center md:items-end">
+                <Image
+                  src={Arrow}
+                  alt="hhh"
+                  width={32}
+                  className="w-[30px] sm:w-[100px] md:w-[35px]"
+                />
+              </div>
+
+              <div className="grid md:hidden justify-start items-start">
+                <div className="text-2xl text-[#5027D9]">
+                  {highPriorityTickets}
+                </div>
+                <div className="text-[#696969] text-[12px] whitespace-nowrap">
+                  High Priority Tickets
+                </div>
+              </div>
+              <div className="flex justify-end items-start pt-2 md:hidden">
+                <Image src={Arrow} alt="hhh" width={28} />
               </div>
             </div>
-            <div className="pl-5 grid gap-3">
+            <div className="hidden pl-5 md:grid gap-3">
               <div className="text-4xl text-[#5027D9]">
                 {highPriorityTickets}
               </div>
@@ -159,52 +181,92 @@ const DashboardPage: React.FC = () => {
           </div>
 
           <div
-            className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer"
+            className="bg-[#F7F7F7] md:p-8 p-2 rounded-md md:ml-7 md:mb-7  mb-2 cursor-pointer"
             onClick={handleCardClick2}
           >
-            <div className="grid grid-cols-2 pb-10">
+            <div className="grid md:grid-cols-2 grid-cols-3 md:pb-10 md:pt-0 pb-5 pt-5 gap-10">
               <div>
-                <Image src={OpenTickets} alt="hhh" width={80} />
+                <Image
+                  src={OpenTickets}
+                  alt="hhh"
+                  width={80}
+                  className="w-[60px] sm:w-[100px] md:w-[100px]"
+                />
               </div>
-              <div className="flex justify-end items-end">
-                <Image src={Arrow} alt="hhh" width={32} />
+              <div className="hidden md:flex md:justify-end items-center md:items-end">
+                <Image
+                  src={Arrow}
+                  alt="hhh"
+                  width={32}
+                  className="w-[30px] sm:w-[100px] md:w-[35px]"
+                />
+              </div>
+
+              <div className="grid md:hidden justify-start items-start">
+                <div className="text-2xl text-[#5027D9]">{openTickets}</div>
+                <div className="text-[#696969] text-[12px] whitespace-nowrap">
+                  Open Tickets
+                </div>
+              </div>
+              <div className="flex justify-end items-start pt-2 md:hidden">
+                <Image src={Arrow} alt="hhh" width={28} />
               </div>
             </div>
-            <div className="pl-5 grid gap-3">
+            <div className="hidden pl-5 md:grid gap-3">
               <div className="text-4xl text-[#5027D9]">{openTickets}</div>
               <div className="text-[#696969]">Open tickets</div>
             </div>
           </div>
 
           <div
-            className="bg-[#F7F7F7] p-8 rounded-md ml-7 mb-7 cursor-pointer"
+            className="bg-[#F7F7F7] md:p-8 p-2 rounded-md md:ml-7 md:mb-7  mb-0 cursor-pointer"
             onClick={handleCardClick3}
           >
-            <div className="grid grid-cols-2 pb-10">
+            <div className="grid md:grid-cols-2 grid-cols-3 md:pb-10 md:pt-0 pb-5 pt-5 gap-10">
               <div>
-                <Image src={ClosedTickets} alt="hhh" width={80} />
+                <Image
+                  src={ClosedTickets}
+                  alt="hhh"
+                  width={80}
+                  className="w-[60px] sm:w-[100px] md:w-[100px]"
+                />
               </div>
-              <div className="flex justify-end items-end">
-                <Image src={Arrow} alt="hhh" width={32} />
+              <div className="hidden md:flex md:justify-end items-center md:items-end">
+                <Image
+                  src={Arrow}
+                  alt="hhh"
+                  width={32}
+                  className="w-[30px] sm:w-[100px] md:w-[35px]"
+                />
+              </div>
+
+              <div className="grid md:hidden justify-start items-start">
+                <div className="text-2xl text-[#5027D9]">{closedTickets}</div>
+                <div className="text-[#696969] text-[12px] whitespace-nowrap">
+                  Closed tickets
+                </div>
+              </div>
+              <div className="flex justify-end items-start pt-2 md:hidden">
+                <Image src={Arrow} alt="hhh" width={28} />
               </div>
             </div>
-            <div className="pl-5 grid gap-3">
+            <div className="hidden pl-5 md:grid gap-3">
               <div className="text-4xl text-[#5027D9]">{closedTickets}</div>
               <div className="text-[#696969]">Closed tickets</div>
             </div>
           </div>
         </div>
       </div>
-      <div className="m-8 flex flex-col gap-5">
-        <div className="flex p-7 justify-between">
-          <div className="text-3xl text-[#2A2C3E]">Recent Tickets</div>
-          <div className="text-2xl text-[#696969] flex gap-3 justify-center items-center">
+      <div className="md:m-8 flex flex-col gap-5">
+        <div className="flex md:p-7 p-2 justify-between gap-5">
+          <div className="md:text-3xl text-md text-[#2A2C3E] whitespace-nowrap">Recent Tickets</div>
+          <div className="md:text-2xl text-md text-[#696969] flex md:gap-3 gap-1 justify-center items-center whitespace-nowrap">
             <div>
               <Link href="/TicketManagement">View All Tickets </Link>
             </div>
             <div>
               <Link href="#">
-                <Image src={Arrow} alt="hhh" width={28} />
+                <Image src={Arrow} alt="hhh" width={28} className="w-[15px] sm:w-[100px] md:w-[35px]"/>
               </Link>
             </div>
           </div>

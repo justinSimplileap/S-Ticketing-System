@@ -14,12 +14,10 @@ import toast, { Toaster } from "react-hot-toast";
 import Loader from "@/Components/common/Loader";
 import Ellipse from "../../../../../public/images/Ellipse262.svg";
 
-
 interface UploadedFile {
   filename: string;
   fileUrl: string;
 
-  
   uploadedOn: string;
 }
 
@@ -168,9 +166,9 @@ const Page: React.FC = () => {
         setRaisedBy(user.customer_name);
         setSubject(ticketDetails.subject);
         setDescription(ticketDetails.details);
-        setAssignedTo(ticketDetails.assigned_to)
-        setProjectName(ticketDetails.company_legal_name)
-        setTotalHours(ticketDetails.hours_logged)
+        setAssignedTo(ticketDetails.assigned_to);
+        setProjectName(ticketDetails.company_legal_name);
+        setTotalHours(ticketDetails.hours_logged);
 
         const uploadedFiles = ticketDetails.details_images_url.map(
           (url: string) => {
@@ -271,7 +269,7 @@ const Page: React.FC = () => {
       );
 
       toast.success("Comment Added successfully");
-      
+
       console.log("Comment added successfully:", response.data);
       fetchComments();
 
@@ -299,8 +297,8 @@ const Page: React.FC = () => {
   return (
     <div className="">
       <Toaster />
-      <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
-        <div className="grid grid-cols-3 py-5">
+      <div className="bg-[#F9F9F9] md:p-10 md:m-10 p-3 m-3 rounded-md">
+        <div className="grid md:grid-cols-3 grid-cols-2 py-5">
           <div className="pb-5">
             <div className="text-base font-medium">Ticket ID</div>
             <div>
@@ -360,7 +358,7 @@ const Page: React.FC = () => {
               <p className="text-base py-5 text-[#7D7D7D]">{assignedTo}</p>
             </div>
           </div>
-          <div className="">
+          <div className="hidden md:block">
             <div className="text-base font-medium">Project Name</div>
             <div>
               <p className="text-base py-5 text-[#7D7D7D]">{projectName}</p>
@@ -369,8 +367,8 @@ const Page: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-[#F9F9F9] p-10 m-10 rounded-md">
-        <div className="pb-10">
+      <div className="bg-[#F9F9F9] md:p-10 md:m-10 p-5 m-3 rounded-md">
+        <div className="md:pb-10 pb-5">
           <div className="text-base font-medium pb-2">Subject</div>
           <div>
             <p className="text-sm text-[#7d7d7d] font-light">{subject}</p>
@@ -387,7 +385,7 @@ const Page: React.FC = () => {
         </div>
       </div>
 
-      <div className="m-10 rounded-md">
+      <div className="md:m-10 rounded-md">
         <div className="p-10 bg-[#F9F9F9] text-base font-medium rounded-md">
           Activity
         </div>
@@ -405,33 +403,47 @@ const Page: React.FC = () => {
             </Tab>
           </TabList>
           <TabPanels>
-            <TabPanel className="p-10 bg-white">
-              <div className="p-4">
-                <div className="bg-[#F9F9F9] p-10 m-3 rounded-md">
+            <TabPanel className="md:p-10 bg-white">
+              <div className="md:p-4 p-2">
+                <div className="bg-[#F9F9F9] md:p-10 p-3 m-3 rounded-md">
                   <div className="grid gap-5">
                     <div className="pb-5 w-full">
-                      <div className="text-base font-medium">Events</div>
+                      <div className="text-base font-medium pb-4">Events</div>
                       <div>
                         {events.length > 0 ? (
-                          <ul className="space-y-2">
-                          {events
-                            .sort((a, b) => {
-                              return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-                            })
-                            .map((event, index) => {
-                              const eventDate = new Date(event.createdAt).toLocaleString();
-                              return (
-                                <li
-                                  key={index}
-                                  className="text-[#5027D9] flex items-center space-x-2 cursor-pointer w-full"
-                                >
-                                  <Image src={Ellipse} alt="ellipse" width={15} height={15} />
-                                  <span>{event.event_details}</span>
-                                  <span className="text-gray-400">on {eventDate}</span>
-                                </li>
-                              );
-                            })}
-                        </ul>
+                          <ul className="space-y-2 whitespace-nowrap">
+                            {events
+                              .sort((a, b) => {
+                                return (
+                                  new Date(b.createdAt).getTime() -
+                                  new Date(a.createdAt).getTime()
+                                );
+                              })
+                              .map((event, index) => {
+                                const eventDate = new Date(
+                                  event.createdAt
+                                ).toLocaleString();
+                                return (
+                                  <li
+                                    key={index}
+                                    className="text-[#5027D9] flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 cursor-pointer w-full"
+                                  >
+                                    <div className="flex items-center space-x-2">
+                                      <Image
+                                        src={Ellipse}
+                                        alt="ellipse"
+                                        width={15}
+                                        height={15}
+                                      />
+                                      <span>{event.event_details}</span>
+                                    </div>
+                                    <span className="text-gray-400">
+                                      on {eventDate}
+                                    </span>
+                                  </li>
+                                );
+                              })}
+                          </ul>
                         ) : (
                           <p className="text-gray-500">No events available.</p>
                         )}
@@ -442,21 +454,23 @@ const Page: React.FC = () => {
               </div>
             </TabPanel>
 
-            <TabPanel className="p-5 lg:p-7 bg-white">
-              <div className="bg-[#F9F9F9] p-10 m-5 rounded-md">
-                <div className="text-base font-medium pb-5">Comments</div>
-                <div>
+            <TabPanel className="md:p-10 bg-white">
+              <div className="md:p-4 p-2">
+                <div className="bg-[#F9F9F9] md:p-10 p-3 m-5 rounded-md">
+                  Comments
+                </div>
+                <div className="p-3 m-3">
                   {comments.map((comment: Comment, index: number) => (
                     <div
                       key={index}
-                      className="pb-5 flex justify-start items-center"
+                      className="pb-5 flex justify-start items-center gap-2"
                     >
-                      <div className="bg-[#041444] rounded-full w-12 h-12 flex items-center justify-center text-white mr-6">
+                      <div className="bg-[#041444] rounded-full md:w-12 md:h-12 w-12 h-10 flex items-center justify-center text-white md:mr-6 ">
                         {comment.comment_by.charAt(0)}
                       </div>
                       <div className="flex w-full justify-between">
                         <div>
-                          <p className="font-bold text-[#4B4B4B]">
+                          <p className="font-bold text-[#4B4B4B] whitespace-nowrap">
                             {comment.comment_by}
                           </p>
                           <p className="text-[#4B4B4B]">
@@ -476,7 +490,7 @@ const Page: React.FC = () => {
                               )}
                           </p>
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 hidden md:block">
                           {comment.commentedOn}
                         </div>
                       </div>
@@ -521,10 +535,15 @@ const Page: React.FC = () => {
                       />
                       <label htmlFor="attachment" className="cursor-pointer">
                         <button
-                          className="bg-white text-white lg:p-4 rounded-md border-[#5027D9] border"
+                          className="bg-white text-white p-4 rounded-md border-[#5027D9] border"
                           onClick={handleAddAttachment}
                         >
-                          <Image src={sendAttachment} alt="" width={25} />
+                          <Image
+                            src={sendAttachment}
+                            alt=""
+                            width={30}
+                            className="w-[40px] sm:w-[50px] md:w-[35px]"
+                          />
                         </button>
                       </label>
                     </div>
@@ -533,39 +552,46 @@ const Page: React.FC = () => {
                         onClick={handleAddComment}
                         className="bg-[#5027D9] text-white p-4 rounded border-[#5027D9] border"
                       >
-                        <Image src={sendComment} alt="" width={25} />
+                        <Image
+                          src={sendComment}
+                          alt=""
+                          width={25}
+                          className="w-[40px] sm:w-[50px] md:w-[35px]"
+                        />
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
             </TabPanel>
-            <TabPanel className="p-7 bg-white">
-              <div className="flex justify-between items-center mb-4">
-                <div className="font-semibold">All Uploaded Files</div>
+            <TabPanel className="md:p-10 bg-white">
+              <div className="flex justify-between items-center mb-4 m-3">
+                <div className="font-semibold md:ml-5 md:mt-5 text-sm md:text-base">
+                  All Uploaded Files
+                </div>
                 {/* <div className="flex items-center gap-2 cursor-pointer">
-                  <div>
-                    <Image src={addticket} alt="Add new" width={20} />
-                  </div>
-                  <div className="text-[#5027D9] text-lg">Add new</div>
-                </div> */}
+      <div>
+        <Image src={addticket} alt="Add new" width={20} />
+      </div>
+      <div className="text-[#5027D9] text-lg">Add new</div>
+    </div> */}
               </div>
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-1 py-1 text-left text-xs text-gray-500 uppercase"
                     >
                       Filename
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-1 py-1 text-left text-xs text-gray-500 uppercase"
                     >
                       Uploaded On
                     </th>
-                    <th scope="col" className="relative px-6 py-3">
+                    <th scope="col" className="relative px-1 py-1">
                       <span className="sr-only">Download</span>
                     </th>
                   </tr>
@@ -573,18 +599,18 @@ const Page: React.FC = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {uploadedFiles.map((file, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-2 py-1 text-xs text-gray-500">
                         {file.filename}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-2 py-1 text-xs text-gray-500">
                         {file.uploadedOn}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-2 py-1 text-xs text-right">
                         <button
                           onClick={() =>
                             downloadFile(file.fileUrl, file.filename)
                           }
-                          className="text-[#5027D9] hover:text-[#5027D9] underline"
+                          className="text-indigo-600 hover:text-indigo-900"
                         >
                           Download
                         </button>

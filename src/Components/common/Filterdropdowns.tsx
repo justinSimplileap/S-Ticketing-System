@@ -128,7 +128,7 @@ const DropdownFilters: React.FC<DropdownFiltersProps> = ({
 
       <Button
         onClick={handleReset}
-        className="w-[100%] flex justify-center rounded bg-[#5027D9] py-2 px-10 text-sm text-white items-center gap-2  lg:w-fit my-2 lg-my-0"
+        className="w-[100%] flex justify-center rounded bg-[#5027D9] py-2 px-10 text-sm text-white items-center gap-2  lg:w-fit my-2 lg:my-0"
       >
         Reset
       </Button>

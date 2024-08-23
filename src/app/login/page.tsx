@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Loader from "@/Components/common/Loader";
 import { base_url } from "@/utils/constant";
+import logoBlack from "../../../public/images/simplileap_black_logo_2023 1.svg";
 // Define the interface for form data
 interface FormData {
   username: string;
@@ -20,8 +21,8 @@ interface FormData {
 }
 
 interface User {
-  onBoarded: boolean
-  role: string
+  onBoarded: boolean;
+  role: string;
 }
 
 interface LoginResponseData {
@@ -40,9 +41,8 @@ const LoginForm = () => {
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    
     try {
-      setLoading(true)
+      setLoading(true);
       const response: AxiosResponse<LoginResponseData> = await axios.post(
         `${base_url}/login`,
         {
@@ -51,30 +51,44 @@ const LoginForm = () => {
         }
       );
 
-      
-
       if (response.status === 200) {
-        const token  = response.data.token;
-        localStorage.setItem('token', token)
+        const token = response.data.token;
+        localStorage.setItem("token", token);
         toast.success("Login successful!");
         const responseData = response.data;
-        
 
         if (responseData?.user?.role === "1") {
           router.push("/SuperAdmin");
-
-        }else if (responseData?.user?.role === "4" && responseData?.user?.onBoarded === false){
-          router.push("/AccountDetails")
-        } else if (responseData?.user?.role === "4" && responseData?.user?.onBoarded === true){
-          router.push("/Dashboard")
-        } else if (responseData?.user?.role === "2" && responseData?.user?.onBoarded === false){
-          router.push("/AccountDetails")
-        } else if (responseData?.user?.role === "2" && responseData?.user?.onBoarded === true){
-          router.push("/Manager/Dashboard")
-        } else if (responseData?.user?.role === "3" && responseData?.user?.onBoarded === true){
-          router.push("/TeamMember/Dashboard")
-        } else if (responseData?.user?.role === "3" && responseData?.user?.onBoarded === false){
-          router.push("/AccountDetails")
+        } else if (
+          responseData?.user?.role === "4" &&
+          responseData?.user?.onBoarded === false
+        ) {
+          router.push("/AccountDetails");
+        } else if (
+          responseData?.user?.role === "4" &&
+          responseData?.user?.onBoarded === true
+        ) {
+          router.push("/Dashboard");
+        } else if (
+          responseData?.user?.role === "2" &&
+          responseData?.user?.onBoarded === false
+        ) {
+          router.push("/AccountDetails");
+        } else if (
+          responseData?.user?.role === "2" &&
+          responseData?.user?.onBoarded === true
+        ) {
+          router.push("/Manager/Dashboard");
+        } else if (
+          responseData?.user?.role === "3" &&
+          responseData?.user?.onBoarded === true
+        ) {
+          router.push("/TeamMember/Dashboard");
+        } else if (
+          responseData?.user?.role === "3" &&
+          responseData?.user?.onBoarded === false
+        ) {
+          router.push("/AccountDetails");
         } else {
           toast.error("Error logging in. Please check your credentials.");
         }
@@ -92,7 +106,6 @@ const LoginForm = () => {
         //   setLoading(false)
         //   router.push("/Dashboard");
 
-          
         // }
       }
     } catch (error) {
@@ -104,10 +117,9 @@ const LoginForm = () => {
   return (
     <>
       <Toaster />
-      <div className="h-screen grid grid-cols-2">
-
+      <div className="h-screen grid grid-cols-1 md:grid-cols-2">
         {/* left side  */}
-        <div className=" relative h-full flex flex-col items-center">
+        <div className="hidden md:flex relative h-full flex-col items-center">
           <Image
             src={cover}
             alt="Background"
@@ -132,15 +144,17 @@ const LoginForm = () => {
           </div>
         </div>
 
-
         {/* right side  */}
 
         {/* ========================================== */}
-        <div className=" flex flex-col justify-center items-center gap-14 w-[70%] mx-auto h-full">
-          <div className="text-3xl font-bold text-center text-black">
+        <div className="flex flex-col justify-center items-center md:gap-14 gap-3 md:w-[70%] w-[100%] mx-auto h-screen overflow-hidden">
+          <div className="flex justify-center items-center md:hidden mb-[33px]">
+            <Image src={logoBlack} alt="Logo" height={50} />
+          </div>
+          <div className="md:text-3xl text-2xl font-bold text-center text-black md:mb-0 mb-[33px]">
             Welcome to <br></br>Ticket Management System
           </div>
-          <div className="flex flex-col justify-start w-full">
+          <div className="flex flex-col justify-start w-full md:pl-0 md:pr-0 pl-3 pr-3 md:pb-0 pb-3">
             <form onSubmit={handleSubmit(onSubmit)} className="">
               <div className="mb-4 relative">
                 <label
@@ -199,7 +213,7 @@ const LoginForm = () => {
               <div className="flex items-center justify-center p-6">
                 <button
                   type="submit"
-                  className="bg-[#5027d9] hover:bg-blue-700 text-white py-4 px-10 rounded-xl focus:outline-none focus:shadow-outline font-xs"
+                  className="bg-[#5027d9] hover:bg-blue-700 text-white py-4 px-10 rounded-xl focus:outline-none focus:shadow-outline font-xs md:w-[150px] w-full"
                 >
                   LOG IN
                 </button>
@@ -212,9 +226,7 @@ const LoginForm = () => {
                 </Link>
               </div>
             </form>
-            {loading && (
-              <Loader />
-            )}
+            {loading && <Loader />}
           </div>
         </div>
       </div>
