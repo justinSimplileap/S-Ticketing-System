@@ -138,10 +138,10 @@ const Example: React.FC = () => {
       name: "Edit Profile",
       posts: [],
     },
-    {
-      name: "Member management",
-      posts: [],
-    },
+    // {
+    //   name: "Member management",
+    //   posts: [],
+    // },
     {
       name: "Security",
       posts: [],

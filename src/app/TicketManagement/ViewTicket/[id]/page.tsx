@@ -564,62 +564,59 @@ const Page: React.FC = () => {
                 </div>
               </div>
             </TabPanel>
-            <TabPanel className="md:p-10 bg-white">
-              <div className="flex justify-between items-center mb-4 m-3">
-                <div className="font-semibold md:ml-5 md:mt-5 text-sm md:text-base">
-                  All Uploaded Files
-                </div>
-                {/* <div className="flex items-center gap-2 cursor-pointer">
-      <div>
-        <Image src={addticket} alt="Add new" width={20} />
-      </div>
-      <div className="text-[#5027D9] text-lg">Add new</div>
-    </div> */}
-              </div>
-              <table className="w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-1 py-1 text-left text-xs text-gray-500 uppercase"
-                    >
-                      Filename
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-1 py-1 text-left text-xs text-gray-500 uppercase"
-                    >
-                      Uploaded On
-                    </th>
-                    <th scope="col" className="relative px-1 py-1">
-                      <span className="sr-only">Download</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {uploadedFiles.map((file, index) => (
-                    <tr key={index}>
-                      <td className="px-2 py-1 text-xs text-gray-500">
-                        {file.filename}
-                      </td>
-                      <td className="px-2 py-1 text-xs text-gray-500">
-                        {file.uploadedOn}
-                      </td>
-                      <td className="px-2 py-1 text-xs text-right">
-                        <button
-                          onClick={() =>
-                            downloadFile(file.fileUrl, file.filename)
-                          }
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          Download
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </TabPanel>
+            <TabPanel className="md:p-10 p-5 bg-white">
+  <div className="flex justify-between items-center mb-4">
+    <div className="font-semibold text-sm md:text-base">
+      All Uploaded Files
+    </div>
+  </div>
+  <div className="overflow-x-auto"> {/* Added this wrapper to enable horizontal scrolling */}
+    <table className="w-full divide-y divide-gray-200 min-w-[500px]"> {/* Set a minimum width */}
+      <thead className="bg-gray-50">
+        <tr>
+          <th
+            scope="col"
+            className="px-2 py-2 text-left text-xs text-gray-500 uppercase"
+          >
+            Filename
+          </th>
+          <th
+            scope="col"
+            className="px-2 py-2 text-left text-xs text-gray-500 uppercase"
+          >
+            Uploaded On
+          </th>
+          <th scope="col" className="relative px-2 py-2">
+            <span className="sr-only">Download</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody className="bg-white divide-y divide-gray-200">
+        {uploadedFiles.map((file, index) => (
+          <tr key={index}>
+            <td className="px-2 py-1 text-xs text-gray-500 truncate max-w-[150px]">
+              {file.filename}
+            </td>
+            <td className="px-2 py-1 text-xs text-gray-500">
+              {file.uploadedOn}
+            </td>
+            <td className="px-2 py-1 text-xs text-right">
+              <button
+                onClick={() =>
+                  downloadFile(file.fileUrl, file.filename)
+                }
+                className="text-indigo-600 hover:text-indigo-900"
+              >
+                Download
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</TabPanel>
+
           </TabPanels>
         </TabGroup>
       </div>

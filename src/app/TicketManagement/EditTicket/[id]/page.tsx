@@ -74,7 +74,6 @@ export default function Page() {
     "link",
   ];
 
-
   useEffect(() => {
     fetchTickets();
   }, []);
@@ -404,7 +403,7 @@ export default function Page() {
             )}
           </div> */}
 
-          <div className="flex flex-col gap-0 my-2">
+          <div className="flex flex-col gap-4 my-4">
             <label
               htmlFor="requestDetails"
               className="block text-[#5E626C] pb-2"
@@ -412,11 +411,11 @@ export default function Page() {
               Request Details <span className="text-red-600 text-md">*</span>
             </label>
             <ReactQuill
-              id="requestDetials"
+              id="requestDetails"
               value={requestDetails}
               onChange={handleRequestDetailsChange}
               theme="snow"
-              className={"h-[100px] my-5"}
+              className="h-[200px] mb-20" // Increased height and margin bottom
               modules={modules}
               formats={formats}
             />
@@ -428,19 +427,19 @@ export default function Page() {
             )}
           </div>
 
-          <div className="rounded-md bg-[#F0ECFB] p-8">
-            <div className="flex justify-between items-center gap-12 md:gap-0">
-              <div>
-                <h1 className="text-md font-medium text-lg whitespace-nowrap">Attach files</h1>
-              </div>
+          <div className="rounded-md bg-[#F0ECFB] p-6 my-8">
+            {" "}
+            {/* Reduced padding and margin */}
+            <div className="flex justify-between items-center gap-4">
+              <h1 className="text-lg font-medium">Attach files</h1>
               <div
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={handleAddNewClick}
               >
-                <div className="w-[30px] sm:w-[100px] md:w-[35px]">
+                <div className="w-[30px] md:w-[35px]">
                   <Image src={addticket} alt="Add new" width={20} />
                 </div>
-                <div className="text-[#5027D9] text-lg whitespace-nowrap">Add new</div>
+                <div className="text-[#5027D9] text-lg">Add new</div>
               </div>
             </div>
             <input
@@ -452,7 +451,7 @@ export default function Page() {
             />
             <div className="mt-4">
               {fileCombination && (
-                <div className="flex items-center">
+                <div className="flex flex-col gap-2 overflow-clip">
                   <ul className="list-disc pl-5">
                     {fileCombination.map((file: any, index: any) => (
                       <li key={index} className="text-[#5E626C]">
@@ -470,10 +469,10 @@ export default function Page() {
                 </div>
               )}
               {selectedFiles.length > 0 && (
-                <div>
-                  <h2 className="text-md font-medium text-lg">
-                    Attached Files:
-                  </h2>
+                <div className="mt-4">
+                  {" "}
+                  {/* Added top margin */}
+                  <h2 className="text-lg font-medium">Attached Files:</h2>
                   <ul className="list-disc pl-5">
                     {selectedFiles.map((file, index) => (
                       <li key={index} className="text-[#5E626C]">
@@ -492,6 +491,7 @@ export default function Page() {
               )}
             </div>
           </div>
+
           <div className="md:flex grid gap-5 md:justify-end">
             <div>
               <Button

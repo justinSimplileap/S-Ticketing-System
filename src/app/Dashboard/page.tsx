@@ -137,7 +137,7 @@ const DashboardPage: React.FC = () => {
       </div>
       <div className="md:ml-8 ml-3 md:mr-8 mr-3 shadow-lg rounded-md">
         <h1 className="md:text-3xl text-2xl p-7 text-[#2A2C3E]">Summary</h1>
-        <div className="grid md:grid-cols-3 gap-5 md:mr-7 mr-0">
+        <div className="grid md:grid-cols-3 gap-5 md:mr-7 mr-2 ml-2">
           <div
             className="bg-[#F7F7F7] md:p-8 p-2 rounded-md md:ml-7 md:mb-7  mb-2  cursor-pointer"
             onClick={handleCardClick1}
@@ -219,7 +219,7 @@ const DashboardPage: React.FC = () => {
           </div>
 
           <div
-            className="bg-[#F7F7F7] md:p-8 p-2 rounded-md md:ml-7 md:mb-7  mb-0 cursor-pointer"
+            className="bg-[#F7F7F7] md:p-8 p-2 rounded-md md:ml-7 md:mb-7  mb-3 cursor-pointer"
             onClick={handleCardClick3}
           >
             <div className="grid md:grid-cols-2 grid-cols-3 md:pb-10 md:pt-0 pb-5 pt-5 gap-10">
@@ -258,7 +258,7 @@ const DashboardPage: React.FC = () => {
         </div>
       </div>
       <div className="md:m-8 flex flex-col gap-5">
-        <div className="flex md:p-7 p-2 justify-between gap-5">
+        <div className="flex md:p-7 p-3 justify-between gap-5">
           <div className="md:text-3xl text-md text-[#2A2C3E] whitespace-nowrap">Recent Tickets</div>
           <div className="md:text-2xl text-md text-[#696969] flex md:gap-3 gap-1 justify-center items-center whitespace-nowrap">
             <div>
