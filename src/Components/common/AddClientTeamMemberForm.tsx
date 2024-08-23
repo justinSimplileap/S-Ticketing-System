@@ -195,7 +195,7 @@ const AddClientTeamMemberForm: React.FC<AddClientTeamMemberFormProps> = ({
                 id="customerCompany"
                 type="text"
                 defaultValue={company_legal_name}
-                disabled
+                // disabled
                 {...register("company_legal_name", {
                   required: true,
                 })}
