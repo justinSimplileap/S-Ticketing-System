@@ -261,7 +261,7 @@ export default function Page() {
         </div>
       </div> */}
 
-      <div className="h-[100%] p-10 mx-10 my-12 bg-[#F9F9F9] rounded-md shadow-md">
+      <div className="h-[100%] p-5 lg:p-10 mx-3 lg:mx-10 my-6 lg:my-12 bg-[#F9F9F9] rounded-md shadow-md">
         <div className="text-[#2A2C3E] text-2xl mb-6">New Ticket</div>
 
         <form className="space-y-6" onSubmit={handleFormSubmit}>
@@ -293,9 +293,9 @@ export default function Page() {
               )}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="lg:grid grid-cols-2 gap-3">
             <div className="">
-              <label htmlFor="ticketType" className="block text-[#5E626C] pb-2">
+              <label htmlFor="ticketType" className="block text-[#5E626C] pb-2 -mt-2 lg:mt-0">
                 Ticket Type <span className="text-red-600 text-md">*</span>
               </label>
               <div className="flex items-center border border-gray-300 bg-white rounded-md">
@@ -327,7 +327,7 @@ export default function Page() {
             </div>
 
             <div className="">
-              <label htmlFor="priority" className="block text-[#5E626C] pb-2">
+              <label htmlFor="priority" className="block text-[#5E626C] pb-2 pt-3 lg:pt-0">
                 Priority <span className="text-red-600 text-md">*</span>
               </label>
               <div className="flex items-center border border-gray-300 bg-white rounded-md">
@@ -358,7 +358,7 @@ export default function Page() {
           </div>
 
           <div className="relative">
-            <label htmlFor="subject" className="block text-[#5E626C] pb-2">
+            <label htmlFor="subject" className="block text-[#5E626C] pb-2 -mt-2 lg:mt-0">
               Subject <span className="text-red-600 text-md">*</span>
             </label>
             <input
@@ -382,7 +382,7 @@ export default function Page() {
           <div className="flex flex-col gap-0 my-2">
             <label
               htmlFor="requestDetails"
-              className="block text-[#5E626C] pb-2"
+              className="block text-[#5E626C] lg:pb-2"
             >
               Request Details <span className="text-red-600 text-md">*</span>
             </label>
@@ -403,7 +403,7 @@ export default function Page() {
             )}
           </div>
 
-          <div className="rounded-md bg-[#F0ECFB] p-8 my-3">
+          <div className="rounded-md bg-[#F0ECFB] p-4 lg:p-8">
             <div className="flex justify-between items-center ">
               <div>
                 <h1 className="text-md font-medium text-lg">Attach files</h1>

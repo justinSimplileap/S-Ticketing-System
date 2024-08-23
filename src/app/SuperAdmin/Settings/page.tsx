@@ -37,7 +37,7 @@ const designations = ["Manager", "Developer", "Designer", "Analyst", "Intern"];
 const role = ["Team", "Admin", "Manager"];
 
 const tabClasses = ({ selected }: { selected: boolean }) =>
-  `px-7 text-left w-fit pb-4 text-sm font-medium focus:outline-none border-b-2 ${
+  `lg:px-7 text-center lg:text-left w-fit pb-4 text-sm font-medium focus:outline-none border-b-2 ${
     selected
       ? "text-[#5027D9] font-medium border-b-2 border-[#5027D9]"
       : "text-gray-500"
@@ -588,9 +588,9 @@ export default function Settings() {
   return (
     <div>
       <Toaster />
-      <div className="px-3 py-7">
+      <div className="lg:px-3 py-3 lg:py-7">
         <TabGroup selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-          <TabList className="flex space-x-1 bg-white w-fit text-left p-3 px-7 cursor-pointer pb-0">
+          <TabList className="flex space-x-1 bg-white w-fit text-left p-3 lg:px-7 cursor-pointer pb-0">
             {[
               "Customer Management",
               "Organisation Management",
@@ -605,12 +605,12 @@ export default function Settings() {
           </TabList>
           <TabPanels>
             {/* Custmer management tab */}
-            <TabPanel className="px-7 py-5 bg-white pt-0">
+            <TabPanel className="px-3 lg:px-7 py-5 bg-white pt-0">
               {selectedCustomer ? (
                 <div>
-                  <div className="py-5 flex items-center justify-between border-b-2">
+                  <div className="py-3 lg:py-5 flex items-center justify-between border-b-2">
                     <div>
-                      <h2 className="text-2xl font-semibold pl-3">
+                      <h2 className="text-lg lg:text-2xl font-semibold pl-3">
                         {selectedCustomer.name}
                       </h2>
                     </div>
@@ -659,8 +659,8 @@ export default function Settings() {
                     )}
                   </div>
 
-                  <div className="flex mt-5 mb-10">
-                    <div className="w-[15%] pr-4 pl-2 border-r-2">
+                  <div className="flex mt-3 lg:mt-5 mb-10">
+                    <div className="lg:w-[15%] lg:pr-4 lg:pl-2 border-r-2">
                       <TabGroup
                         selectedIndex={innerTabIndex}
                         onChange={setInnerTabIndex}
@@ -672,10 +672,10 @@ export default function Settings() {
                                 as="div"
                                 key={index}
                                 className={({ selected }) =>
-                                  `text-left cursor-pointer ${
+                                  `text-left cursor-pointer  ${
                                     selected
-                                      ? "text-white bg-[#5027D9] p-3"
-                                      : "text-[#91919B] p-3"
+                                      ? "text-white bg-[#5027D9] p-3 text-xs lg:text-base"
+                                      : "text-[#91919B] p-3 text-xs lg:text-base"
                                   }`
                                 }
                               >
@@ -687,7 +687,7 @@ export default function Settings() {
                       </TabGroup>
                     </div>
 
-                    <div className="w-[85%] p-3">
+                    <div className="w-[85%] px-3 lg:p-3">
                       {innerTabIndex === 0 ? (
                         <div>
                           {/* form displaying individual customer */}
@@ -803,7 +803,7 @@ export default function Settings() {
                 <div>
                   {!showAddCustomerForm && (
                     <div className="flex justify-between items-center py-7">
-                      <h2 className="text-2xl font-semibold">
+                      <h2 className="lg:text-2xl font-semibold">
                         Customer Management
                       </h2>
                       <div className="flex gap-5">
@@ -812,7 +812,7 @@ export default function Settings() {
                           <div>
                             <Button
                               type="button"
-                              className="rounded bg-[#5027D9] py-2 px-4 text-sm text-white items-center gap-2  flex"
+                              className="rounded bg-[#5027D9] py-2 px-2 lg:px-4 text-sm text-white items-center gap-2  flex"
                               onClick={handleAddCustomerClick}
                             >
                               <Image
@@ -833,9 +833,9 @@ export default function Settings() {
                   <div>
                     {showAddCustomerForm ? (
                       <div>
-                        <div className="py-5 flex justify-between items-center border-b-2 mb-10">
+                        <div className="py-5 flex justify-between items-center border-b-2 lg:mb-10 mb-5">
                           <div>
-                            <h2 className="text-2xl font-semibold">
+                            <h2 className="lg:text-2xl font-semibold">
                               Create a new customer
                             </h2>
                           </div>
@@ -925,21 +925,21 @@ export default function Settings() {
             </TabPanel>
 
             {/* Organisation management tab */}
-            <TabPanel className="p-5 bg-white">
+            <TabPanel className="p-3 lg:p-5 bg-white">
               {showAddMemberForm ? (
-                <div className="flex justify-between items-center py-5">
-                  <h2 className="text-2xl font-semibold">Add a new member</h2>
+                <div className="flex justify-between items-center lg:py-5">
+                  <h2 className="lg:text-2xl font-semibold">Add a new member</h2>
                   <div className="flex gap-5"></div>
                 </div>
               ) : (
-                <div className="flex justify-between items-center py-7">
-                  <h2 className="text-2xl font-semibold">
+                <div className="lg:flex justify-between items-center py-3 lg:py-7">
+                  <h2 className="lg:text-2xl font-semibold">
                     Organisation Management
                   </h2>
                   <div className="flex gap-5">
                     <Button
                       type="button"
-                      className="rounded bg-[#5027D9] py-2 px-4 text-sm text-white items-center gap-2 flex"
+                      className="rounded bg-[#5027D9] py-2 px-2 lg:px-4 mt-3 lg:mt-0 text-sm text-white items-center gap-2 flex"
                       onClick={handleAddMemberClick}
                     >
                       <Image src={Plus} alt="add" width={22} height={22} />
@@ -951,11 +951,11 @@ export default function Settings() {
 
               {showAddMemberForm ? (
                 <div className="mt-7 mb-10">
-                  <h2 className="text-xl font-semibold mb-4">Basic Details</h2>
+                  <h2 className="lg:text-xl font-semibold mb-4">Basic Details</h2>
                   <form onSubmit={handleSubmit(handleAddMemberForm)}>
-                    <div className="flex py-5 items-center">
+                    <div className="lg:flex py-5 items-center">
                       <div className="w-[20%]">
-                        <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+                        <div className="relative w-24 h-24 lg:w-20 lg:h-20 rounded-full overflow-hidden cursor-pointer mb-5 lg:mb-0">
                           <Image
                             src={
                               profileImage
@@ -982,7 +982,7 @@ export default function Settings() {
                           className="hidden"
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4 w-full">
+                      <div className="lg:grid grid-cols-2 gap-4 w-full">
                         <div>
                           <label
                             htmlFor="customer_name"
@@ -1051,13 +1051,13 @@ export default function Settings() {
                         </div>
                       </div>
                     </div>
-                    <div className="text-xl font-semibold py-7">
+                    <div className="lg:text-xl font-semibold py-3 lg:py-7">
                       Contact details
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="lg:grid grid-cols-2 gap-4">
                       <div>
                         <label htmlFor="phone_number" className="block text-sm">
-                          Phone number
+                          Phone number *
                         </label>
                         <input
                           id="phone_number"
@@ -1082,10 +1082,10 @@ export default function Settings() {
                         />
                       </div>
                     </div>
-                    <div className="text-xl font-semibold py-7">
+                    <div className="lg:text-xl font-semibold py-3 lg:py-7">
                       Permission settings
                     </div>
-                    <div className="grid grid-cols-2 gap-20">
+                    <div className="lg:grid grid-cols-2 gap-20">
                       <div>
                         <label htmlFor="password" className="block text-sm">
                           Role of member
@@ -1123,14 +1123,14 @@ export default function Settings() {
                     <div className="pt-5">
                       <Button
                         type="button"
-                        className="rounded bg-transparent py-3 px-7 mr-5 text-sm text-[#5027D9] border-[#5027D9] border-2"
+                        className="lg:mb-0 mb-3 w-[100%] lg:w-56 rounded bg-transparent py-3 px-7 text-sm text-[#5027D9] border-[#5027D9] border-2"
                         onClick={handleCancelAddMember}
                       >
                         Cancel
                       </Button>
                       <Button
                         type="submit"
-                        className="rounded bg-[#5027D9] py-3 px-10 text-sm text-white"
+                        className="rounded bg-[#5027D9] w-[100%] lg:w-56 lg:mb-0 mb-3 py-3 px-10 text-sm text-white"
                       >
                         Create member
                       </Button>
@@ -1139,12 +1139,12 @@ export default function Settings() {
                 </div>
               ) : (
                 <div className="flex mt-5 mb-10">
-                  <div className="w-[15%] pr-4 pl-2 border-r-2">
+                  <div className="w-[35%] lg:w-[15%] lg:pr-4 lg:pl-2 border-r-2">
                     <TabGroup
                       selectedIndex={innerTabIndex}
                       onChange={setInnerTabIndex}
                     >
-                      <div className="text-xl pb-7 font-semibold">
+                      <div className="lg:text-xl pb-7 font-semibold">
                         Department
                       </div>
                       <TabList className="space-y-4">
@@ -1171,7 +1171,7 @@ export default function Settings() {
                   <div className="m-4">
                     {employees[selectedTab] &&
                     employees[selectedTab].length > 0 ? (
-                      <div className="grid grid-cols-3 gap-4">
+                      <div className="lg:grid grid-cols-3 gap-4">
                         {employees[selectedTab].map((employee) => (
                           <div
                             key={employee.id}
@@ -1202,10 +1202,10 @@ export default function Settings() {
               )}
             </TabPanel>
 
-            <TabPanel className="p-10 bg-white">
-              <h2 className="text-2xl font-semibold">Profile Settings</h2>
+            <TabPanel className="p-3 lg:p-10 bg-white">
+              <h2 className="lg:text-2xl font-semibold">Profile Settings</h2>
               <TabGroup>
-                <TabList className="flex space-x-1 bg-white text-left p-3 px-7 cursor-pointer pb-0 mt-4">
+                <TabList className="flex space-x-1 bg-white text-left lg:p-3 lg:px-7 cursor-pointer pb-0 mt-4">
                   {categories.map((category, index) => (
                     <Tab as="div" key={index} className={tabClasses}>
                       {category.name}
@@ -1219,13 +1219,13 @@ export default function Settings() {
                     </div>
                   </TabPanel>
                   <TabPanel>
-                    <div className="pt-7 pl-7">
-                      <div className="text-xl pb-7 font-medium text-[#333B69]">
+                    <div className="pt-5 lg:pt-7 lg:pl-7">
+                      <div className="lg:text-xl pb-7 font-medium text-[#333B69]">
                         Change Password
                       </div>
                       <div className="w-1/2">
                         <form onSubmit={handleSubmitSecurity(onSubmitSecurity)}>
-                          <div className="mb-4 pb-7">
+                          <div className="mb-4 lg:pb-7">
                             <label
                               htmlFor="currentPassword"
                               className="block mb-2 text-[#6E6E6E]"
@@ -1246,7 +1246,7 @@ export default function Settings() {
                               </span>
                             )}
                           </div>
-                          <div className="mb-4 pb-7">
+                          <div className="mb-4 lg:pb-7">
                             <label
                               htmlFor="newPassword"
                               className="block mb-2 text-[#6E6E6E]"

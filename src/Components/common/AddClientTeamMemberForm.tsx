@@ -97,11 +97,11 @@ const AddClientTeamMemberForm: React.FC<AddClientTeamMemberFormProps> = ({
   return (
     <div>
       <Toaster />
-      <h2 className="text-xl font-semibold mb-4">Basic Details</h2>
+      <h2 className="lg:text-xl font-semibold mb-4">Basic Details</h2>
       <form onSubmit={handleSubmit(handleAddClientMember)}>
-        <div className="flex py-5">
+        <div className="lg:flex py-5">
           <div className="w-[20%]">
-            <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+            <div className="relative w-24 h-24 lg:w-20 lg:h-20 rounded-full overflow-hidden cursor-pointer mb-5 lg:mb-0">
               <Image
                 src={profileImage ? URL.createObjectURL(profileImage) : Profile}
                 alt="Profile Pic"
@@ -123,7 +123,7 @@ const AddClientTeamMemberForm: React.FC<AddClientTeamMemberFormProps> = ({
               className="hidden"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4 w-full">
+          <div className="lg:grid grid-cols-2 gap-4 w-full">
             <div>
               <label htmlFor="customerName" className="block text-sm ">
                 Customer Name

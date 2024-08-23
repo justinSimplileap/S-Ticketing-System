@@ -104,12 +104,12 @@ const CustomerForm: React.FC = () => {
     }
   };
   return (
-    <div className="p-5 pt-0">
+    <div className="lg:p-5 pt-0">
       <Toaster />
-      <div className="text-xl font-semibold">Basic Details</div>
-      <div className="flex py-5 items-center">
+      <div className="lg:text-xl font-semibold">Basic Details</div>
+      <div className="lg:flex py-5 items-center">
         <div className="w-[20%]">
-          <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+          <div className="relative w-24 h-24 lg:w-20 lg:h-20 rounded-full overflow-hidden cursor-pointer mb-5 lg:mb-0">
             <Image
               src={profileImage ? URL.createObjectURL(profileImage) : Profile}
               alt="Profile Pic"
@@ -353,7 +353,7 @@ const CustomerForm: React.FC = () => {
             </span>
           )}
         </div>
-        <div className="flex justify-end w-full mt-6 col-span-2">
+        <div className="flex justify-end w-full mt-6 col-span-2 mb-16">
           <button
             type="submit"
             className="btn-submit ml-auto block rounded bg-[#5027D9] py-3 px-5 text-sm text-white"

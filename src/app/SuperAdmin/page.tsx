@@ -174,14 +174,14 @@ export default function SuperAdminDashboard() {
         </div>
       </div> */}
 
-      <div className="p-7 pb-0">
-        <div className="shadow-sm p-5 rounded-md">
+      <div className="p-3 lg:p-7 pb-0">
+        <div className="shadow-sm p-3 lg:p-5 rounded-md">
           <div className="text-2xl font-medium mb-7">Summary</div>
 
-          <div className="grid grid-cols-2 gap-5">
+          <div className="lg:grid grid-cols-2 gap-5">
             {/* left side */}
             <div>
-              <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 mb-5 cursor-pointer" onClick={handleCardClick}>
+              <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-4 lg:p-8 mb-3 lg:mb-5 cursor-pointer" onClick={handleCardClick}>
                 <div className="flex items-center gap-8">
                   <Image src={HighPriorityTickets} alt="Circle Icon" width={90} />
                   <div>
@@ -195,8 +195,8 @@ export default function SuperAdminDashboard() {
                 <Image src={Arrow} alt="Arrow Icon" width={32} />
               </div>
 
-              <div className="grid grid-cols-2 gap-5">
-                <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" onClick={handleCardClick1}>
+              <div className="grid grid-cols-2 gap-3 lg:gap-5">
+                <div className="bg-[#F4F3FF] p-4 lg:p-8 rounded-lg cursor-pointer" onClick={handleCardClick1}>
                   <div className="grid grid-cols-2 pb-10">
                     <div>
                       <Image src={NewTickets} alt="Circle Icon" width={90} />
@@ -211,7 +211,7 @@ export default function SuperAdminDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" onClick={handleCardClick2}>
+                <div className="bg-[#F4F3FF] p-4 lg:p-8 rounded-lg cursor-pointer" onClick={handleCardClick2}>
                   <div className="grid grid-cols-2 pb-10">
                     <div>
                       <Image src={Open} alt="Circle Icon" width={90} />
@@ -226,7 +226,7 @@ export default function SuperAdminDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" onClick={handleCardClick3}>
+                <div className="bg-[#F4F3FF] p-4 lg:p-8 rounded-lg cursor-pointer" onClick={handleCardClick3}>
                   <div className="grid grid-cols-2 pb-10">
                     <div>
                       <Image src={Closed} alt="Circle Icon" width={90} />
@@ -244,7 +244,7 @@ export default function SuperAdminDashboard() {
                 </div>
 
                 <Link href={"/SuperAdmin/TicketManagement"}>
-                <div className="bg-[#F4F3FF] p-8 rounded-lg cursor-pointer" >
+                <div className="bg-[#F4F3FF] p-4 lg:p-8 rounded-lg cursor-pointer" >
                   <div className="grid grid-cols-2 pb-10">
                     <div>
                       <Image src={Totaltickets} alt="Circle Icon" width={90} />
@@ -265,8 +265,8 @@ export default function SuperAdminDashboard() {
 
             {/* right side */}
 
-            <div className="grid grid-cols-2 gap-5 h-fit">
-              <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 h-fit" >
+            <div className="lg:grid grid-cols-2 gap-3 lg:gap-5 h-fit pt-3 lg:pt-0">
+              <div className="hidden lg:flex justify-between items-center bg-[#F4F3FF] rounded-xl p-4 lg:p-8 h-fit mb-3 lg:mb-0" >
                 <div className="flex items-center gap-8">
                   <Image src={Customers} alt="Circle Icon" width={90} />
                   <div>
@@ -276,7 +276,7 @@ export default function SuperAdminDashboard() {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8 h-fit">
+              <div className="hidden lg:flex justify-between items-center bg-[#F4F3FF] rounded-xl p-4 lg:p-8 h-fit mb-3 lg:mb-0">
                 <div className="flex items-center gap-8">
                   <Image src={Departments} alt="Circle Icon" width={90} />
                   <div>
@@ -286,7 +286,7 @@ export default function SuperAdminDashboard() {
                 </div>
               </div>
               <div className="col-span-2 h-fit">
-                <div className="flex justify-between items-center bg-[#F4F3FF] rounded-xl p-8">
+                <div className="hidden lg:flex justify-between items-center bg-[#F4F3FF] rounded-xl p-4 lg:p-8 mb-3 lg:mb-0">
                   <div className="flex items-center gap-8">
                     <Image src={teamMembers} alt="Circle Icon" width={90} />
                     <div>
@@ -304,8 +304,8 @@ export default function SuperAdminDashboard() {
                   <div className="text-xl font-medium text-[#343A69]">
                     Open Tickets by type
                   </div>
-                  <div className="overflow-hidden border-2 rounded-lg mt-6 py-7">
-                    <table className="bg-white m-3 w-full table-fixed">
+                  <div className="overflow-hidden border-2 rounded-lg mt-6 lg:py-7">
+                    <table className="bg-white m-1 lg:m-3 w-full table-fixed">
                       <thead>
                         <tr>
                           <th className="text-[#718EBF] pb-5 font-normal w-1/3 text-left pl-5">
@@ -361,16 +361,21 @@ export default function SuperAdminDashboard() {
       </div>
       {/* end of top half */}
 
-      <div className="m-8 flex flex-col gap-5">
-        <div className="flex p-7 justify-between">
-          <div className="text-3xl text-[#2A2C3E]">Recent Tickets</div>
-          <div className="text-2xl text-[#696969] flex gap-3 justify-center items-center">
+      <div className="m-4 lg:m-8 flex flex-col gap-5">
+        <div className="flex flex-col lg:flex-row p-3 lg:p-7 justify-between">
+          <div className="text-xl lg:text-3xl text-[#2A2C3E]">Recent Tickets</div>
+          <div className="text-xl lg:text-2xl text-[#696969] flex gap-3 lg:justify-center items-center pt-3 lg:pt-0">
             <div>
-              <Link href="/AllTickets">View All Tickets </Link>
+              <Link href="/SuperAdmin/TicketManagement">View All Tickets </Link>
             </div>
-            <div>
-              <Link href="#">
+            <div className="hidden lg:block">
+              <Link href="/SuperAdmin/TicketManagement">
                 <Image src={Arrow} alt="hhh" width={28} />
+              </Link>
+            </div>
+            <div className="lg:hidden">
+              <Link href="#">
+                <Image src={Arrow} alt="hhh" width={18} />
               </Link>
             </div>
           </div>

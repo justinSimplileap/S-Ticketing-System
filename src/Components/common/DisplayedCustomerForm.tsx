@@ -184,17 +184,17 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
 
 
   return (
-    <div className="p-5 pt-0">
+    <div className="lg:p-5 pt-0">
       <Toaster />
       <div className="flex justify-between items-center">
-        <div className="text-xl font-semibold">Basic Details</div>
-        <div className="text-xl font-semibold">
+        <div className="lg:text-xl font-semibold">Basic Details</div>
+        <div className="lg:text-xl font-semibold">
           User ID : <span className=" text-[#5027D9]">{selectedUserId}</span>
         </div>
       </div>
-      <div className="flex py-5 items-center">
+      <div className="lg:flex py-5 items-center">
       <div className="w-[20%]">
-          <div className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer">
+          <div className="relative w-24 h-24 lg:w-20 lg:h-20 rounded-full overflow-hidden cursor-pointer mb-5 lg:mb-0">
             <Image
              src={
               profileImage
@@ -220,7 +220,7 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
             className="hidden"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4 w-full">
+        <div className="lg:grid grid-cols-2 gap-4 w-full">
           <div>
             <label htmlFor="customerName" className="block text-sm ">
               Customer Name
@@ -274,10 +274,10 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
           </div>
         </div>
       </div>
-      <div className="text-xl font-semibold py-7">Contact Details</div>
+      <div className="lg:text-xl font-semibold py-3 lg:py-7">Contact Details</div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-2 gap-4"
+        className="lg:grid grid-cols-2 gap-4"
       >
         <div>
           <label htmlFor="phoneNumber" className="block text-sm ">
@@ -398,7 +398,7 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
           )} */}
         </div>
         <div className="col-span-2">
-          <label htmlFor="workDomain" className="block mt-6">
+          <label htmlFor="workDomain" className="block lg:mt-6">
             Work Domain
           </label>
           <div className="border-2 border-[#DFEAF2] rounded-md p-2 mt-2 bg-white h-40 cursor-pointer">
@@ -437,17 +437,17 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
               </span>
             )} */}
         </div>
-        <div className="flex justify-end w-full mt-6 col-span-2 gap-5">
+        <div className="lg:flex justify-end w-full mt-6 col-span-2 gap-5">
           <button
             type="submit"
-            className="btn-submit ml-auto block rounded bg-[#5027D9] py-3 px-5 text-sm text-white"
+            className="btn-submit w-[100%] lg:w-56 lg:mb-0 mb-3 lg:ml-auto block rounded bg-[#5027D9] py-3 px-5 text-sm text-white"
           >
             Update details
           </button>
           <button
             type="button"
             onClick={onDelete}
-            className="rounded bg-transparent py-3 px-7 text-sm text-[#5027D9] border-[#5027D9] border-2"
+            className="lg:mb-0 mb-3 w-[100%] lg:w-56 rounded bg-transparent py-3 px-7 text-sm text-[#5027D9] border-[#5027D9] border-2"
           >
             Remove Customer
           </button>

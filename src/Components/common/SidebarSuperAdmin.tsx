@@ -67,13 +67,13 @@ const Sidebar: React.FC<SidebarProps> = ({
           <Image src={settings} alt="settings" />
           <Link href="/SuperAdmin/Settings">Settings</Link>
         </div>
-        <div
+        {/* <div
           onClick={handleLinkClick}
           className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
         >
           <Image src={profileGrp} alt="profile" />
           <Link href="/SuperAdmin/Profile">Profile</Link>
-        </div>
+        </div> */}
         <div
           className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
         >

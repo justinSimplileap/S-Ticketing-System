@@ -200,32 +200,35 @@ export default function Page() {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center mt-10 ml-8 mr-8">
+      <div className="lg:flex justify-between items-center mt-5 lg:mt-10 mx-4 lg:mx-8">
         <div>
-          <h1 className="text-3xl text-[#2A2C3E]">Tickets</h1>
+          <h1 className="text-3xl text-[#2A2C3E] pb-3 lg:pb-0">Tickets</h1>
         </div>
-        <div className="flex justify-around items-center gap-2">
-          <div>
+        <div className="lg:flex justify-around items-center gap-2">
+          <div className="mb-3 lg:mb-0">
             <SearchBar setSearchQuery={setSearchQuery} />
           </div>
-          <div>
-            <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]" onClick={exportTableToExcel}>
+          <div className="flex">
+          <div className="mb-3 lg:mb-0 mr-3">
+            <Button className="w-full flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]" onClick={exportTableToExcel}>
               <Image src={Folder} alt="Folder Icon" width={22} height={22} />
               Export report
             </Button>
           </div>
           <div>
           <Link href="/SuperAdmin/TicketManagement/NewTicket">
-            <Button className="flex rounded bg-[#5027D9] py-2 border-2 border-[#5027D9] px-4 text-sm text-white items-center gap-2">
+            <Button className=" flex rounded bg-[#5027D9] py-2 border-2 border-[#5027D9] px-4 text-sm text-white items-center gap-2">
               <Image src={Plus} alt="Plus Icon" width={22} height={22} />
               New Ticket
             </Button>
             </Link>
           </div>
+          </div>
+          
         </div>
       </div>
 
-      <div className="py-7 px-5 font-semibold rounded-md m-8 bg-[#F9F9F9]">
+      <div className="py-7 px-5 font-semibold rounded-md m-3 lg:m-8 bg-[#F9F9F9]">
         <p>Filter ticket by</p>
         <Filterdropdowns
           typeValue={typeValue}
@@ -241,7 +244,7 @@ export default function Page() {
           fetchTickets={fetchTickets}
         />
       </div>
-      <div className="mx-8">
+      <div className="mx-3 lg:mx-8">
         <Table tickets={tickets} />
       </div>
     </div>
