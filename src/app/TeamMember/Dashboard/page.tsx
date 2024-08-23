@@ -119,56 +119,71 @@ const Member: React.FC = () => {
   return (
     <div>
       <div className='p-6'>
-        <div className="shadow-lg rounded-md">
-          <h1 className="p-7 text-[#2A2C3E] text-2xl font-bold font-lato">Summary</h1>
-          <div className="grid grid-cols-3 gap-4 pl-5 pr-5">
-            <div className="bg-[#F7F7F7] p-8 rounded-md mb-7" onClick={handleCardClick1}>
-              <div className="grid grid-cols-2 pb-10">
-                <div className="w-16 h-16 bg-[#D4C7FF] rounded-full flex items-center justify-center">
-                  <Image src={warning} alt="High Priority Icon" width={30} height={30} className="rounded-full" />
-                </div>
-                <div className="flex justify-end items-end">
-                  <Image src={Arrow} alt="Arrow" width={30} />
-                </div>
-              </div>
-              <div className="pl-5 grid gap-3">
-                <div className="text-4xl text-[#5027D9]">{highPriorityTickets}</div>
-                <div className="text-[#696969] font-lato font-semibold text-base">High Priority Tickets</div>
-              </div>
-            </div>
+  <div className="shadow-lg rounded-md">
+    <h1 className="p-5 md:p-7 text-[#2A2C3E] text-xl md:text-2xl font-bold font-lato text-left md:text-left">Summary</h1>
+    <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-4 px-5">
+    <div className="relative bg-[#F7F7F7] md:p-8 rounded-md mb-7 p-5 flex md:block" onClick={handleCardClick1}>
+  <div className="md:grid md:grid-cols-2 md:pb-10">
+    <div className="w-16 h-16 bg-[#D4C7FF] rounded-full flex items-center justify-center">
+      <Image src={warning} alt="High Priority Icon" width={30} height={30} className="rounded-full" />
+    </div>
+    <div className="hidden md:flex justify-end items-end">
+      <Image src={Arrow} alt="Arrow" width={30} />
+    </div>
+  </div>
+  <div className="md:pl-5 md:grid gap-3 pl-5 pr-11">
+    <div className="text-4xl text-[#5027D9]">{highPriorityTickets}</div>
+    <div className="text-[#696969] font-lato font-semibold text-base">High Priority Tickets</div>
+  </div>
+  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 md:hidden">
+    <Image src={Arrow} alt="Arrow" width={30} />
+  </div>
+</div>
 
-            <div className="bg-[#F7F7F7] p-8 rounded-md mb-7" onClick={handleCardClick2}>
-              <div className="grid grid-cols-2 pb-10">
-                <div className="w-16 h-16 bg-[#D4C7FF] rounded-full flex items-center justify-center">
-                  <Image src={test} alt="Open Tickets Icon" width={30} height={30} className="rounded-full" />
-                </div>
-                <div className="flex justify-end items-end">
-                  <Image src={Arrow} alt="Arrow" width={30} />
-                </div>
-              </div>
-              <div className="pl-5 grid gap-3">
-                <div className="text-4xl text-[#5027D9]">{openTickets}</div>
-                <div className="text-[#696969] font-semibold font-lato">Open Tickets</div>
-              </div>
-            </div>
 
-            <div className="bg-[#F7F7F7] p-8 rounded-md mb-7" onClick={handleCardClick3}>
-              <div className="grid grid-cols-2 pb-10">
-                <div className="w-16 h-16 bg-[#D4C7FF] rounded-full flex items-center justify-center">
-                  <Image src={tick} alt="Closed Tickets Icon" width={30} height={30} className="rounded-full" />
-                </div>
-                <div className="flex justify-end items-end">
-                  <Image src={Arrow} alt="Arrow" width={30} />
-                </div>
-              </div>
-              <div className="pl-5 grid gap-3">
-                <div className="text-4xl text-[#5027D9]">{closedTickets}</div>
-                <div className="text-[#696969] font-lato font-semibold">Closed Tickets</div>
-              </div>
-            </div>
+
+<div className="relative bg-[#F7F7F7] md:p-8 rounded-md mb-7 p-5 flex md:block" onClick={handleCardClick1}>
+        <div className="md:grid md:grid-cols-2 md:pb-10">
+          <div className="w-16 h-16 bg-[#D4C7FF] rounded-full flex items-center justify-center">
+            <Image src={test} alt="Open Tickets Icon" width={30} height={30} className="rounded-full" />
+          </div>
+          <div className="hidden md:flex justify-end items-end " >
+            <Image src={Arrow} alt="Arrow" width={30} />
           </div>
         </div>
+        <div className="md:pl-5 md:grid gap-3 pl-5 pr-11">
+          <div className="text-4xl text-[#5027D9]">{openTickets}</div>
+          <div className="text-[#696969] font-semibold font-lato">Open Tickets</div>
+        </div>
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 md:hidden">
+    <Image src={Arrow} alt="Arrow" width={30} />
+  </div>
       </div>
+
+      <div className="relative bg-[#F7F7F7] md:p-8 rounded-md mb-7 p-5 flex md:block" onClick={handleCardClick1}>
+        <div className="md:grid md:grid-cols-2 md:pb-10">
+          <div className="w-16 h-16 bg-[#D4C7FF] rounded-full flex items-center justify-center ">
+            <Image src={tick} alt="Closed Tickets Icon" width={30} height={30} className="rounded-full" />
+          </div>
+          <div className="hidden md:flex justify-end items-end ">
+            <Image src={Arrow} alt="Arrow" width={30} />
+          </div>
+        </div>
+        <div className="pl-5 md:grid gap-3 ">
+          <div className="text-4xl text-[#5027D9]">{closedTickets}</div>
+          <div className="text-[#696969] font-lato font-semibold">Closed Tickets</div>
+        </div>
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 md:hidden">
+    <Image src={Arrow} alt="Arrow" width={30} />
+  </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div className='p-6 '>
+<h1 className='text-xl font-bold'>Recent Tickets</h1>
+</div>
 
       <div className='p-6'>
         <TableTwo tickets={tickets} />

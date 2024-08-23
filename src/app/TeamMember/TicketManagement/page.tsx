@@ -203,15 +203,19 @@ function TicketManagementPage() {
   return (
     <div className="">
       <div className="lg:flex justify-between items-center mt-5 lg:mt-10 lg:mx-8 mx-5">
-        <div>
+      <div className="flex items-center justify-between lg:justify-start ">
           <h1 className="text-3xl text-[#2A2C3E] mb-7 lg:mg-0">Tickets</h1>
+          <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9] lg:hidden" onClick={exportTicketsToCSV}>
+   <Image src={Folder} alt="Folder Icon" width={22} height={22} />
+      Export report
+    </Button>
         </div>
-        <div className="lg:flex justify-around items-center gap-2">
-          <div>
+        <div className="lg:flex justify-around items-center  gap-2">
+        <div className="">
             <SearchBar setSearchQuery={setSearchQuery} />
           </div>
           <div>
-            <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]" onClick={exportTicketsToCSV}>
+            <Button className="lg:flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9] hidden" onClick={exportTicketsToCSV}>
               <Image src={Folder} alt="Folder Icon" width={22} height={22} />
               Export report
             </Button>
@@ -219,6 +223,8 @@ function TicketManagementPage() {
           
         </div>
       </div>
+
+   
 
       <div className="py-7 px-5 font-semibold rounded-md m-8 bg-[#F9F9F9]">
         <p>Filter ticket by</p>

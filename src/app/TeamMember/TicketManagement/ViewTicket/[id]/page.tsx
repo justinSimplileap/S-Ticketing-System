@@ -92,6 +92,20 @@ const ViewTicketPage: React.FC = () => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [commentedOn, setCommentedOn] = useState("");
   const [events, setEvents] = useState<Event[]>([]);
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+
+  const handleHoursChange = (e: any) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    setHours(value);
+  };
+
+  const handleMinutesChange = (e: any) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value >= 0 && value < 60) {
+      setMinutes(value);
+    }
+  };
   console.log('teamMembers: ', teamMembers);
 
 
@@ -201,6 +215,7 @@ const ViewTicketPage: React.FC = () => {
         setSubject(response.data.body[0].subject);
         setDescription(response.data.body[0].details);
         setProjectName(ticketDetails.company_legal_name)
+        setTotalHours(ticketDetails.hours_logged);
 
         const filesData = response.data.body[0].details_images_url.map(
           (url: string) => {
@@ -298,8 +313,9 @@ const ViewTicketPage: React.FC = () => {
       );
 
       toast.success("Comment Added successfully");
+      
       console.log("Comment added successfully:", response.data);
-
+      fetchComments();
       setNewComment("");
       setAttachments([]);
     } catch (error) {
@@ -322,37 +338,42 @@ const ViewTicketPage: React.FC = () => {
   };
 
   const handleStatusChange = async (event: React.FormEvent<HTMLFormElement>) => {
-
-
     event.preventDefault();
-    console.log("called");
-
-    try {
-      const response = await axios.put(
-        `${base_url}/updateTicket/${ticketId}`,
-        {
-          status: formStatus,
-          totalHours: formTotalHours,
-          additionalNotes: formAdditionalNotes,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+      console.log("called");
+  
+      const formattedHours = hours.padStart(2, "0");
+      const formattedMinutes = minutes.padStart(2, "0");
+      const combinedValue = `${formattedHours}HRS${formattedMinutes}MINS`;
+      console.log("Formatted Value to Save:", combinedValue);
+  
+      try {
+        const response = await axios.put(
+          `${base_url}/updateTicket/${ticketId}`,
+          {
+            status: formStatus,
+            totalHours: combinedValue,
+            additionalNotes: formAdditionalNotes,
           },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+  
+        if (response.status === 200) {
+          fetchTickets();
+          setStatus(formStatus);
+          setTotalHours(formTotalHours);
+          setIsStatusModalOpen(false);
         }
-      );
-
-      if (response.status === 200) {
-        fetchTickets();
-        // Update local state
-        setStatus(formStatus);
-        setTotalHours(formTotalHours);
-        setIsStatusModalOpen(false);
+  
+        toast.success("Ticket updated successfully");
+      } catch (error) {
+        console.error("Error updating ticket status:", error);
+        toast.error("Failed to update ticket");
       }
-    } catch (error) {
-      console.error("Error updating ticket status:", error);
-    }
-  };
+    };
 
 
 
@@ -376,93 +397,70 @@ const ViewTicketPage: React.FC = () => {
       {/* <NextBreadCrumb items={breadcrumbItems} /> */}
 
       {/* View Ticket Section */}
-      <div className="p-8">
-        <div className='p-6 bg-[#F9F9F9] drop-shadow-md'>
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-2xl font-semibold text-[#222222]">View Ticket</h1>
-            <button
-              className="bg-[#5027D9] text-white py-2 px-4 rounded"
-              onClick={() => setIsStatusModalOpen(true)}
-            >
-              Change status
-            </button>
-          </div>
+      <div className="p-4 md:p-8">
+  <div className="p-4 md:p-6 bg-[#F9F9F9] drop-shadow-md">
+    <div className="flex flex-row md:flex-row justify-between items-start md:items-center mb-4 md:mb-8">
+      <h1 className="text-lg md:text-2xl font-semibold text-[#222222] mb-4 md:mb-0">View Ticket</h1>
+      <button
+        className="bg-[#5027D9] text-white py-2 px-4 rounded"
+        onClick={() => setIsStatusModalOpen(true)}
+      >
+        Change Status
+      </button>
+    </div>
 
-          {/* Ticket Info */}
-          <div className="grid grid-cols-3 gap-8 mb-8">
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Ticket ID:</p>
-              <p className="text-[#7D7D7D]">{ticketId}</p>
-            </div>
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Ticket Type:</p>
-              <p className="text-[#7D7D7D]">{ticketType}</p>
-            </div>
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Created On:</p>
-              <p className="text-[#7D7D7D]">{createdOn}</p>
-            </div>
-          </div>
-
-          {/* Ticket Details */}
-          <div className="grid grid-cols-3 gap-8 mb-8">
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Priority:</p>
-              <p className="text-[#7D7D7D]">{priority}</p>
-            </div>
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Status:</p>
-              <p className="text-[#7D7D7D]">{status}</p>
-            </div>
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Total Hours Logged:</p>
-              <p className="text-[#7D7D7D]">{totalHours}</p>
-            </div>
-          </div>
-
-          {/* Raised By & Assigned To */}
-          {/* <div className="grid grid-cols-3">
-          <div className="grid grid-cols-3">
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Raised By:</p>
-              <p className="text-[#7D7D7D]">{customer_name}</p>
-            </div>
-            </div>
-            <div className="grid grid-cols-3">
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
-              <p className="text-[#7D7D7D]">{assignedTo}</p>
-            </div>
-            
-          </div>
-          <div className="grid grid-cols-3">
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
-              <p className="text-[#7D7D7D]">{assignedTo}</p>
-            </div>
-            
-          </div>
-          
-          </div> */}
-           <div className="grid grid-cols-3 gap-8 mb-8">
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Raised By:</p>
-              <p className="text-[#7D7D7D]">{customer_name}</p>
-            </div>
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
-              <p className="text-[#7D7D7D]">{assignedTo}</p>
-            </div>
-            <div>
-              <p className="text-[#2A2C3E] font-medium">Project Name</p>
-              <p className="text-[#7D7D7D]">{projectName}</p>
-            </div>
-          </div>
-        </div>
+    {/* Ticket Info */}
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 mb-4 md:mb-8 pt-2">
+    <div className="flex flex-col">
+  <p className="text-[#2A2C3E] font-medium">Ticket ID:</p>
+  <p className="text-[#7D7D7D]">{ticketId}</p> 
+</div>
+      <div className="flex flex-col">
+        <p className="text-[#2A2C3E] font-medium">Ticket Type:</p>
+        <p className="text-[#7D7D7D] md:inline">{ticketType}</p>
       </div>
+      <div className="col-span-2 md:col-span-1">
+        <p className="text-[#2A2C3E] font-medium">Created On:</p>
+        <p className="text-[#7D7D7D] md:inline">{createdOn}</p>
+      </div>
+    </div>
 
-      <div className='p-8'>
-        <div className="bg-[#F9F9F9] p-6 drop-shadow-md">
+    {/* Ticket Details */}
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 mb-4 md:mb-8">
+      <div className="flex flex-col">
+        <p className="text-[#2A2C3E] font-medium">Priority:</p>
+        <p className="text-[#7D7D7D] md:inline">{priority}</p>
+      </div>
+      <div className="flex flex-col">
+        <p className="text-[#2A2C3E] font-medium">Status:</p>
+        <p className="text-[#7D7D7D] md:inline">{status}</p>
+      </div>
+      <div className="flex flex-col">
+        <p className="text-[#2A2C3E] font-medium">Total Hours Logged:</p>
+        <p className="text-[#7D7D7D] md:inline">{totalHours}</p>
+      </div>
+    </div>
+
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 mb-4 md:mb-8">
+      <div className="flex flex-col">
+        <p className="text-[#2A2C3E] font-medium">Raised By:</p>
+        <p className="text-[#7D7D7D] md:inline">{customer_name}</p>
+      </div>
+      <div className="flex flex-col">
+        <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
+        <p className="text-[#7D7D7D] md:inline">{assignedTo}</p>
+      </div>
+      <div className="flex flex-col">
+        <p className="text-[#2A2C3E] font-medium">Project Name:</p>
+        <p className="text-[#7D7D7D] md:inline">{projectName}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      <div className='p-4 md:p-8'>
+        <div className="p-4 md:p-6 bg-[#F9F9F9] drop-shadow-md">
           <div className='flex flex-col'>
             <p className="text-[#2A2C3E] font-medium">Subject</p>
             <p className="text-[#7D7D7D] mt-2">{subject}</p>
@@ -473,17 +471,6 @@ const ViewTicketPage: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* <div className='p-8'>
-                <div className='flex flex-col'>
-                    <div className="bg-[#F9F9F9] p-6 drop-shadow-md">
-                        <p className="text-[#393939] font-medium">Activity</p>
-                    </div>
-                </div>
-                <div className="bg-[#FFFFFF] p-6 drop-shadow-md">
-                    <TabThree />
-                </div>
-            </div> */}
 
       {/* Modal for Change Status */}
       <Dialog open={isStatusModalOpen} onClose={() => setIsStatusModalOpen(false)} className="relative z-50">
@@ -510,14 +497,29 @@ const ViewTicketPage: React.FC = () => {
                 </select>
               </div>
               <div className="mb-4">
-                <label htmlFor="totalHours" className="block text-gray-700 mt-4">Enter total hours logged*</label>
+              <label
+                  htmlFor="totalHours"
+                  className="block text-gray-700 mt-4"
+                >
+                  Enter total hours logged*
+                </label>
                 <input
                   type="text"
-                  id="totalHours"
-                  name="totalHours"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none"
-                  value={formTotalHours}
-                  onChange={(e) => setFormTotalHours(e.target.value)}
+                  id="hours"
+                  name="hours"
+                  className="w-1/2 px-3 py-2 border rounded-lg focus:outline-none"
+                  value={hours}
+                  onChange={handleHoursChange}
+                  placeholder="Hours"
+                />
+                <input
+                  type="text"
+                  id="minutes"
+                  name="minutes"
+                  className="w-1/2 px-3 py-2 border rounded-lg focus:outline-none"
+                  value={minutes}
+                  onChange={handleMinutesChange}
+                  placeholder="Minutes"
                 />
               </div>
               <div className="mb-4">
@@ -602,12 +604,12 @@ const ViewTicketPage: React.FC = () => {
           </DialogPanel>
         </div>
       </Dialog>
-      <div className="m-10 rounded-md">
-        <div className="p-10 bg-[#F9F9F9] text-base font-medium rounded-md">
+      <div className="p-4 md:p-8 rounded-md ">
+        <div className="md:p-8 p-4 bg-[#F9F9F9] text-base font-medium rounded-md">
           Activity
         </div>
         <TabGroup selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-          <TabList className="flex space-x-1 bg-white p-3 px-7 cursor-pointer">
+          <TabList className="flex space-x-1 bg-white md:p-4 cursor-pointer">
             <Tab as="div" className={tabClasses}>
               Events Timeline
             </Tab>
@@ -619,15 +621,15 @@ const ViewTicketPage: React.FC = () => {
             </Tab>
           </TabList>
           <TabPanels>
-            <TabPanel className="p-10 bg-white">
-              <div className="p-4">
-                <div className="bg-[#F9F9F9] p-10 m-3 rounded-md">
-                  <div className="grid gap-5">
-                    <div className="pb-5 w-full">
-                      <div className="text-base font-medium">Events</div>
+            <TabPanel className=" bg-white">
+              <div className="sm:p-4 p-3">
+                <div className="m-2 sm:m-3 rounded-md">
+                  <div className="grid sm:gap-5 gap-3">
+                    <div className="pb-3 sm:pb-5 w-full">
+                      
                       <div>
                         {events.length > 0 ? (
-                          <ul className="space-y-2">
+                          <ul className="sm:space-y-2 space-y-1">
                             {events
                               .sort((a, b) => {
                                 return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -657,8 +659,8 @@ const ViewTicketPage: React.FC = () => {
             </TabPanel>
 
             <TabPanel className="p-5 lg:p-7 bg-white">
-              <div className="bg-[#F9F9F9] p-10 m-5 rounded-md">
-                <div className="text-base font-medium pb-5">Comments</div>
+              <div className="  rounded-md">
+            
                 <div>
                   {comments.map((comment: Comment, index: number) => (
                     <div
