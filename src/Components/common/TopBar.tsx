@@ -1,20 +1,17 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import Bell from "../../../public/images/bell.svg";
-import userBg from "../../../public/images/User.svg";
+import Profile from "../../../public/images/Profile.svg";
 import breadcrumbArrow from "../../../public/images/BreadcrumbArrow.svg";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import Link from "next/link";
 import Hamburger from "../../../public/images/Hamburger.svg";
-import { base_url } from "@/utils/constant";
-import Porfile from "../../../public/images/Profile.svg"
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import axios from "axios";
+import { base_url } from "@/utils/constant";
 
 type User = {
   profile_url: string;
 };
-
 
 const formatBreadcrumbName = (name: string) => {
   return name.replace(/([a-z])([A-Z])/g, "$1 $2");
@@ -34,8 +31,6 @@ interface TopBarProps {
   isSidebarExpanded: boolean;
 }
 
-
-
 const TopBar: React.FC<TopBarProps> = ({
   setIsSidebarExpanded,
   isSidebarExpanded,
@@ -44,26 +39,25 @@ const TopBar: React.FC<TopBarProps> = ({
 
   useEffect(() => {
     fetchUser();
-  })
-  
+  }, []);
+
   const fetchUser = async () => {
     try {
       const response = await axios.get<{ user: User }>(
         `${base_url}/getUserDetails`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      if(response){
-        setProfilePicture(response.data.user.profile_url)
+      if (response) {
+        setProfilePicture(response.data.user.profile_url);
       }
-      
     } catch (error) {
-      console.error('Error fetching tickets:', error);
+      console.error("Error fetching user details:", error);
     }
-  }
+  };
 
   const pathname = usePathname();
   const breadcrumbs = generateBreadcrumbs(pathname);
@@ -73,17 +67,17 @@ const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <div className="flex justify-between items-center shadow-md px-8 py-5 sticky top-0 z-50 bg-[#2A2C3E] lg:bg-white w-[100%] ">
-      <div className="flex gap-2 items-center text-[#17192b] text-xl ">
+    <div className="flex justify-between items-center shadow-md px-8 py-5 sticky top-0 z-50 bg-[#2A2C3E] lg:bg-white w-full">
+      <div className="flex gap-2 items-center text-[#17192b] text-xl">
         <Image
           src={Hamburger}
           alt="Toggle Sidebar"
           width={40}
-          className="lg:hidden"
+          className="lg:hidden cursor-pointer"
           onClick={toggleSidebar}
         />
         {breadcrumbs.map((crumb, index) => (
-          <div key={index} className="lg:flex hidden items-center ">
+          <div key={index} className="lg:flex hidden items-center">
             <Link href={crumb.href} className="text-black">
               {crumb.name}
             </Link>
@@ -105,7 +99,13 @@ const TopBar: React.FC<TopBarProps> = ({
           <Image src={Bell} alt="Notification Bell" width={25} />
         </div>
         <div className="w-12 h-12 rounded-full overflow-hidden items-center justify-center flex">
-          <Image src={profilePicture ? profilePicture : Porfile} alt="User Profile" width={50} height={50} layout="intrinsic"/>
+          <Image
+            src={profilePicture || Profile}
+            alt="User Profile"
+            width={50}
+            height={50}
+            layout="intrinsic"
+          />
         </div>
       </div>
     </div>

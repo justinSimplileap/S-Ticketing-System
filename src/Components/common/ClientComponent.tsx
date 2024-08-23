@@ -3,8 +3,8 @@
 import Sidebar from "@/Components/common/Sidebar";
 import PassSidebar from "@/Components/common/PassSidebar";
 import SidebarSuperAdmin from "../common/SidebarSuperAdmin";
-import TeamMemberSidebar from "../../Components/common/TeamMemberSidebar"
-import ManagerSidebar from "../../Components/common/ManagerSidebar"
+import TeamMemberSidebar from "../../Components/common/TeamMemberSidebar";
+import ManagerSidebar from "../../Components/common/ManagerSidebar";
 import TopBar from "./TopBar";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -19,10 +19,8 @@ export default function ClientComponent({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false); // Add state for sidebar expansion
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false); // Sidebar is collapsed by default
   const [isLoading, setIsLoading] = useState(true);
-  // const ResetPathName = window.location.pathname;
-  // console.log("ResetPathName", ResetPathName);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -64,7 +62,6 @@ export default function ClientComponent({
     "/Manager/TicketManagement",
     "/Manager/Dashboard",
     /^\/Manager\/TicketManagement\/ViewTicket\/[^/]+$/,
-
   ];
 
   const passwordSidebarRoutes = [
@@ -81,24 +78,31 @@ export default function ClientComponent({
     "/SuperAdmin/TicketManagement/NewTicket",
     /^\/SuperAdmin\/TicketManagement\/ViewTicket\/[^/]+$/,
     /^\/SuperAdmin\/TicketManagement\/EditTicket\/[^/]+$/,
-
   ];
+
   const TeamMemberSidebarRoutes = [
     "/TeamMember/Dashboard",
     "/TeamMember/TicketManagement",
     "/TeamMember/TicketManagement/ViewTicket",
     "/TeamMember/Profile",
     /^\/TeamMember\/TicketManagement\/ViewTicket\/[^/]+$/,
-
   ];
+
   const ManagerSidebarRoutes = [
     "/Manager/Dashboard",
     "/Manager/TicketManagement",
     "/Manager/TicketManagement/ViewTicket",
     "/Manager/Profile",
     /^\/Manager\/TicketManagement\/ViewTicket\/[^/]+$/,
-
   ];
+
+  const ExtraRoutes = [
+    "/login",
+    "/reset",
+    "/AccountDetails",
+    "/FirstPassword",
+    "/ResetPassword",
+  ]
 
   const dontShowTopBarRoutes = [
     "/login",
@@ -122,12 +126,6 @@ export default function ClientComponent({
   return (
     <div className="flex">
       <Toaster />
-      {!matchesRoute(sidebarRoutes) && (
-        <Sidebar
-          isExpanded={isSidebarExpanded}
-          setIsSidebarExpanded={setIsSidebarExpanded}
-        />
-      )}
       {matchesRoute(passwordSidebarRoutes) && <PassSidebar />}
       {matchesRoute(superAdminSidebarRoutes) && (
         <SidebarSuperAdmin
@@ -135,8 +133,7 @@ export default function ClientComponent({
           setIsSidebarExpanded={setIsSidebarExpanded}
         />
       )}
-
-{matchesRoute(TeamMemberSidebarRoutes) && (
+      {matchesRoute(TeamMemberSidebarRoutes) && (
         <TeamMemberSidebar
           isExpanded={isSidebarExpanded}
           setIsSidebarExpanded={setIsSidebarExpanded}
@@ -148,6 +145,17 @@ export default function ClientComponent({
           setIsSidebarExpanded={setIsSidebarExpanded}
         />
       )}
+      {!matchesRoute(passwordSidebarRoutes) &&
+        !matchesRoute(superAdminSidebarRoutes) &&
+        !matchesRoute(TeamMemberSidebarRoutes) &&
+        !matchesRoute(ManagerSidebarRoutes) && 
+        !matchesRoute(ExtraRoutes) &&
+        (
+          <Sidebar
+            isExpanded={isSidebarExpanded}
+            setIsSidebarExpanded={setIsSidebarExpanded}
+          />
+        )}
         
 
       <div className="w-full">
