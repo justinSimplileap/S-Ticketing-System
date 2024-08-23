@@ -184,7 +184,7 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
 
 
   return (
-    <div className="lg:p-5 pt-0">
+    <div className="p-3 lg:p-5 pt-0">
       <Toaster />
       <div className="flex justify-between items-center">
         <div className="lg:text-xl font-semibold">Basic Details</div>

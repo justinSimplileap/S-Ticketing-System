@@ -626,9 +626,9 @@ export default function Settings() {
             <TabPanel className="px-3 lg:px-7 py-5 bg-white pt-0">
               {selectedCustomer ? (
                 <div>
-                  <div className="py-3 lg:py-5 flex items-center justify-between border-b-2">
-                    <div>
-                      <h2 className="text-lg lg:text-2xl font-semibold pl-3">
+                  <div className="py-3 lg:py-5 flex lg:flex-row flex-col items-center justify-between border-b-2">
+                    <div className="mr-auto">
+                      <h2 className="text-lg lg:text-2xl font-semibold lg:pl-3 pb-3 lg:pb-0">
                         {selectedCustomer.name}
                       </h2>
                     </div>
@@ -664,7 +664,7 @@ export default function Settings() {
                         </Button> */}
                       </div>
                     ) : (
-                      <div className="flex gap-5">
+                      <div className="flex gap-5 mr-auto lg:ml-auto lg:mr-0">
                         <Button
                           type="button"
                           onClick={handleAddMemberClick}
@@ -705,7 +705,7 @@ export default function Settings() {
                       </TabGroup>
                     </div>
 
-                    <div className="w-[85%] px-3 lg:p-3">
+                    <div className="w-[85%]  lg:p-3">
                       {innerTabIndex === 0 ? (
                         <div>
                           {/* form displaying individual customer */}
@@ -740,7 +740,7 @@ export default function Settings() {
                       ) : (
                         <div>
                           <Toaster />
-                          <div className="overflow-x-auto">
+                          <div className="overflow-x-hidden">
       <table className="min-w-full divide-y divide-gray-200 border-b-0 lg:block hidden">
         <thead className="bg-white">
           <tr>
@@ -797,11 +797,19 @@ export default function Settings() {
               </span>
             </button>
             {openMemberId === member.user_id && (
-              <div className="p-6 bg-white grid grid-cols-2">
-                <div className="mb-1"><p className="font-semibold">Member ID: {member.id}</p></div>
-                <div><p>Designation: {member.designation}</p></div>
-                <div><p>Phone: {member.phone_number}</p></div>
-                <div><p>Email: {member.email}</p></div>
+              <div className="p-3 bg-white grid grid-cols-2">
+                <div className="mb-1"><p className="font-semibold text-sm">Member ID:</p></div>
+                <div className="mb-1"><p className="text-xs">{member.id}</p></div>
+
+                <div className="mb-1"><p  className="font-semibold text-sm">Designation:</p></div>
+                <div className="mb-1"><p  className="text-xs">{member.designation}</p></div>
+
+                <div className="mb-1"><p  className="font-semibold text-sm">Phone:</p></div>
+                <div className="mb-1"><p  className="text-xs">{member.phone_number}</p></div>
+
+                <div className="mb-1"><p  className="font-semibold text-sm">Email:</p></div>
+                <div className="mb-1"><p  className="text-xs">{member.email}</p></div>
+
                 <div className="flex items-center space-x-4">
                   <button onClick={() => handleDeleteMember(member.user_id)}>
                     <Image src={Delete} alt="delete" />
@@ -871,7 +879,7 @@ export default function Settings() {
                         <CustomerForm />
                       </div>
                     ) : (
-                      <div className="overflow-x-auto">
+                      <div className="overflow-x-hidden">
       <table className="min-w-full divide-y divide-gray-200 border-b-0 lg:block hidden">
         <thead className="bg-white">
           <tr>
@@ -934,15 +942,15 @@ export default function Settings() {
               </span>
             </button>
             {openClientId === client.id && (
-              <div className="p-6 bg-white grid grid-cols-2">
-                <div className="mb-1"><p className="font-semibold">Company URL:</p></div>
-                <div><p>{client.company_url}</p></div>
+              <div className="p-3 bg-white grid grid-cols-2">
+                <div className="mb-1"><p className="font-semibold text-sm">Company URL:</p></div>
+                <div><p className="text-xs">{client.company_url}</p></div>
 
-                <div className="mb-1" ><p  className="font-semibold">Phone:</p></div>
-                <div><p>{client.phone_number}</p></div>
+                <div className="mb-1" ><p  className="font-semibold text-sm">Phone:</p></div>
+                <div><p className="text-xs">{client.phone_number}</p></div>
 
-                <div  className="mb-1"><p className="font-semibold">Email:</p></div>
-                <div><p>{client.email}</p></div>
+                <div  className="mb-1"><p className="font-semibold text-sm">Email:</p></div>
+                <div><p className="text-xs">{client.email}</p></div>
 
               </div>
             )}
@@ -1323,3 +1331,4 @@ export default function Settings() {
     </div>
   );
 }
+
