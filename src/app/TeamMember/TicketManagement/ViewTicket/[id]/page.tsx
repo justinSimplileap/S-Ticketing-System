@@ -1,8 +1,8 @@
-'use client'
+"use client";
 import React, { useState, useEffect, useRef } from "react";
-import Image from 'next/image';
-import { useRouter, usePathname } from 'next/navigation';
-import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios, { AxiosResponse } from "axios";
 // import TabThree from "../../../../Components/common/TabThree";
 // import AttachmentTable from "../../../Components/common/AttachmentTable";
@@ -50,8 +50,7 @@ interface Comment {
   comment_description: string;
   comment_by: string;
   commentedOn: string;
-};
-
+}
 
 interface Event {
   id: number;
@@ -63,7 +62,7 @@ interface Event {
   event_details: string;
   createdAt: string;
   updatedAt: string;
-};
+}
 
 const ViewTicketPage: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -106,8 +105,7 @@ const ViewTicketPage: React.FC = () => {
       setMinutes(value);
     }
   };
-  console.log('teamMembers: ', teamMembers);
-
+  console.log("teamMembers: ", teamMembers);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -115,9 +113,9 @@ const ViewTicketPage: React.FC = () => {
   const value = parts[parts.length - 1];
 
   const tabClasses = ({ selected }: { selected: boolean }) =>
-    `px-4 py-2 text-sm font-medium focus:outline-none ${selected ? "text-[#5027D9] border-b-2 border-[#5027D9]" : "text-gray-500"
+    `px-4 py-2 text-sm font-medium focus:outline-none ${
+      selected ? "text-[#5027D9] border-b-2 border-[#5027D9]" : "text-gray-500"
     }`;
-
 
   useEffect(() => {
     fetchComments();
@@ -182,10 +180,8 @@ const ViewTicketPage: React.FC = () => {
       }));
 
       setComments(commentsData.reverse());
-    } catch (error) { }
+    } catch (error) {}
   };
-
-
 
   const fetchTickets = async () => {
     try {
@@ -199,22 +195,24 @@ const ViewTicketPage: React.FC = () => {
       );
 
       if (response) {
-        console.log("sss", response.data.body[0])
-        const ticketDetails = response.data.body[0]
+        console.log("sss", response.data.body[0]);
+        const ticketDetails = response.data.body[0];
         // const ticketDetails = response.data.body[0].;
         // // console.log("tt", ticketDetails);
         // // const user = response.data.user;
 
         setTicketId(response.data.body[0].id);
         setTicketType(response.data.body[0].ticket_type);
-        setCreatedOn(new Date(response.data.body[0].createdAt).toLocaleDateString());
+        setCreatedOn(
+          new Date(response.data.body[0].createdAt).toLocaleDateString()
+        );
         setPriority(response.data.body[0].priority);
         setStatus(response.data.body[0].status);
-        setAssignedTo(ticketDetails.assigned_to)
+        setAssignedTo(ticketDetails.assigned_to);
         setRaisedBy(response.data.body[0].customer_name);
         setSubject(response.data.body[0].subject);
         setDescription(response.data.body[0].details);
-        setProjectName(ticketDetails.company_legal_name)
+        setProjectName(ticketDetails.company_legal_name);
         setTotalHours(ticketDetails.hours_logged);
 
         const filesData = response.data.body[0].details_images_url.map(
@@ -227,7 +225,7 @@ const ViewTicketPage: React.FC = () => {
           }
         );
 
-        console.log("filesData", filesData)
+        console.log("filesData", filesData);
         setUploadedFiles(filesData);
       }
     } catch (error) {
@@ -247,8 +245,8 @@ const ViewTicketPage: React.FC = () => {
       );
 
       if (response) {
-        console.log('response: ', response);
-        console.log(response.data)
+        console.log("response: ", response);
+        console.log(response.data);
         setTeamMembers(response.data);
       }
     } catch (error) {
@@ -313,7 +311,7 @@ const ViewTicketPage: React.FC = () => {
       );
 
       toast.success("Comment Added successfully");
-      
+
       console.log("Comment added successfully:", response.data);
       fetchComments();
       setNewComment("");
@@ -337,60 +335,58 @@ const ViewTicketPage: React.FC = () => {
     }
   };
 
-  const handleStatusChange = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleStatusChange = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
-      console.log("called");
-  
-      const formattedHours = hours.padStart(2, "0");
-      const formattedMinutes = minutes.padStart(2, "0");
-      const combinedValue = `${formattedHours}HRS${formattedMinutes}MINS`;
-      console.log("Formatted Value to Save:", combinedValue);
-  
-      try {
-        const response = await axios.put(
-          `${base_url}/updateTicket/${ticketId}`,
-          {
-            status: formStatus,
-            totalHours: combinedValue,
-            additionalNotes: formAdditionalNotes,
+    console.log("called");
+
+    const formattedHours = hours.padStart(2, "0");
+    const formattedMinutes = minutes.padStart(2, "0");
+    const combinedValue = `${formattedHours}HRS${formattedMinutes}MINS`;
+    console.log("Formatted Value to Save:", combinedValue);
+
+    try {
+      const response = await axios.put(
+        `${base_url}/updateTicket/${ticketId}`,
+        {
+          status: formStatus,
+          totalHours: combinedValue,
+          additionalNotes: formAdditionalNotes,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-  
-        if (response.status === 200) {
-          fetchTickets();
-          setStatus(formStatus);
-          setTotalHours(formTotalHours);
-          setIsStatusModalOpen(false);
         }
-  
-        toast.success("Ticket updated successfully");
-      } catch (error) {
-        console.error("Error updating ticket status:", error);
-        toast.error("Failed to update ticket");
+      );
+
+      if (response.status === 200) {
+        fetchTickets();
+        setStatus(formStatus);
+        setTotalHours(formTotalHours);
+        setIsStatusModalOpen(false);
       }
-    };
 
-
-
-
+      toast.success("Ticket updated successfully");
+    } catch (error) {
+      console.error("Error updating ticket status:", error);
+      toast.error("Failed to update ticket");
+    }
+  };
 
   const handleAssign = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const selectedMember = teamMembers.find(member => member.id === selectedPerson);
+    const selectedMember = teamMembers.find(
+      (member) => member.id === selectedPerson
+    );
     if (selectedMember) {
-      console.log('Assigned to:', selectedMember.customer_name);
+      console.log("Assigned to:", selectedMember.customer_name);
       // Here you can perform further actions, like sending the assigned person's data to the backend.
       setAssignedTo(selectedMember.customer_name); // Update the assignedTo state
       setIsAssignModalOpen(false); // Close the modal
     }
   };
-
-
 
   return (
     <div>
@@ -398,94 +394,109 @@ const ViewTicketPage: React.FC = () => {
 
       {/* View Ticket Section */}
       <div className="p-4 md:p-8">
-  <div className="p-4 md:p-6 bg-[#F9F9F9] drop-shadow-md">
-    <div className="flex flex-row md:flex-row justify-between items-start md:items-center mb-4 md:mb-8">
-      <h1 className="text-lg md:text-2xl font-semibold text-[#222222] mb-4 md:mb-0">View Ticket</h1>
-      <button
-        className="bg-[#5027D9] text-white py-2 px-4 rounded"
-        onClick={() => setIsStatusModalOpen(true)}
-      >
-        Change Status
-      </button>
-    </div>
-
-    {/* Ticket Info */}
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 mb-4 md:mb-8 pt-2">
-    <div className="flex flex-col">
-  <p className="text-[#2A2C3E] font-medium">Ticket ID:</p>
-  <p className="text-[#7D7D7D]">{ticketId}</p> 
-</div>
-      <div className="flex flex-col">
-        <p className="text-[#2A2C3E] font-medium">Ticket Type:</p>
-        <p className="text-[#7D7D7D] md:inline">{ticketType}</p>
-      </div>
-      <div className="col-span-2 md:col-span-1">
-        <p className="text-[#2A2C3E] font-medium">Created On:</p>
-        <p className="text-[#7D7D7D] md:inline">{createdOn}</p>
-      </div>
-    </div>
-
-    {/* Ticket Details */}
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 mb-4 md:mb-8">
-      <div className="flex flex-col">
-        <p className="text-[#2A2C3E] font-medium">Priority:</p>
-        <p className="text-[#7D7D7D] md:inline">{priority}</p>
-      </div>
-      <div className="flex flex-col">
-        <p className="text-[#2A2C3E] font-medium">Status:</p>
-        <p className="text-[#7D7D7D] md:inline">{status}</p>
-      </div>
-      <div className="flex flex-col">
-        <p className="text-[#2A2C3E] font-medium">Total Hours Logged:</p>
-        <p className="text-[#7D7D7D] md:inline">{totalHours}</p>
-      </div>
-    </div>
-
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 mb-4 md:mb-8">
-      <div className="flex flex-col">
-        <p className="text-[#2A2C3E] font-medium">Raised By:</p>
-        <p className="text-[#7D7D7D] md:inline">{customer_name}</p>
-      </div>
-      <div className="flex flex-col">
-        <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
-        <p className="text-[#7D7D7D] md:inline">{assignedTo}</p>
-      </div>
-      <div className="flex flex-col">
-        <p className="text-[#2A2C3E] font-medium">Project Name:</p>
-        <p className="text-[#7D7D7D] md:inline">{projectName}</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-      <div className='p-4 md:p-8'>
         <div className="p-4 md:p-6 bg-[#F9F9F9] drop-shadow-md">
-          <div className='flex flex-col'>
+          <div className="flex flex-row md:flex-row justify-between items-start md:items-center mb-4 md:mb-8">
+            <h1 className="text-lg md:text-2xl font-semibold text-[#222222] mb-4 md:mb-0">
+              View Ticket
+            </h1>
+            <button
+              className="bg-[#5027D9] text-white py-2 px-4 rounded"
+              onClick={() => setIsStatusModalOpen(true)}
+            >
+              Change Status
+            </button>
+          </div>
+
+          {/* Ticket Info */}
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 mb-4 md:mb-8 pt-2">
+            <div className="flex flex-col">
+              <p className="text-[#2A2C3E] font-medium">Ticket ID:</p>
+              <p className="text-[#7D7D7D]">{ticketId}</p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[#2A2C3E] font-medium">Ticket Type:</p>
+              <p className="text-[#7D7D7D] md:inline">{ticketType}</p>
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <p className="text-[#2A2C3E] font-medium">Created On:</p>
+              <p className="text-[#7D7D7D] md:inline">{createdOn}</p>
+            </div>
+          </div>
+
+          {/* Ticket Details */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 mb-4 md:mb-8">
+            <div className="flex flex-col">
+              <p className="text-[#2A2C3E] font-medium">Priority:</p>
+              <p className="text-[#7D7D7D] md:inline">{priority}</p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[#2A2C3E] font-medium">Status:</p>
+              <p className="text-[#7D7D7D] md:inline">{status}</p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[#2A2C3E] font-medium">Total Hours Logged:</p>
+              <p className="text-[#7D7D7D] md:inline">{totalHours}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 mb-4 md:mb-8">
+            <div className="flex flex-col">
+              <p className="text-[#2A2C3E] font-medium">Raised By:</p>
+              <p className="text-[#7D7D7D] md:inline">{customer_name}</p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
+              <p className="text-[#7D7D7D] md:inline">{assignedTo}</p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[#2A2C3E] font-medium">Project Name:</p>
+              <p className="text-[#7D7D7D] md:inline">{projectName}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-4 md:p-8">
+        <div className="p-4 md:p-6 bg-[#F9F9F9] drop-shadow-md">
+          <div className="flex flex-col">
             <p className="text-[#2A2C3E] font-medium">Subject</p>
             <p className="text-[#7D7D7D] mt-2">{subject}</p>
           </div>
-          <div className='flex flex-col mt-6'>
+          <div className="flex flex-col mt-6">
             <p className="text-[#2A2C3E] font-medium">Request Details</p>
-            <p className="text-[#7D7D7D] font-normal mt-2"> {renderSections(description)}</p>
+            <p className="text-[#7D7D7D] font-normal mt-2">
+              {" "}
+              {renderSections(description)}
+            </p>
           </div>
         </div>
       </div>
 
       {/* Modal for Change Status */}
-      <Dialog open={isStatusModalOpen} onClose={() => setIsStatusModalOpen(false)} className="relative z-50">
+      <Dialog
+        open={isStatusModalOpen}
+        onClose={() => setIsStatusModalOpen(false)}
+        className="relative z-50"
+      >
         <div className="fixed inset-0 bg-black opacity-50 w-full"></div>
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel className="bg-white p-8 rounded shadow-lg z-50 w-[43em]">
             <div className="flex justify-between items-center mb-10">
-              <DialogTitle className="font-bold text-xl text-[#222222]">Change status</DialogTitle>
-              <button onClick={() => setIsStatusModalOpen(false)} className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-300">
+              <DialogTitle className="font-bold text-xl text-[#222222]">
+                Change status
+              </DialogTitle>
+              <button
+                onClick={() => setIsStatusModalOpen(false)}
+                className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-300"
+              >
                 <Image src={close} alt="Close Icon" width={16} height={16} />
               </button>
             </div>
             <form onSubmit={handleStatusChange}>
               <div className="mb-4">
-                <label htmlFor="status" className="block text-gray-700">Choose status*</label>
+                <label htmlFor="status" className="block text-gray-700">
+                  Choose status*
+                </label>
                 <select
                   id="status"
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none mt-2 text-gray-700"
@@ -497,7 +508,7 @@ const ViewTicketPage: React.FC = () => {
                 </select>
               </div>
               <div className="mb-4">
-              <label
+                <label
                   htmlFor="totalHours"
                   className="block text-gray-700 mt-4"
                 >
@@ -523,7 +534,12 @@ const ViewTicketPage: React.FC = () => {
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="additionalNotes" className="block text-gray-700">Additional notes</label>
+                <label
+                  htmlFor="additionalNotes"
+                  className="block text-gray-700"
+                >
+                  Additional notes
+                </label>
                 <textarea
                   id="additionalNotes"
                   name="additionalNotes"
@@ -554,12 +570,18 @@ const ViewTicketPage: React.FC = () => {
       </Dialog>
 
       {/* Modal for Assigning */}
-      <Dialog open={isAssignModalOpen} onClose={() => setIsAssignModalOpen(false)} className="relative z-50">
+      <Dialog
+        open={isAssignModalOpen}
+        onClose={() => setIsAssignModalOpen(false)}
+        className="relative z-50"
+      >
         <div className="fixed inset-0 bg-black opacity-50 w-full"></div>
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel className="bg-white p-8 rounded shadow-lg z-50 w-[43em]">
             <div className="flex justify-between items-center mb-10">
-              <DialogTitle className="font-bold text-xl text-[#222222]">Assign</DialogTitle>
+              <DialogTitle className="font-bold text-xl text-[#222222]">
+                Assign
+              </DialogTitle>
               <Image
                 src={close}
                 alt="Close Icon"
@@ -570,14 +592,16 @@ const ViewTicketPage: React.FC = () => {
               />
             </div>
             <form onSubmit={handleAssign}>
-              <div className='flex items-center justify-center'>
+              <div className="flex items-center justify-center">
                 <select
                   id="dropdown"
                   className="block w-full p-4 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  value={selectedPerson || ''}
+                  value={selectedPerson || ""}
                   onChange={(e) => setSelectedPerson(Number(e.target.value))}
                 >
-                  <option value="" disabled>Select a person</option>
+                  <option value="" disabled>
+                    Select a person
+                  </option>
                   {teamMembers.map((member) => (
                     <option key={member.id} value={member.id}>
                       {member.customer_name}
@@ -626,24 +650,37 @@ const ViewTicketPage: React.FC = () => {
                 <div className="m-2 sm:m-3 rounded-md">
                   <div className="grid sm:gap-5 gap-3">
                     <div className="pb-3 sm:pb-5 w-full">
-                      
                       <div>
                         {events.length > 0 ? (
-                          <ul className="sm:space-y-2 space-y-1">
+                          <ul className="space-y-2 whitespace-nowrap">
                             {events
                               .sort((a, b) => {
-                                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                                return (
+                                  new Date(b.createdAt).getTime() -
+                                  new Date(a.createdAt).getTime()
+                                );
                               })
                               .map((event, index) => {
-                                const eventDate = new Date(event.createdAt).toLocaleString();
+                                const eventDate = new Date(
+                                  event.createdAt
+                                ).toLocaleString();
                                 return (
                                   <li
                                     key={index}
-                                    className="text-[#5027D9] flex items-center space-x-2 cursor-pointer w-full"
+                                    className="text-[#5027D9] flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 cursor-pointer w-full"
                                   >
-                                    <Image src={Ellipse} alt="ellipse" width={15} height={15} />
-                                    <span>{event.event_details}</span>
-                                    <span className="text-gray-400">on {eventDate}</span>
+                                    <div className="flex items-center space-x-2">
+                                      <Image
+                                        src={Ellipse}
+                                        alt="ellipse"
+                                        width={15}
+                                        height={15}
+                                      />
+                                      <span>{event.event_details}</span>
+                                    </div>
+                                    <span className="text-gray-400">
+                                      on {eventDate}
+                                    </span>
                                   </li>
                                 );
                               })}
@@ -660,19 +697,18 @@ const ViewTicketPage: React.FC = () => {
 
             <TabPanel className="p-5 lg:p-7 bg-white">
               <div className="  rounded-md">
-            
                 <div>
                   {comments.map((comment: Comment, index: number) => (
                     <div
                       key={index}
-                      className="pb-5 flex justify-start items-center"
+                      className="pb-5 flex justify-start items-center gap-2"
                     >
-                      <div className="bg-[#041444] rounded-full w-12 h-12 flex items-center justify-center text-white mr-6">
+                      <div className="bg-[#041444] rounded-full md:w-12 md:h-12 w-10 h-8 flex items-center justify-center text-white md:mr-6">
                         {comment.comment_by.charAt(0)}
                       </div>
-                      <div className="flex w-full justify-between">
+                      <div className="flex w-full justify-between gap-2">
                         <div>
-                          <p className="font-bold text-[#4B4B4B]">
+                          <p className="font-bold text-[#4B4B4B] whitespace-nowrap">
                             {comment.comment_by}
                           </p>
                           <p className="text-[#4B4B4B]">
@@ -737,10 +773,15 @@ const ViewTicketPage: React.FC = () => {
                       />
                       <label htmlFor="attachment" className="cursor-pointer">
                         <button
-                          className="bg-white text-white lg:p-4 rounded-md border-[#5027D9] border"
+                          className="bg-white text-white p-4 rounded-md border-[#5027D9] border"
                           onClick={handleAddAttachment}
                         >
-                          <Image src={sendAttachment} alt="" width={25} />
+                          <Image
+                            src={sendAttachment}
+                            alt=""
+                            width={25}
+                            className="w-[40px] sm:w-[50px] md:w-[35px]"
+                          />
                         </button>
                       </label>
                     </div>
@@ -749,72 +790,74 @@ const ViewTicketPage: React.FC = () => {
                         onClick={handleAddComment}
                         className="bg-[#5027D9] text-white p-4 rounded border-[#5027D9] border"
                       >
-                        <Image src={sendComment} alt="" width={25} />
+                        <Image
+                          src={sendComment}
+                          alt=""
+                          width={25}
+                          className="w-[40px] sm:w-[50px] md:w-[35px]"
+                        />
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
             </TabPanel>
-            <TabPanel className="p-7 bg-white">
+            <TabPanel className="md:p-10 p-5 bg-white">
               <div className="flex justify-between items-center mb-4">
-                <div className="font-semibold">All Uploaded Files</div>
-                <div className="flex items-center gap-2 cursor-pointer">
-                  <div>
-                    <Image src={addticket} alt="Add new" width={20} />
-                  </div>
-                  <div className="text-[#5027D9] text-lg">Add new</div>
+                <div className="font-semibold text-sm md:text-base">
+                  All Uploaded Files
                 </div>
               </div>
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Filename
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Uploaded On
-                    </th>
-                    <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Download</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {uploadedFiles.map((file, index) => (
-                    <tr key={index}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {file.filename}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {file.uploadedOn}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() =>
-                            downloadFile(file.fileUrl, file.filename)
-                          }
-                          className="text-[#5027D9] hover:text-[#5027D9] underline"
-                        >
-                          Download
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full divide-y divide-gray-200 min-w-[500px]">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-2 py-2 text-left text-xs text-gray-500 uppercase"
+                      >
+                        Filename
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-2 py-2 text-left text-xs text-gray-500 uppercase"
+                      >
+                        Uploaded On
+                      </th>
+                      <th scope="col" className="relative px-2 py-2">
+                        <span className="sr-only">Download</span>
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {uploadedFiles.map((file, index) => (
+                      <tr key={index}>
+                        <td className="px-2 py-1 text-xs text-gray-500 truncate max-w-[150px]">
+                          {file.filename}
+                        </td>
+                        <td className="px-2 py-1 text-xs text-gray-500">
+                          {file.uploadedOn}
+                        </td>
+                        <td className="px-2 py-1 text-xs text-right">
+                          <button
+                            onClick={() =>
+                              downloadFile(file.fileUrl, file.filename)
+                            }
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Download
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </TabPanel>
           </TabPanels>
         </TabGroup>
       </div>
     </div>
-
   );
 };
 
