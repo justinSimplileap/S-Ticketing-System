@@ -257,8 +257,6 @@ export default function Settings() {
   const toggleDropdown2 = (userId: any) => {
     setOpenMemberId(openMemberId === userId ? null : userId);
   };
-  
-
 
   useEffect(() => {
     if (innerTabIndex === 1 && organizationId) {
@@ -603,6 +601,24 @@ export default function Settings() {
     }
   };
 
+  const handleRemoveMember = async (id: any) =>  {
+    console.log("removing member with id: ", id);
+    try {
+      console.log("Removing member with ID:", id);
+  
+      const response = await axios.post(`${base_url}/removeMember`, { userId: id });
+  
+      if (response.status === 200) {
+        toast.success("Member removed successfully");
+        console.log("Member removed successfully");
+        location.reload();
+      }
+    } catch (error) {
+      console.error("Error removing member:", error);
+      alert("There was an error removing the member. Please try again.");
+    }
+  }
+
   return (
     <div>
       <Toaster />
@@ -741,86 +757,146 @@ export default function Settings() {
                         <div>
                           <Toaster />
                           <div className="overflow-x-hidden">
-      <table className="min-w-full divide-y divide-gray-200 border-b-0 lg:block hidden">
-        <thead className="bg-white">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Member ID</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Member Name</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Designation</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Phone</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Email</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Delete</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white">
-          {clientTeam.map((member) => (
-            <tr
-              key={member.user_id}
-              className=""
-              
-            >
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-[#5027D9]">
-                <p className="border-b-2 w-fit border-[#5027D9]">{member.id}</p>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-[#5027D9]">
-                <p className="border-b-2 w-fit border-[#5027D9]">{member.customer_name}</p>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{member.designation}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{member.phone_number}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{member.email}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <button onClick={() => handleDeleteMember(member.user_id)}>
-                  <Image src={Delete} alt="delete" />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                            <table className="min-w-full divide-y divide-gray-200 border-b-0 lg:block hidden">
+                              <thead className="bg-white">
+                                <tr>
+                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                    Member ID
+                                  </th>
+                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                    Member Name
+                                  </th>
+                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                    Designation
+                                  </th>
+                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                    Phone
+                                  </th>
+                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                    Email
+                                  </th>
+                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                    Delete
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody className="bg-white">
+                                {clientTeam.map((member) => (
+                                  <tr key={member.user_id} className="">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#5027D9]">
+                                      <p className="border-b-2 w-fit border-[#5027D9]">
+                                        {member.id}
+                                      </p>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#5027D9]">
+                                      <p className="border-b-2 w-fit border-[#5027D9]">
+                                        {member.customer_name}
+                                      </p>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      {member.designation}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      {member.phone_number}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      {member.email}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <button
+                                        onClick={() =>
+                                          handleDeleteMember(member.user_id)
+                                        }
+                                      >
+                                        <Image src={Delete} alt="delete" />
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
 
-      <div className="block lg:hidden">
-        {clientTeam.map((member) => (
-          <div key={member.user_id} className="border-b border-gray-200">
-            <button
-              className="w-full text-left px-6 py-4 text-sm text-[#5027D9] border-b-2 border-[#5027D9] flex justify-between items-center"
-              
-            >
-              <span>{member.customer_name}</span>
-              <span
-                className={`transform ${openMemberId === member.user_id ? 'rotate-180' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevent click from triggering the row click
-                  toggleDropdown2(member.user_id);
-                }}
-              >
-                ▼
-              </span>
-            </button>
-            {openMemberId === member.user_id && (
-              <div className="p-3 bg-white grid grid-cols-2">
-                <div className="mb-1"><p className="font-semibold text-sm">Member ID:</p></div>
-                <div className="mb-1"><p className="text-xs">{member.id}</p></div>
+                            <div className="block lg:hidden">
+                              {clientTeam.map((member) => (
+                                <div
+                                  key={member.user_id}
+                                  className="border-b border-gray-200"
+                                >
+                                  <button className="w-full text-left px-6 py-4 text-sm text-[#5027D9] border-b-2 border-[#5027D9] flex justify-between items-center">
+                                    <span>{member.customer_name}</span>
+                                    <span
+                                      className={`transform ${
+                                        openMemberId === member.user_id
+                                          ? "rotate-180"
+                                          : ""
+                                      }`}
+                                      onClick={(e) => {
+                                        e.stopPropagation(); // Prevent click from triggering the row click
+                                        toggleDropdown2(member.user_id);
+                                      }}
+                                    >
+                                      ▼
+                                    </span>
+                                  </button>
+                                  {openMemberId === member.user_id && (
+                                    <div className="p-3 bg-white grid grid-cols-2">
+                                      <div className="mb-1">
+                                        <p className="font-semibold text-sm">
+                                          Member ID:
+                                        </p>
+                                      </div>
+                                      <div className="mb-1">
+                                        <p className="text-xs">{member.id}</p>
+                                      </div>
 
-                <div className="mb-1"><p  className="font-semibold text-sm">Designation:</p></div>
-                <div className="mb-1"><p  className="text-xs">{member.designation}</p></div>
+                                      <div className="mb-1">
+                                        <p className="font-semibold text-sm">
+                                          Designation:
+                                        </p>
+                                      </div>
+                                      <div className="mb-1">
+                                        <p className="text-xs">
+                                          {member.designation}
+                                        </p>
+                                      </div>
 
-                <div className="mb-1"><p  className="font-semibold text-sm">Phone:</p></div>
-                <div className="mb-1"><p  className="text-xs">{member.phone_number}</p></div>
+                                      <div className="mb-1">
+                                        <p className="font-semibold text-sm">
+                                          Phone:
+                                        </p>
+                                      </div>
+                                      <div className="mb-1">
+                                        <p className="text-xs">
+                                          {member.phone_number}
+                                        </p>
+                                      </div>
 
-                <div className="mb-1"><p  className="font-semibold text-sm">Email:</p></div>
-                <div className="mb-1"><p  className="text-xs">{member.email}</p></div>
+                                      <div className="mb-1">
+                                        <p className="font-semibold text-sm">
+                                          Email:
+                                        </p>
+                                      </div>
+                                      <div className="mb-1">
+                                        <p className="text-xs">
+                                          {member.email}
+                                        </p>
+                                      </div>
 
-                <div className="flex items-center space-x-4">
-                  <button onClick={() => handleDeleteMember(member.user_id)}>
-                    <Image src={Delete} alt="delete" />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+                                      <div className="flex items-center space-x-4">
+                                        <button
+                                          onClick={() =>
+                                            handleDeleteMember(member.user_id)
+                                          }
+                                        >
+                                          <Image src={Delete} alt="delete" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -880,35 +956,59 @@ export default function Settings() {
                       </div>
                     ) : (
                       <div className="overflow-x-hidden">
-      <table className="min-w-full divide-y divide-gray-200 border-b-0 lg:block hidden">
-        <thead className="bg-white">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Customer ID</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Customer Name</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Company URL</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Phone</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Email</th>
-            {/* <th className=""></th>
+                        <table className="min-w-full divide-y divide-gray-200 border-b-0 lg:block hidden">
+                          <thead className="bg-white">
+                            <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Customer ID
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Customer Name
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Company URL
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Phone
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Email
+                              </th>
+                              {/* <th className=""></th>
             <th className=""></th> */}
-          </tr>
-        </thead>
-        <tbody className="bg-white">
-          {clients.map((client) => (
-            <tr
-              key={client.id}
-              className="cursor-pointer"
-              onClick={() => handleCustomerClick(convertClientToCustomer(client))}
-            >
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-[#5027D9]">
-                <p className="border-b-2 w-fit border-[#5027D9]">#{client.id}</p>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-[#5027D9]">
-                <p className="border-b-2 w-fit border-[#5027D9]">{client.customer_name}</p>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.company_url}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.phone_number}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.email}</td>
-              {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white">
+                            {clients.map((client) => (
+                              <tr
+                                key={client.id}
+                                className="cursor-pointer"
+                                onClick={() =>
+                                  handleCustomerClick(
+                                    convertClientToCustomer(client)
+                                  )
+                                }
+                              >
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#5027D9]">
+                                  <p className="border-b-2 w-fit border-[#5027D9]">
+                                    #{client.id}
+                                  </p>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#5027D9]">
+                                  <p className="border-b-2 w-fit border-[#5027D9]">
+                                    {client.customer_name}
+                                  </p>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  {client.company_url}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  {client.phone_number}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                  {client.email}
+                                </td>
+                                {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <button>
                   <Image src={View} alt="view" width={20} />
                 </button>
@@ -918,46 +1018,76 @@ export default function Settings() {
                   <Image src={Delete} alt="delete" />
                 </button>
               </td> */}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
 
-      <div className="block lg:hidden">
-        {clients.map((client) => (
-          <div key={client.id} className="border-b border-gray-200">
-            <button
-              className="w-full text-left px-6 py-4 text-sm text-[#5027D9] border-b-2 border-[#5027D9] flex justify-between items-center"
-              onClick={() => handleCustomerNameClick(client)}
-            >
-              <span>#{client.id} - {client.customer_name}</span>
-              <span
-                className={`transform ${openClientId === client.id ? 'rotate-180' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevent click from triggering the row click
-                  toggleDropdown(client.id);
-                }}
-              >
-                ▼
-              </span>
-            </button>
-            {openClientId === client.id && (
-              <div className="p-3 bg-white grid grid-cols-2">
-                <div className="mb-1"><p className="font-semibold text-sm">Company URL:</p></div>
-                <div><p className="text-xs">{client.company_url}</p></div>
+                        <div className="block lg:hidden">
+                          {clients.map((client) => (
+                            <div
+                              key={client.id}
+                              className="border-b border-gray-200"
+                            >
+                              <button
+                                className="w-full text-left px-6 py-4 text-sm text-[#5027D9] border-b-2 border-[#5027D9] flex justify-between items-center"
+                                onClick={() => handleCustomerNameClick(client)}
+                              >
+                                <span>
+                                  #{client.id} - {client.customer_name}
+                                </span>
+                                <span
+                                  className={`transform ${
+                                    openClientId === client.id
+                                      ? "rotate-180"
+                                      : ""
+                                  }`}
+                                  onClick={(e) => {
+                                    e.stopPropagation(); // Prevent click from triggering the row click
+                                    toggleDropdown(client.id);
+                                  }}
+                                >
+                                  ▼
+                                </span>
+                              </button>
+                              {openClientId === client.id && (
+                                <div className="p-3 bg-white grid grid-cols-2">
+                                  <div className="mb-1">
+                                    <p className="font-semibold text-sm">
+                                      Company URL:
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-xs">
+                                      {client.company_url}
+                                    </p>
+                                  </div>
 
-                <div className="mb-1" ><p  className="font-semibold text-sm">Phone:</p></div>
-                <div><p className="text-xs">{client.phone_number}</p></div>
+                                  <div className="mb-1">
+                                    <p className="font-semibold text-sm">
+                                      Phone:
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-xs">
+                                      {client.phone_number}
+                                    </p>
+                                  </div>
 
-                <div  className="mb-1"><p className="font-semibold text-sm">Email:</p></div>
-                <div><p className="text-xs">{client.email}</p></div>
-
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+                                  <div className="mb-1">
+                                    <p className="font-semibold text-sm">
+                                      Email:
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-xs">{client.email}</p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1235,6 +1365,15 @@ export default function Settings() {
                                 {employee.role}
                               </p>
                             </div>
+                            <div>
+                              <button
+                                type="submit"
+                                className="btn-submit rounded bg-[#5027D9] py-1 px-2 my-2 text-sm text-white"
+                                onClick={() => handleRemoveMember(employee.id)}
+                              >
+                                Remove Member
+                              </button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -1331,4 +1470,3 @@ export default function Settings() {
     </div>
   );
 }
-
