@@ -7,6 +7,7 @@ import ticketManagementGrp from "../../../public/images/ticketManagementGrp.svg"
 import logout from "../../../public/images/logoutNew.svg";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -17,11 +18,20 @@ const Sidebar: React.FC<SidebarProps> = ({
   isExpanded,
   setIsSidebarExpanded,
 }) => {
+
   const router = useRouter();
+
+  // useEffect(() => {
+  //   localStorage.setItem("isSidebarExpanded", JSON.stringify(isExpanded));
+  // }, [isExpanded]);
 
   const handleLogout = async () => {
     try {
+
       localStorage.removeItem("token");
+      // localStorage.setItem("isSidebarExpanded", JSON.stringify(false));
+      setIsSidebarExpanded(false)
+
       toast.success("Logged out successfully");
       router.push("/login");
     } catch (error) {

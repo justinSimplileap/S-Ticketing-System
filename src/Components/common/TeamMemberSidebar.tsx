@@ -22,6 +22,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const handleLogout = async () => {
     try {
       localStorage.removeItem("token");
+      setIsSidebarExpanded(false)
       toast.success("Logged out successfully");
       router.push("/login");
     } catch (error) {

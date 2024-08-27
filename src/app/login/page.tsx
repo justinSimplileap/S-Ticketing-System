@@ -58,6 +58,7 @@ const LoginForm = () => {
         const responseData = response.data;
 
         if (responseData?.user?.role === "1") {
+          localStorage.setItem("role", responseData?.user?.role);
           router.push("/SuperAdmin");
         } else if (
           responseData?.user?.role === "4" &&
