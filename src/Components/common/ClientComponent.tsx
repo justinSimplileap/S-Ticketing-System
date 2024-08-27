@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
+import axios from "axios";
+import { base_url } from "@/utils/constant";
 
 export default function ClientComponent({
   children,
@@ -21,6 +23,9 @@ export default function ClientComponent({
   const router = useRouter();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false); // Sidebar is collapsed by default
   const [isLoading, setIsLoading] = useState(true);
+
+  const [userRole, setUserRole] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -35,7 +40,83 @@ export default function ClientComponent({
       return;
     }
 
-    setIsLoading(false);
+
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`${base_url}/getUserDetails`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response) {
+          const role = response.data.user.role;
+          setUserRole(role);
+
+          if (role === "1") {
+            const isAllowed = superAdminSidebarRoutes.some((route) =>
+              route instanceof RegExp
+                ? route.test(currentPath)
+                : route === currentPath
+            );
+
+            if (!isAllowed) {
+              toast.error("You do not have access to this page.");
+              router.push("/SuperAdmin");
+            } else {
+              setIsAuthorized(true);
+            }
+          } else if (role === "3") {
+            const isAllowed = TeamMemberSidebarRoutes.some((route) =>
+              route instanceof RegExp
+                ? route.test(currentPath)
+                : route === currentPath
+            );
+
+            if (!isAllowed) {
+              toast.error("You do not have access to this page.");
+              router.push("/TeamMember/Dashboard");
+            } else {
+              setIsAuthorized(true);
+            }
+          } else if (role === "4") {
+            const isAllowed = customerRoutes.some((route) =>
+              route instanceof RegExp
+                ? route.test(currentPath)
+                : route === currentPath
+            );
+            if (!isAllowed) {
+              toast.error("You do not have access to this page.");
+              router.push("/Dashboard");
+            } else {
+              setIsAuthorized(true);
+            }
+          }
+          // else if (role === "4") {
+          //   const isAllowed = CustomerSidebarRoutes.some((route) =>
+          //     route instanceof RegExp ? route.test(currentPath) : route === currentPath
+          //   );
+
+          //   if (!isAllowed) {
+          //     toast.error("You do not have access to this page.");
+          //     router.push("/Dashboard");
+          //   } else {
+          //     setIsAuthorized(true);
+          //   }
+          // }
+          else {
+            setIsAuthorized(true);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        toast.error("Failed to fetch user details");
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchUser();
   }, [pathname]);
 
   const sidebarRoutes = [
@@ -63,6 +144,15 @@ export default function ClientComponent({
     "/Manager/Dashboard",
     /^\/Manager\/TicketManagement\/ViewTicket\/[^/]+$/,
   ];
+
+  const customerRoutes = [
+    "/Dashboard",
+    "/TicketManagement",
+    "/TicketManagement/NewTicket",
+    /^\/TicketManagement\/ViewTicket\/[^/]+$/,
+    /^\/TicketManagement\/EditTicket\/[^/]+$/,
+    "/Profile",
+  ]
 
   const passwordSidebarRoutes = [
     "/FirstPassword",
@@ -102,6 +192,7 @@ export default function ClientComponent({
     "/AccountDetails",
     "/FirstPassword",
     "/ResetPassword",
+     /^\/ResetPassword\/[^/]+$/
   ]
 
   const dontShowTopBarRoutes = [
