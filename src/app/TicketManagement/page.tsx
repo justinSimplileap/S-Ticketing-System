@@ -209,7 +209,7 @@ function TicketManagementPage() {
               onClick={exportTableToExcel}
             >
               <Image src={Folder} alt="Folder Icon" width={22} height={22} className="w-[18px] sm:w-[100px] md:w-[20px]"/>
-              Export report
+              Export Report
             </Button>
           </div>
           <div>

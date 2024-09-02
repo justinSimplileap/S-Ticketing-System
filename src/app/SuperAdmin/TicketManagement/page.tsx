@@ -212,7 +212,7 @@ export default function Page() {
           <div className="mb-3 lg:mb-0 mr-3">
             <Button className="w-full flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]" onClick={exportTableToExcel}>
               <Image src={Folder} alt="Folder Icon" width={22} height={22} />
-              Export report
+              Export Report
             </Button>
           </div>
           <div>

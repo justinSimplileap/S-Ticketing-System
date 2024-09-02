@@ -41,7 +41,8 @@ type Ticket = {
 
 export default function SuperAdminDashboard() {
   const router = useRouter();
-
+  const [customers, setCustomers] = useState<number>(0);
+  const [team, setTeam] = useState<number>(0);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [newTickets, setNewTickets] = useState<number>(0);
   const [openTickets, setOpenTickets] = useState<number>(0);
@@ -57,7 +58,50 @@ export default function SuperAdminDashboard() {
   // const [tickets, setTickets] = useState([]);
   useEffect(() => {
     fetchTickets();
+    fetchCustomerCard();
+    fetchTeamCard();
   }, []);
+
+
+  const fetchCustomerCard = async () => {
+    try {
+      const response = await axios.get(`${base_url}/viewAllClients`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      // Extract customer names from the response
+      // const customerNames = response.data.clients.map(
+      //   (client: { customer_name: any }) => client.customer_name
+      // );
+      setCustomers(response.data.clients.length);
+      // console.log("vegerf",response.data.clients.length)
+
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
+
+  const fetchTeamCard = async () => {
+    try {
+      const response = await axios.get(`${base_url}/users/Organisation`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      // Extract customer names from the response
+      // const customerNames = response.data.clients.map(
+      //   (client: { customer_name: any }) => client.customer_name
+      // );
+      setTeam(response.data.length);
+      // console.log("vegerf",response.data.length)
+
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
 
   const fetchTickets = async () => {
     try {
@@ -272,17 +316,17 @@ export default function SuperAdminDashboard() {
                 <div className="flex items-center gap-8">
                   <Image src={Customers} alt="Circle Icon" width={90} />
                   <div>
-                    <div className="text-4xl text-[#5027D9]">3</div>
+                    <div className="text-4xl text-[#5027D9]">{customers}</div>
                     <div className="text-[#696969]">Customers </div>
                   </div>
                 </div>
               </div>
 
-              <div className="hidden lg:flex justify-between items-center bg-[#F4F3FF] rounded-xl p-4 lg:p-8 h-fit mb-3 lg:mb-0">
+              <div className="hidden lg:flex justify-between items-center bg-[#F4F3FF] rounded-xl p-4 lg:p-8 h-fit mb-3 lg:mb-0 min-h-[9.7rem]">
                 <div className="flex items-center gap-8">
                   <Image src={Departments} alt="Circle Icon" width={90} />
                   <div>
-                    <div className="text-4xl text-[#5027D9]">3</div>
+                    <div className="text-4xl text-[#5027D9]">4</div>
                     <div className="text-[#696969]">Departments</div>
                   </div>
                 </div>
@@ -292,7 +336,7 @@ export default function SuperAdminDashboard() {
                   <div className="flex items-center gap-8">
                     <Image src={teamMembers} alt="Circle Icon" width={90} />
                     <div>
-                      <div className="text-4xl text-[#5027D9]">10</div>
+                      <div className="text-4xl text-[#5027D9]">{team}</div>
                       <div className="text-[#696969]">Team Members</div>
                     </div>
                   </div>

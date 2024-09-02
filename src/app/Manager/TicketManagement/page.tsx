@@ -213,7 +213,7 @@ function TicketManagementPage() {
           <div>
             <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9]" onClick={exportTicketsToCSV}>
               <Image src={Folder} alt="Folder Icon" width={22} height={22} />
-              Export report
+              Export Report
             </Button>
           </div>
           

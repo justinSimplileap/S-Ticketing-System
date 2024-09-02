@@ -207,7 +207,7 @@ function TicketManagementPage() {
           <h1 className="text-3xl text-[#2A2C3E] mb-7 lg:mg-0">Tickets</h1>
           <Button className="flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9] lg:hidden" onClick={exportTicketsToCSV}>
    <Image src={Folder} alt="Folder Icon" width={22} height={22} />
-      Export report
+      Export Report
     </Button>
         </div>
         <div className="lg:flex justify-around items-center  gap-2">
@@ -217,7 +217,7 @@ function TicketManagementPage() {
           <div>
             <Button className="lg:flex rounded bg-white py-2 px-4 text-sm text-[#5027D9] items-center gap-2 border-2 border-[#5027D9] hidden" onClick={exportTicketsToCSV}>
               <Image src={Folder} alt="Folder Icon" width={22} height={22} />
-              Export report
+              Export Report
             </Button>
           </div>
           
