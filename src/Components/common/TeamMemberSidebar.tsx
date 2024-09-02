@@ -46,32 +46,33 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <div className="flex flex-col gap-5">
-        <div
+      <Link href="/TeamMember/Dashboard"><div
           onClick={handleLinkClick}
-          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
+          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center cursor-pointer"
         >
           <Image src={dashboardGrp} alt="dashboard" />
           <Link href="/TeamMember/Dashboard">Dashboard</Link>
-        </div>
-        <div
+        </div></Link>
+        <Link href="/TeamMember/TicketManagement"><div
           onClick={handleLinkClick}
-          className="flex gap-2 text-white pt-3 pb-3 pl-3 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
+          className="flex gap-2 text-white pt-3 pb-3 pl-3 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center cursor-pointer"
         >
           <Image src={ticketmanagementgrp} alt="ticket management" />
           <Link href="/TeamMember/TicketManagement">Ticket Management</Link>
-        </div>
-        <div
+        </div></Link>
+        <Link href="/TeamMember/Profile"><div
           onClick={handleLinkClick}
-          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
+          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center cursor-pointer"
         >
           <Image src={profileGrp} alt="profile" />
           <Link href="/TeamMember/Profile">Profile</Link>
-        </div>
+        </div></Link>
         <div
-          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
+          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center cursor-pointer" 
+          onClick={handleLogout}
         >
           <Image src={logout} alt="logout" width={20} />
-          <button onClick={handleLogout}>Logout</button>
+          <button>Logout</button>
         </div>
       </div>
     </div>

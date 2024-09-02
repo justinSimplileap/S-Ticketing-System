@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const handleLogout = async () => {
     try {
       localStorage.removeItem("token");
-      setIsSidebarExpanded(false)
+      setIsSidebarExpanded(false);
       toast.success("Logged out successfully");
       router.push("/login");
     } catch (error) {
@@ -47,27 +47,33 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <div className="flex flex-col gap-5">
-        <div
-          onClick={handleLinkClick}
-          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
-        >
-          <Image src={dashboardGrp} alt="dashboard" />
-          <Link href="/SuperAdmin">Dashboard</Link>
-        </div>
-        <div
-          onClick={handleLinkClick}
-          className="flex gap-2 text-white pt-3 pb-3 pl-3 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
-        >
-          <Image src={ticketmanagementgrp} alt="ticket management" />
-          <Link href="/SuperAdmin/TicketManagement">Ticket Management</Link>
-        </div>
-        <div
-          onClick={handleLinkClick}
-          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
-        >
-          <Image src={settings} alt="settings" />
-          <Link href="/SuperAdmin/Settings">Settings</Link>
-        </div>
+        <Link href="/SuperAdmin">
+          <div
+            onClick={handleLinkClick}
+            className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center cursor-pointer"
+          >
+            <Image src={dashboardGrp} alt="dashboard" />
+            <Link href="/SuperAdmin">Dashboard</Link>
+          </div>
+        </Link>
+        <Link href="/SuperAdmin/TicketManagement">
+          <div
+            onClick={handleLinkClick}
+            className="flex gap-2 text-white pt-3 pb-3 pl-3 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center cursor-pointer"
+          >
+            <Image src={ticketmanagementgrp} alt="ticket management" />
+            <Link href="/SuperAdmin/TicketManagement">Ticket Management</Link>
+          </div>
+        </Link>
+        <Link href="/SuperAdmin/Settings">
+          <div
+            onClick={handleLinkClick}
+            className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center cursor-pointer"
+          >
+            <Image src={settings} alt="settings" />
+            <Link href="/SuperAdmin/Settings">Settings</Link>
+          </div>
+        </Link>
         {/* <div
           onClick={handleLinkClick}
           className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
@@ -76,10 +82,11 @@ const Sidebar: React.FC<SidebarProps> = ({
           <Link href="/SuperAdmin/Profile">Profile</Link>
         </div> */}
         <div
-          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center"
+          className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center cursor-pointer"
+          onClick={handleLogout}
         >
           <Image src={logout} alt="logout" width={20} />
-          <button onClick={handleLogout}>Logout</button>
+          <button>Logout</button>
         </div>
       </div>
     </div>

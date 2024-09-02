@@ -54,22 +54,22 @@ const Sidebar: React.FC<SidebarProps> = ({
         <Image src={logoWhite} alt="logo" height={80} width={150} />
       </div>
       <div className="flex flex-col gap-5">
-        <div className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center">
+      <Link href="/Dashboard" onClick={handleLinkClick}><div className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center">
           <Image src={dashboardGrp} alt="dashboard" />
           <Link href="/Dashboard" onClick={handleLinkClick}>Dashboard</Link>
-        </div>
-        <div className="flex gap-2 text-white pt-3 pb-3 pl-3 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center">
+        </div></Link>
+        <Link href="/TicketManagement" onClick={handleLinkClick}><div className="flex gap-2 text-white pt-3 pb-3 pl-3 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center">
           <Image src={ticketManagementGrp} alt="Ticket Management" />
           <Link href="/TicketManagement" onClick={handleLinkClick}>Ticket Management</Link>
-        </div>
-        <div className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center">
+        </div></Link>
+        <Link href="/Profile" onClick={handleLinkClick}><div className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center">
           <Image src={profileGrp} alt="profile" />
           <Link href="/Profile" onClick={handleLinkClick}>Profile</Link>
-        </div>
-        <div className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center">
+        </div></Link>
+        <Link href="/Profile" onClick={handleLinkClick}><div className="flex gap-3 text-white pt-3 pb-3 pl-4 pr-4 rounded-md hover:bg-[#5027D9] text-sm items-center">
           <Image src={logout} alt="logout" width={20} />
           <button onClick={handleLogout}>Logout</button>
-        </div>
+        </div></Link>
       </div>
     </div>
   );
