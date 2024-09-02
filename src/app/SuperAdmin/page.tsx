@@ -70,14 +70,14 @@ export default function SuperAdminDashboard() {
         }
       );
       const tickets = response.data.user;
-      // console.log("tickets",tickets)
+      console.log("tickets",tickets)
 
       if (!response.data.user) {
         throw new Error("No tickets found");
       }
 
       const activeTickets = response.data.user.filter(
-        (ticket) => ticket.status === "Active"
+        (ticket) => ticket.status === "Open"
       );
 
       const closedTickets = response.data.user.filter(
@@ -110,7 +110,9 @@ export default function SuperAdminDashboard() {
 
       setOpenTickets(activeTickets.length);
       setNewTickets(response.data.user.length);
+      console.log("hrfgeuiyhrd",activeTickets.length)
       setClosedTickets(closedTickets.length);
+
       setTickets(response.data.user);
       setHighPriorityTickets(
         highPriorityTickets.length - closedHighPriorityTickets.length
@@ -206,7 +208,7 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
                   <div className="pl-5 grid gap-3">
-                    <div className="text-4xl text-[#5027D9]">{newTickets}</div>
+                    <div className="text-4xl text-[#5027D9]">{openTickets}</div>
                     <div className="text-[#696969]">New Tickets</div>
                   </div>
                 </div>
@@ -221,7 +223,7 @@ export default function SuperAdminDashboard() {
                     </div>
                   </div>
                   <div className="pl-5 grid gap-3">
-                    <div className="text-4xl text-[#5027D9]">{newTickets}</div>
+                    <div className="text-4xl text-[#5027D9]">{openTickets}</div>
                     <div className="text-[#696969]">Open Tickets</div>
                   </div>
                 </div>
