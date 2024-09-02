@@ -32,7 +32,7 @@ type TableRow = {
   "Updated At": string;
   Status: string;
   Actions: string;
-  "Customer Name"?: string;
+  "Customer"?: string;
 };
 
 type TableProps = {
@@ -80,7 +80,7 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
   const tableHead: (keyof TableRow)[] = showCustomerName
     ? [
         "ID",
-        "Customer Name",
+        "Customer",
         "Type",
         "Subject",
         "Priority",
@@ -110,7 +110,7 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
         "Updated At": new Date(ticket.updatedAt).toLocaleString(),
         Status: ticket.status,
         Actions: "view",
-        "Customer Name": ticket.customer_name ?? "",
+        "Customer": ticket.customer_name ?? "",
       }))
     : [];
 
@@ -212,7 +212,7 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
                       key={heading}
                       className={`px-6 py-4 ${heading === "Type" ? "text-blue-500":heading==="ID" ? "text-black" : heading === "Subject" ? "text-black" : heading === "Status" ? getStatusColor(row[heading]) : heading === "Priority" ? getPriorityColor(row[heading]) : ""} ${heading === "ID" ? "w-1/12" : heading === "Subject" ? "w-2/5" : (heading === "Created At" || heading === "Updated At")
                         ? "whitespace-nowrap"
-                        : ""}`}
+                        : ""} ${heading==="Customer" ? "whitespace-nowrap" : ""}`}
                     >
                       {heading === "Actions" ? (
                         <div className="flex items-center gap-2">
@@ -261,9 +261,9 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
                 <span>ID </span>
                 <span>{row["ID"]}</span>
               </p>
-              <p className="text-black text-xs">
+              <p className="text-black text-xs whitespace-nowrap">
                 <span>Company Name </span>
-                <span>{row["Customer Name"]}</span>
+                <span>{row["Customer"]}</span>
               </p>
               <p className="text-black text-xs">
                 <span>Type </span>

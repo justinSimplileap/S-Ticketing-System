@@ -283,7 +283,7 @@ export default function SuperAdminDashboard() {
                   <Image src={Departments} alt="Circle Icon" width={90} />
                   <div>
                     <div className="text-4xl text-[#5027D9]">3</div>
-                    <div className="text-[#696969]">Depart-ments</div>
+                    <div className="text-[#696969]">Departments</div>
                   </div>
                 </div>
               </div>
