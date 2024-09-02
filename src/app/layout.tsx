@@ -1,15 +1,18 @@
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientComponent from "@/Components/common/ClientComponent";
+import { Inter } from "next/font/google";
 // import PassSidebar from '../Components/Pass'
-const inter = Inter({ subsets: ["latin"] });
-
+// const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({subsets: ["latin"]})
 
 export const metadata: Metadata = {
   title: "iService - Simplileap",
   description: "Ticketing System",
+  
+
+
 };
 
 export default function RootLayout({

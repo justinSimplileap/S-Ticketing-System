@@ -6,7 +6,7 @@ import Head from "next/head";
 import Image from "next/image";
 import logo from "../../../public/images/logo.svg";
 import cover from "../../../public/images/cover.png";
-import Illustration from "../../../public/images/Illustration.svg";
+import Illustration from "../../../public/images/newIllustration2.png";
 import toast, { Toaster } from "react-hot-toast";
 import logoWhite from "../../../public/images/sidebarLogo.svg";
 import Link from "next/link";
@@ -120,37 +120,27 @@ const LoginForm = () => {
       <Toaster />
       <div className="h-screen grid grid-cols-1 md:grid-cols-2">
         {/* left side  */}
-        <div className="hidden md:flex relative h-full flex-col items-center">
+        <div className="hidden md:flex relative h-full justify-center items-center">
           <Image
             src={cover}
             alt="Background"
             layout="fill"
-            className="absolute z-[-1]"
+            className="absolute z-[-1] brightness-50"
           />
-          <div className="flex justify-center items-center mt-28 mb-28">
-            <Image src={logoWhite} alt="Logo" height={50} />
-          </div>
+
           <div className="">
-            <Image src={Illustration} alt="Illustration" height={300} />
+            <Image src={Illustration} alt="Illustration" height={650} width={650}/>
           </div>
 
-          <div className="flex justify-center mt-14">
-            <h1 className="text-white text-3xl font-bold ">
-              Ticket Management System
-            </h1>
-          </div>
-          <div className="flex justify-center items-center text-white mt-14 w-[80%]">
-            Streamline your ticketing process: Efficient, intuitive, and
-            reliable ticket management for seamless service.
-          </div>
+          
         </div>
 
         {/* right side  */}
 
         {/* ========================================== */}
         <div className="flex flex-col justify-center items-center md:gap-14 gap-3 md:w-[70%] w-[100%] mx-auto h-screen overflow-hidden">
-          <div className="flex justify-center items-center md:hidden mb-[33px]">
-            <Image src={logoBlack} alt="Logo" height={50} />
+          <div className="flex justify-center items-center mb-[33px]">
+            <Image src={logoBlack} alt="Logo" height={200} width={200}/>
           </div>
           <div className="md:text-3xl text-2xl font-bold text-center text-black md:mb-0 mb-[33px]">
             Welcome to <br></br>Ticket Management System
@@ -162,7 +152,7 @@ const LoginForm = () => {
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="username"
                 >
-                  Username <span className="text-red-500">*</span>
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...register("username", {
@@ -175,8 +165,8 @@ const LoginForm = () => {
                   })}
                   id="username"
                   type="text"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none mb-2"
-                  placeholder="Enter your username"
+                  className="appearance-none border rounded w-full py-[0.938rem] px-3 text-gray-700 leading-tight focus:outline-none mb-2 text-sm shadow-[0px_0px_10px_rgba(0,0,0,0.05)] pl-[1rem]"
+                  placeholder="Enter your email"
                 />
                 {errors.username && (
                   <p className="text-red-500 text-xs ">
@@ -202,7 +192,7 @@ const LoginForm = () => {
                   })}
                   id="password"
                   type="password"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none mb-2"
+                  className="shadow-[0px_0px_10px_rgba(0,0,0,0.05)] appearance-none border rounded w-full py-[0.938rem] px-3 text-gray-700 leading-tight focus:outline-none mb-2 text-sm pl-[1rem]"
                   placeholder="Enter your password"
                 />
                 {errors.password && (
@@ -214,7 +204,7 @@ const LoginForm = () => {
               <div className="flex items-center justify-center p-6">
                 <button
                   type="submit"
-                  className="bg-[#5027d9] hover:bg-blue-700 text-white py-4 px-10 rounded-xl focus:outline-none focus:shadow-outline font-xs md:w-[150px] w-full"
+                  className="bg-[linear-gradient(107deg,_#3430a7,_#a432df)] hover:bg-[linear-gradient(107deg,_#3430a7,_#a432df)] text-white pt-[14px] pb-[15px] px-10 rounded-[5px] focus:outline-none focus:shadow-outline font-xs md:w-[10rem] w-full text-sm"
                 >
                   LOG IN
                 </button>
