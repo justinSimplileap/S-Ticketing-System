@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 type Ticket = {
   id: number;
   company_legal_name: string;
+  customer_name?: string;
   status: string;
   priority: string;
   subject: string;
@@ -14,8 +15,8 @@ type Ticket = {
 };
 
 type TableRow = {
-  "Ticket ID": string;
-  "Ticket Type": string;
+  "ID": string;
+  "Type": string;
   Subject: string;
   CompanyName: string;
   Priority: string;
@@ -23,7 +24,7 @@ type TableRow = {
   "Updated At"?: string;
   Status: string;
   Actions: string;
-  "Customer Name"?: string;
+  "Customer"?: string;
 };
 
 type TableProps = {
@@ -36,12 +37,13 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
 
   const tableHead: (keyof TableRow)[] = [
-    "Ticket ID",
-    "Ticket Type",
-    "CompanyName",
+    "ID",
+    "Type",
+    "Customer",
     "Priority",
     "Status",
     "Subject",
+
   ];
 
   if (showUpdated) {
@@ -56,8 +58,9 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
   };
 
   const tableData: TableRow[] = tickets.map((ticket) => ({
-    "Ticket ID": ticket.id.toString(),
-    "Ticket Type": ticket.ticket_type,
+    "ID": ticket.id.toString(),
+    "Type": ticket.ticket_type,
+    "Customer":ticket.customer_name,
     Subject: ticket.subject,
     Priority: ticket.priority,
     Status: ticket.status,
@@ -114,7 +117,7 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
                       <button
                         className="focus:outline-none"
                         onClick={() =>
-                          handleViewClick(parseInt(row["Ticket ID"], 10))
+                          handleViewClick(parseInt(row["ID"], 10))
                         }
                       >
                         <Image src={view} alt="view" width={20} height={17} />
@@ -165,7 +168,7 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
               <div className=" mt-4 space-y-2 p-2  bg-[#FFFFFF]">
                 <div className="flex justify-between text-[#696969] font-normal">
                   <h3 className="flex-1 text-center">Ticket ID</h3>
-                  <span className="flex-1 text-center">{row["Ticket ID"]}</span>
+                  <span className="flex-1 text-center">{row["ID"]}</span>
                 </div>
 
             
@@ -198,7 +201,7 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
                 <button
                   className="focus:outline-none mt-2 hidden lg:block"
                   onClick={() =>
-                    handleViewClick(parseInt(row["Ticket ID"], 10))
+                    handleViewClick(parseInt(row["ID"], 10))
                   }
                 >
                   <Image src={view} alt="view" width={20} height={17} />
@@ -206,7 +209,7 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
                 <div className=" lg:hidden mt-2 flex justify-center w-full">
                   <button
                     className="text-blue-500 "
-                    onClick={() => handleViewClick(parseInt(row["Ticket ID"], 10))}
+                    onClick={() => handleViewClick(parseInt(row["ID"], 10))}
                   >
                     View Ticket
                   </button>

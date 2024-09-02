@@ -120,7 +120,7 @@ const Member: React.FC = () => {
     <div>
       <div className='p-6'>
   <div className="shadow-lg rounded-md">
-    <h1 className="p-5 md:p-7 text-[#2A2C3E] text-xl md:text-2xl font-bold font-lato text-left md:text-left">Summary</h1>
+    <h1 className="p-5 md:p-7 text-[#2A2C3E] text-xl md:text-2xl whitespace-nowrap  text-left md:text-left">Summary</h1>
     <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-4 px-5">
     <div className="relative bg-[#F7F7F7] md:p-8 rounded-md mb-7 p-5 flex md:block" onClick={handleCardClick1}>
   <div className="md:grid md:grid-cols-2 md:pb-10">
@@ -182,7 +182,7 @@ const Member: React.FC = () => {
 
 </div>
 <div className='p-6 '>
-<h1 className='text-xl font-bold'>Recent Tickets</h1>
+<h1 className='md:text-2xl text-md text-[#2A2C3E] whitespace-nowrap'>Recent Tickets</h1>
 </div>
 
       <div className='p-6'>
