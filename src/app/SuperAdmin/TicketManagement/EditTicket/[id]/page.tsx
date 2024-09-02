@@ -188,7 +188,7 @@ export default function Page() {
     //   subject: false,
     //   requestDetails: false,
     // });
-    router.push("/TicketManagement");
+    router.push("/SuperAdmin/TicketManagement");
   };
 
   const handleTextAreaChange = (html: any) => {
@@ -260,6 +260,7 @@ export default function Page() {
           }
         );
         toast.success("Ticket Updated Successfully");
+        console.log("Ticket updated ")
         router.push("/SuperAdmin/TicketManagement")
         handleCancel();
       } catch (error) {
