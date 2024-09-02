@@ -24,8 +24,8 @@ type Ticket = {
 };
 
 type TableRow = {
-  "Ticket ID": string;
-  "Ticket Type": string;
+  ID: string;
+  Type: string;
   Subject: string;
   Priority: string;
   "Created At": string;
@@ -79,9 +79,9 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
 
   const tableHead: (keyof TableRow)[] = showCustomerName
     ? [
-        "Ticket ID",
+        "ID",
         "Customer Name",
-        "Ticket Type",
+        "Type",
         "Subject",
         "Priority",
         "Status",
@@ -90,8 +90,8 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
         "Actions",
       ]
     : [
-        "Ticket ID",
-        "Ticket Type",
+        "ID",
+        "Type",
         "Subject",
         "Priority",
         "Status",
@@ -102,8 +102,8 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
 
   const tableData: TableRow[] = Array.isArray(tickets)
     ? tickets.map((ticket) => ({
-        "Ticket ID": ticket.id.toString(),
-        "Ticket Type": ticket.ticket_type,
+        ID: ticket.id.toString(),
+        Type: ticket.ticket_type,
         Subject: ticket.subject,
         Priority: ticket.priority,
         "Created At": new Date(ticket.createdAt).toLocaleString(),
@@ -197,7 +197,7 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-[#FFFFFF] dark:text-gray-400">
             <tr>
               {tableHead.map((heading) => (
-                <th key={heading} scope="col" className={`px-6 py-3 ${heading === "Ticket ID" ? "w-1/12" : heading === "Subject" ? "w-2/5" : ""}`}>
+                <th key={heading} scope="col" className={`px-6 py-3 ${heading === "ID" ? "w-1/24" : heading === "Subject" ? "w-1/5" : ""}`}>
                   {heading}
                 </th>
               ))}
@@ -210,18 +210,20 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
                   {tableHead.map((heading) => (
                     <td
                       key={heading}
-                      className={`px-6 py-4 ${heading === "Ticket ID" || heading === "Ticket Type" ? "text-blue-500" : heading === "Subject" ? "text-black" : heading === "Status" ? getStatusColor(row[heading]) : heading === "Priority" ? getPriorityColor(row[heading]) : ""} ${heading === "Ticket ID" ? "w-1/12" : heading === "Subject" ? "w-2/5" : ""}`}
+                      className={`px-6 py-4 ${heading === "Type" ? "text-blue-500":heading==="ID" ? "text-black" : heading === "Subject" ? "text-black" : heading === "Status" ? getStatusColor(row[heading]) : heading === "Priority" ? getPriorityColor(row[heading]) : ""} ${heading === "ID" ? "w-1/12" : heading === "Subject" ? "w-2/5" : (heading === "Created At" || heading === "Updated At")
+                        ? "whitespace-nowrap"
+                        : ""}`}
                     >
                       {heading === "Actions" ? (
-                        <div className="flex items-center gap-5">
-                          <button className="focus:outline-none" onClick={() => handleViewClick(parseInt(row["Ticket ID"], 10))}>
-                            <Image src={view} alt="view" width={17} height={17} />
+                        <div className="flex items-center gap-2">
+                          <button className="focus:outline-none" onClick={() => handleViewClick(parseInt(row["ID"], 10))}>
+                            <Image src={view} alt="view"  width={25} height={25} />
                           </button>
-                          <button className="focus:outline-none" onClick={() => handleEditClick(parseInt(row["Ticket ID"], 10))}>
-                            <Image src={edit} alt="edit" width={17} height={17} />
+                          <button className="focus:outline-none" onClick={() => handleEditClick(parseInt(row["ID"], 10))}>
+                            <Image src={edit} alt="edit" width={25} height={25} />
                           </button>
-                          <button className="focus:outline-none" onClick={() => handleDeleteClick(parseInt(row["Ticket ID"], 10))}>
-                            <Image src={deleteIcon} alt="delete" width={17} height={17} />
+                          <button className="focus:outline-none" onClick={() => handleDeleteClick(parseInt(row["ID"], 10))}>
+                            <Image src={deleteIcon} alt="delete" width={25} height={25} />
                           </button>
                         </div>
                       ) : (
@@ -252,77 +254,42 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
                 <div>
                   <span className="text-black text-sm font-bold"></span> <span className="text-[#5027D9] text-sm font-bold">{row["Subject"]}</span>
                 </div>
-                {/* <div className="flex items-center gap-4">
-                  <button className="focus:outline-none" onClick={() => handleViewClick(parseInt(row["Ticket ID"], 10))}>
-                    <Image src={view} alt="view" width={17} height={17} />
-                  </button>
-                  <button className="focus:outline-none" onClick={() => handleEditClick(parseInt(row["Ticket ID"], 10))}>
-                    <Image src={edit} alt="edit" width={17} height={17} />
-                  </button>
-                  <button className="focus:outline-none" onClick={() => handleDeleteClick(parseInt(row["Ticket ID"], 10))}>
-                    <Image src={deleteIcon} alt="delete" width={17} height={17} />
-                  </button>
-                </div> */}
               </div>
             </div>
-
-            {openDropdown === index && (
-              <div className="flex flex-col p-4 mt-1 gap-2">
-                {showCustomerName && (
-                  <div className="flex justify-between">
-                    <span className="text-black text-sm font-bold">Customer Name:</span>
-                    <span className="text-[#5027D9] text-sm font-bold">{row["Customer Name"]}</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-black text-sm font-bold">Ticket ID:</span>
-                  <span className="text-[#5027D9] text-sm font-bold">{row["Ticket ID"]}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-black text-sm font-bold">Ticket Type:</span>
-                  <span className="text-[#5027D9] text-sm font-bold">{row["Ticket Type"]}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-black text-sm font-bold">Priority:</span>
-                  <span className={`${getPriorityColor(row.Priority)} text-sm font-bold`}>{row.Priority}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-black text-sm font-bold">Status:</span>
-                  <span className={`${getStatusColor(row.Status)} text-sm font-bold`}>{row.Status}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-black text-sm font-bold">Created At:</span>
-                  <span className="text-sm font-bold">{row["Created At"]}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-black text-sm font-bold">Updated At:</span>
-                  <span className="text-sm font-bold">{row["Updated At"]}</span>
-                </div>
-                <div className="flex justify-center items-center">
-                <div className="flex items-center gap-4 py-3">
-                  <button className="focus:outline-none" onClick={() => handleViewClick(parseInt(row["Ticket ID"], 10))}>
-                    <Image src={view} alt="view" width={17} height={17} />
-                  </button>
-                  <button className="focus:outline-none" onClick={() => handleEditClick(parseInt(row["Ticket ID"], 10))}>
-                    <Image src={edit} alt="edit" width={17} height={17} />
-                  </button>
-                  <button className="focus:outline-none" onClick={() => handleDeleteClick(parseInt(row["Ticket ID"], 10))}>
-                    <Image src={deleteIcon} alt="delete" width={17} height={17} />
-                  </button>
-                </div>
+            <div className={`${openDropdown === index ? 'block' : 'hidden'} bg-[#FFFFFF] p-5 rounded-sm space-y-2`}>
+              <p className="text-black text-xs">
+                <span>ID </span>
+                <span>{row["ID"]}</span>
+              </p>
+              <p className="text-black text-xs">
+                <span>Company Name </span>
+                <span>{row["Customer Name"]}</span>
+              </p>
+              <p className="text-black text-xs">
+                <span>Type </span>
+                <span>{row["Type"]}</span>
+              </p>
+              <p className="text-black text-xs">
+                <span>Priority </span>
+                <span>{row["Priority"]}</span>
+              </p>
+              <p className="text-black text-xs">
+                <span>Status </span>
+                <span>{row["Status"]}</span>
+              </p>
+              <div className="w-1/2 mt-3">
+                <button
+                  className="bg-transparent text-[#FFFFFF] py-1 px-4 border border-blue-500 text-xs font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 w-full"
+                  onClick={() => handleViewClick(parseInt(row["ID"], 10))}
+                  style={{ backgroundColor: "#5027D9" }}
+                >
+                  View Ticket
+                </button>
               </div>
-              </div>
-              
-            )}
+            </div>
           </div>
         ))}
       </div>
-
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <Loader />
-        </div>
-      )}
     </div>
   );
 };

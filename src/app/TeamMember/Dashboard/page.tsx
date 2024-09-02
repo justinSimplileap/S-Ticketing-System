@@ -142,7 +142,7 @@ const Member: React.FC = () => {
 
 
 
-<div className="relative bg-[#F7F7F7] md:p-8 rounded-md mb-7 p-5 flex md:block" onClick={handleCardClick1}>
+<div className="relative bg-[#F7F7F7] md:p-8 rounded-md mb-7 p-5 flex md:block" onClick={handleCardClick2}>
         <div className="md:grid md:grid-cols-2 md:pb-10">
           <div className="w-16 h-16 bg-[#D4C7FF] rounded-full flex items-center justify-center">
             <Image src={test} alt="Open Tickets Icon" width={30} height={30} className="rounded-full" />
@@ -160,7 +160,7 @@ const Member: React.FC = () => {
   </div>
       </div>
 
-      <div className="relative bg-[#F7F7F7] md:p-8 rounded-md mb-7 p-5 flex md:block" onClick={handleCardClick1}>
+      <div className="relative bg-[#F7F7F7] md:p-8 rounded-md mb-7 p-5 flex md:block" onClick={handleCardClick3}>
         <div className="md:grid md:grid-cols-2 md:pb-10">
           <div className="w-16 h-16 bg-[#D4C7FF] rounded-full flex items-center justify-center ">
             <Image src={tick} alt="Closed Tickets Icon" width={30} height={30} className="rounded-full" />
