@@ -168,25 +168,25 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
             {openDropdown === index && (
               <div className=" mt-4 space-y-2 p-2  bg-[#FFFFFF]">
                 <div className="flex justify-between text-[#696969] font-normal">
-                  <h3 className="flex-1 text-center">Ticket ID</h3>
+                  <h3 className="flex-1 text-center font-medium text-gray-700">ID</h3>
                   <span className="flex-1 text-center">{row["ID"]}</span>
                 </div>
 
             
               <div className="flex justify-between text-[#696969] ">
-                  <h3 className="flex-1 text-center text-[#696969] font-medium">Company Name</h3>
-                  <span className="flex-1 text-center">{row["CompanyName"]}</span>
+                  <h3 className="flex-1 text-center font-medium text-gray-700">Customer</h3>
+                  <span className="flex-1 text-center">{row["Customer"]}</span>
                 </div>
                 
                 <div className="flex justify-between text-[#696969] ">
-                  <h3 className="flex-1 text-center text-[#696969] font-medium">Priority</h3>
+                  <h3 className="flex-1 text-center text-gray-700 font-medium">Priority</h3>
                  <span
               className={`flex-1 text-center px-1 py-1 rounded-full ${row["Priority"] === "Low"
-                ? "bg-[#F4F2FF] text-[#5A21DB]"
+                ? " text-[#5A21DB]"
                 : row["Priority"] === "Medium"
-                  ? "bg-[#F4F2FF] text-[#004FCF]"
+                  ? " text-[#004FCF]"
                   : row["Priority"] === "High"
-                    ? "bg-[#F4F2FF] text-[#004FCF]"
+                    ? " text-[#004FCF]"
                     : ""
               }`}
             >
@@ -196,7 +196,7 @@ const TableTwo: React.FC<TableProps> = ({ tickets, showUpdated }) => {
                 </div>
              
                 <div className="flex justify-between text-[#696969] ">
-                  <h3 className="flex-1 text-center text-[#696969] font-medium">Status</h3>
+                  <h3 className="flex-1 text-center text-gray-700 font-medium">Status</h3>
                   <span className="flex-1 text-center  ">{row["Status"]}</span>
                 </div>
                 <button
