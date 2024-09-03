@@ -149,6 +149,7 @@ export default function ClientComponent({
     "/Dashboard",
     "/TicketManagement",
     "/TicketManagement/NewTicket",
+    "/AccountDetails",
     /^\/TicketManagement\/ViewTicket\/[^/]+$/,
     /^\/TicketManagement\/EditTicket\/[^/]+$/,
     "/Profile",
@@ -175,6 +176,7 @@ export default function ClientComponent({
     "/TeamMember/TicketManagement",
     "/TeamMember/TicketManagement/ViewTicket",
     "/TeamMember/Profile",
+    // "/AccountDetails",
     /^\/TeamMember\/TicketManagement\/ViewTicket\/[^/]+$/,
   ];
 
