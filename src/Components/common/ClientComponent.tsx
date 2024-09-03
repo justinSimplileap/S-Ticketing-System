@@ -61,7 +61,7 @@ export default function ClientComponent({
             );
 
             if (!isAllowed) {
-              toast.error("You do not have access to this page.");
+              // toast.error("You do not have access to this page.");
               router.push("/SuperAdmin");
             } else {
               setIsAuthorized(true);
@@ -74,7 +74,7 @@ export default function ClientComponent({
             );
 
             if (!isAllowed) {
-              toast.error("You do not have access to this page.");
+              // toast.error("You do not have access to this page.");
               router.push("/TeamMember/Dashboard");
             } else {
               setIsAuthorized(true);
@@ -86,7 +86,7 @@ export default function ClientComponent({
                 : route === currentPath
             );
             if (!isAllowed) {
-              toast.error("You do not have access to this page.");
+              // toast.error("You do not have access to this page.");
               router.push("/Dashboard");
             } else {
               setIsAuthorized(true);
@@ -110,7 +110,7 @@ export default function ClientComponent({
         }
       } catch (error) {
         console.error("Error fetching user details:", error);
-        toast.error("Failed to fetch user details");
+        // toast.error("Failed to fetch user details");
       }
 
       setIsLoading(false);
