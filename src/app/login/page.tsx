@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import Loader from "@/Components/common/Loader";
 import { base_url } from "@/utils/constant";
 import logoBlack from "../../../public/images/simplileap_black_logo_2023 1.svg";
+
 // Define the interface for form data
 interface FormData {
   username: string;
@@ -52,66 +53,38 @@ const LoginForm = () => {
       );
 
       if (response.status === 200) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        toast.success("Login successful!");
-        const responseData = response.data;
+        const { token, user } = response.data;
 
-        if (responseData?.user?.role === "1") {
-          localStorage.setItem("role", responseData?.user?.role);
-          router.push("/SuperAdmin");
-        } else if (
-          responseData?.user?.role === "4" &&
-          responseData?.user?.onBoarded === false
-        ) {
-          router.push("/AccountDetails");
-        } else if (
-          responseData?.user?.role === "4" &&
-          responseData?.user?.onBoarded === true
-        ) {
-          router.push("/Dashboard");
-        } else if (
-          responseData?.user?.role === "2" &&
-          responseData?.user?.onBoarded === false
-        ) {
-          router.push("/AccountDetails");
-        } else if (
-          responseData?.user?.role === "2" &&
-          responseData?.user?.onBoarded === true
-        ) {
-          router.push("/Manager/Dashboard");
-        } else if (
-          responseData?.user?.role === "3" &&
-          responseData?.user?.onBoarded === true
-        ) {
-          router.push("/TeamMember/Dashboard");
-        } else if (
-          responseData?.user?.role === "3" &&
-          responseData?.user?.onBoarded === false
-        ) {
-          router.push("/AccountDetails");
+        // Save token to local storage
+        localStorage.setItem("token", token);
+
+        // Determine the redirect route based on role and onboarding status
+        let redirectPath = "";
+
+        if (user.role === "1") {
+          redirectPath = "/SuperAdmin";
+        } else if (user.role === "4" || user.role === "2") {
+          redirectPath = user.onBoarded ? "/Dashboard" : "/AccountDetails";
+        } else if (user.role === "3") {
+          redirectPath = user.onBoarded ? "/TeamMember/Dashboard" : "/AccountDetails";
         } else {
           toast.error("Error logging in. Please check your credentials.");
+          setLoading(false);
+          return; // Exit early if there is an error
         }
 
-        // if (responseData?.user?.onBoarded === false && ) {
-        //   console.log("Login successful:", response.data);
-        //   localStorage.setItem("token", response.data.token);
-        //   setLoading(false)
-        //   router.push("/AccountDetails");
-        // } else {
-        //   console.log("Login successful:", response.data);
-        //   localStorage.setItem("token", response.data.token);
-
-        //   localStorage.setItem("token", response.data.token);
-        //   setLoading(false)
-        //   router.push("/Dashboard");
-
-        // }
+        // Successful login toast and redirection
+        toast.success("Login successful!");
+        localStorage.setItem("role", user.role);
+        router.push(redirectPath);
+      } else {
+        toast.error("Error logging in. Please check your credentials.");
       }
     } catch (error) {
-      toast.error("Error logging in. Please check your credentials.");
+      toast.error("An unexpected error occurred.");
       console.error("Error logging in:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -127,23 +100,18 @@ const LoginForm = () => {
             layout="fill"
             className="absolute z-[-1] brightness-50"
           />
-
-          <div className="">
-            <Image src={Illustration} alt="Illustration" height={650} width={650}/>
+          <div>
+            <Image src={Illustration} alt="Illustration" height={650} width={650} />
           </div>
-
-          
         </div>
 
-        {/* right side  */}
-
-        {/* ========================================== */}
+        {/* right side */}
         <div className="flex flex-col justify-center items-center md:gap-14 gap-3 md:w-[70%] w-[100%] mx-auto h-screen overflow-hidden">
           <div className="flex justify-center items-center mb-[33px]">
-            <Image src={logoBlack} alt="Logo" height={200} width={200}/>
+            <Image src={logoBlack} alt="Logo" height={200} width={200} />
           </div>
           <div className="md:text-3xl text-2xl font-bold text-center text-black md:mb-0 mb-[33px]">
-            Welcome to <br></br>Ticket Management System
+            Welcome to <br />Ticket Management System
           </div>
           <div className="flex flex-col justify-start w-full md:pl-0 md:pr-0 pl-3 pr-3 md:pb-0 pb-3">
             <form onSubmit={handleSubmit(onSubmit)} className="">
