@@ -79,7 +79,7 @@ export default function ClientComponent({
             } else {
               setIsAuthorized(true);
             }
-          } else if (role === "4") {
+          } else if (role === "4" || role === "5") {
             const isAllowed = customerRoutes.some((route) =>
               route instanceof RegExp
                 ? route.test(currentPath)
