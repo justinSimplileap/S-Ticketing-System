@@ -86,7 +86,7 @@ const DashboardPage: React.FC = () => {
       setHighPriorityTickets(highPriorityTickets.length);
     } catch (error) {
       console.error("Error fetching tickets:", error);
-      toast.error("Failed to fetch tickets");
+      // toast.error("Failed to fetch tickets");
     }
   };
 
