@@ -324,7 +324,7 @@ export default function Page() {
     <div className="">
       <Toaster />
 
-      <div className="p-10 mx-10 my-12 bg-[#F9F9F9] rounded-md h-screen shadow-md">
+      <div className="p-3 lg:p-10 m-3 lg:mx-10 lg:my-12 bg-[#F9F9F9] rounded-md shadow-md">
         <div className="text-[#2A2C3E] text-2xl mb-6">Edit Ticket</div>
 
         <form className="space-y-6" onSubmit={handleFormSubmit}>
@@ -356,7 +356,7 @@ export default function Page() {
               )}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="lg:grid grid-cols-2 gap-3">
             <div className="">
               <label htmlFor="ticketType" className="block text-[#5E626C] pb-2">
                 Ticket Type <span className="text-red-600 text-md">*</span>
@@ -388,7 +388,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="">
+            <div className="mt-4 lg:mt-0">
               <label htmlFor="priority" className="block text-[#5E626C] pb-2">
                 Priority <span className="text-red-600 text-md">*</span>
               </label>
@@ -490,7 +490,7 @@ export default function Page() {
             )}
           </div>
 
-          <div className="rounded-md bg-[#F0ECFB] p-8">
+          <div className="rounded-md bg-[#F0ECFB] lg:p-8 p-3">
             <div className="flex justify-between items-center ">
               <div>
                 <h1 className="text-md font-medium text-lg">Attach files</h1>
@@ -502,7 +502,7 @@ export default function Page() {
                 <div>
                   <Image src={addticket} alt="Add new" width={20} />
                 </div>
-                <div className="text-[#5027D9] text-lg">Add new</div>
+                <div className="text-[#5027D9] lg:text-lg">Add new</div>
               </div>
             </div>
             <input
@@ -514,7 +514,7 @@ export default function Page() {
             />
             <div className="mt-4">
               {fileCombination && (
-                <div className="flex items-center">
+                <div className="flex items-center break-all">
                   <ul className="list-disc pl-5">
                     {fileCombination.map((file: any, index: any) => (
                       <li key={index} className="text-[#5E626C]">
@@ -554,12 +554,12 @@ export default function Page() {
               )}
             </div>
           </div>
-          <div className="flex gap-5 justify-end">
+          <div className="lg:flex gap-5 justify-end pb-10 lg:pb-0">
             <div>
               <Button
                 type="button"
                 onClick={handleCancel}
-                className="flex rounded bg-transparent py-3 px-7 text-sm text-[#5027D9] items-center gap-2 border-[#5027D9] border-2"
+                className="flex rounded bg-transparent py-3 px-7 text-sm text-[#5027D9] items-center gap-2 border-[#5027D9] border-2 w-[100%] lg:w-min justify-center mb-3"
               >
                 Cancel
               </Button>
@@ -567,7 +567,7 @@ export default function Page() {
             <div>
               <Button
                 type="submit"
-                className="flex rounded bg-[#5027D9] py-3 px-7 text-sm text-white items-center gap-2"
+                className="flex rounded bg-[#5027D9] py-3 px-7 text-sm text-white items-center gap-2 w-[100%] lg:w-42 justify-center"
               >
                 Update ticket
               </Button>

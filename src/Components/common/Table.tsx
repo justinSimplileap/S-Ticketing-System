@@ -256,36 +256,38 @@ const Table: React.FC<TableProps> = ({ tickets }) => {
                 </div>
               </div>
             </div>
-            <div className={`${openDropdown === index ? 'block' : 'hidden'} bg-[#FFFFFF] p-5 rounded-sm space-y-2`}>
-              <p className="text-black text-xs">
-                <span>ID </span>
+            <div className={`${openDropdown === index ? 'block' : 'hidden'} bg-[#FFFFFF] p-5 rounded-sm space-y-2 flex flex-col`}>
+              <p className="text-black text-xs flex justify-between">
+                <span className="font-bold">ID:</span>
                 <span>{row["ID"]}</span>
               </p>
-              <p className="text-black text-xs whitespace-nowrap">
-                <span>Company Name </span>
+              <p className="text-black text-xs whitespace-nowrap flex justify-between">
+                <span className="font-bold">Company Name: </span>
                 <span>{row["Customer"]}</span>
               </p>
-              <p className="text-black text-xs">
-                <span>Type </span>
+              <p className="text-black text-xs flex justify-between">
+                <span className="font-bold">Type: </span>
                 <span>{row["Type"]}</span>
               </p>
-              <p className="text-black text-xs">
-                <span>Priority </span>
+              <p className="text-black text-xs flex justify-between">
+                <span className="font-bold">Priority: </span>
                 <span>{row["Priority"]}</span>
               </p>
-              <p className="text-black text-xs">
-                <span>Status </span>
+              <p className="text-black text-xs flex justify-between">
+                <span className="font-bold">Status: </span>
                 <span>{row["Status"]}</span>
               </p>
-              <div className="w-1/2 mt-3">
-                <button
-                  className="bg-transparent text-[#FFFFFF] py-1 px-4 border border-blue-500 text-xs font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 w-full"
-                  onClick={() => handleViewClick(parseInt(row["ID"], 10))}
-                  style={{ backgroundColor: "#5027D9" }}
-                >
-                  View Ticket
-                </button>
-              </div>
+              <div className="flex items-center justify-center gap-2">
+                          <button className="focus:outline-none" onClick={() => handleViewClick(parseInt(row["ID"], 10))}>
+                            <Image src={view} alt="view"  width={18} height={18} />
+                          </button>
+                          <button className="focus:outline-none" onClick={() => handleEditClick(parseInt(row["ID"], 10))}>
+                            <Image src={edit} alt="edit" width={18} height={18} />
+                          </button>
+                          <button className="focus:outline-none" onClick={() => handleDeleteClick(parseInt(row["ID"], 10))}>
+                            <Image src={deleteIcon} alt="delete" width={18} height={18} />
+                          </button>
+                        </div>
             </div>
           </div>
         ))}
