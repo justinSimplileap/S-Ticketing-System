@@ -19,6 +19,7 @@ type FormInputs = {
   email: string;
   phone_number: string;
   company_url: string;
+  password: string;
   address: string;
   city: string;
   country: string;
@@ -32,6 +33,7 @@ interface DisplayedCustomerFormProps {
   selectedUserEmail: string | null;
   selectedUserPhone: string | null;
   selectedUserUrl: string | null;
+  selectedUserPass: string | null;
   selectedUserArea: string | null;
   selectedUserCompanyName: string | null;
   selectedUserAddress: string | null;
@@ -49,6 +51,7 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
   selectedUserEmail,
   selectedUserPhone,
   selectedUserUrl,
+  selectedUserPass,
   selectedUserArea,
   selectedUserCompanyName,
   selectedUserAddress,
@@ -122,6 +125,7 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
     formData.append("customer_name", data.customer_name);
     formData.append("company_legal_name", data.company_legal_name);
     formData.append("company_url", data.company_url);
+    formData.append("password", data.password)
     formData.append("phone_number", data.phone_number.toString());
     formData.append("email", data.email);
     formData.append("address", data.address);
@@ -255,7 +259,7 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
               </span>
             )} */}
           </div>
-          <div className="col-span-2">
+          <div className="">
             <label htmlFor="companyUrl" className="block text-sm ">
               Company URL
             </label>
@@ -264,6 +268,23 @@ const DisplayedCustomerForm: React.FC<DisplayedCustomerFormProps> = ({
               type="url"
               defaultValue={selectedUserUrl || ""}
               {...register("company_url")}
+              className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
+            />
+            {/* {errors.company_url && (
+              <span role="alert" className="text-red-600">
+                Company URL is required
+              </span>
+            )} */}
+          </div>
+          <div className="">
+            <label htmlFor="password" className="block text-sm ">
+              Password
+            </label>
+            <input
+              id="password"
+              type="text"
+              defaultValue={selectedUserPass || ""}
+              {...register("password")}
               className="input-field p-2 mt-2 mb-2 w-full border-2 border-[#DFEAF2] rounded-md focus:outline-none"
             />
             {/* {errors.company_url && (

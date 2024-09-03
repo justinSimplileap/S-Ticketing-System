@@ -48,6 +48,7 @@ interface Customer {
   organization_id: UUID;
   name: string;
   url: string;
+  password: string;
   area: string;
   phone: string;
   email: string;
@@ -116,6 +117,7 @@ const convertClientToCustomer = (client: Client): Customer => {
     organization_id: client.organization_id,
     name: client.customer_name,
     url: client.company_url || "",
+    password: client.password || "",
     area: client.area_of_work || "",
     phone: client.phone_number || "",
     email: client.email,
@@ -207,6 +209,8 @@ export default function Settings() {
     null
   );
   const [selectedUserUrl, setSelectedUserUrl] = useState<string | null>(null);
+  const [selectedUserPass, setSelectedUserPass] = useState<string | null>(null);
+
   const [selectedUserArea, setSelectedUserArea] = useState<string | null>(null);
   const [selectedUserCompanyName, setSelectedUserCompanyName] = useState<
     string | null
@@ -271,6 +275,7 @@ export default function Settings() {
     setSelectedUserEmail(customer.email);
     setSelectedUserPhone(customer.phone);
     setSelectedUserUrl(customer.url);
+    setSelectedUserPass(customer.password);
     setSelectedUserArea(customer.area);
     setSelectedUserCompanyName(customer.company_legal_name);
     setSelectedUserAddress(customer.address);
@@ -734,6 +739,7 @@ export default function Settings() {
                               selectedUserUrl={selectedUserUrl}
                               selectedUserArea={selectedUserArea}
                               selectedUserCompanyName={selectedUserCompanyName}
+                              selectedUserPass={selectedUserPass}
                               selectedUserAddress={selectedUserAddress}
                               selectedUserCity={selectedUserCity}
                               selectedUserCountry={selectedUserCountry}
