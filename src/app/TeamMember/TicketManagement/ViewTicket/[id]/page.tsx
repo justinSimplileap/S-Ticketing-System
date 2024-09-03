@@ -94,6 +94,9 @@ const ViewTicketPage: React.FC = () => {
   const [hours, setHours] = useState("");
   const [minutes, setMinutes] = useState("");
 
+
+   console.log("Current formStatus:", formStatus);
+
   const handleHoursChange = (e: any) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
     setHours(value);
@@ -387,6 +390,29 @@ const ViewTicketPage: React.FC = () => {
       setIsAssignModalOpen(false); // Close the modal
     }
   };
+  const getPriorityColor = (priority: string) => {
+    switch (priority.toLowerCase()) {
+      case "high":
+        return "text-red-300";
+      case "medium":
+        return "text-purple-300";
+      case "low":
+        return "text-green-300";
+      default:
+        return "text-gray-600";
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "open":
+        return "text-red-300";
+      case "closed":
+        return "text-green-600";
+      default:
+        return "text-gray-600";
+    }
+  };
 
   return (
     <div>
@@ -427,11 +453,15 @@ const ViewTicketPage: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 mb-4 md:mb-8">
             <div className="flex flex-col">
               <p className="text-[#2A2C3E] font-medium">Priority:</p>
-              <p className="text-[#7D7D7D] md:inline">{priority}</p>
+               <p className={`text-[#7D7D7D] md:inline ${getPriorityColor(priority)}`}>
+                {priority}
+              </p>
             </div>
             <div className="flex flex-col">
               <p className="text-[#2A2C3E] font-medium">Status:</p>
-              <p className="text-[#7D7D7D] md:inline">{status}</p>
+              <p className={`text-[#7D7D7D] md:inline ${getStatusColor(status)}`}>
+                {status}
+              </p>
             </div>
             <div className="flex flex-col">
               <p className="text-[#2A2C3E] font-medium">Total Hours Logged:</p>
@@ -503,6 +533,7 @@ const ViewTicketPage: React.FC = () => {
                   value={formStatus}
                   onChange={(e) => setFormStatus(e.target.value)}
                 >
+                   <option value="" disabled>Select status</option>
                   <option value="Open">Open</option>
                   <option value="Closed">Closed</option>
                 </select>
