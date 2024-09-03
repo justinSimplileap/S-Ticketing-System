@@ -73,7 +73,7 @@ const ViewTicketPage: React.FC = () => {
   const [status, setStatus] = useState("");
   const [totalHours, setTotalHours] = useState("");
   const [customer_name, setRaisedBy] = useState("");
-  const [assignedTo, setAssignedTo] = useState("");
+  const [assigned_to, setAssignedTo] = useState("");
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
@@ -446,7 +446,7 @@ const ViewTicketPage: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <p className="text-[#2A2C3E] font-medium">Assigned To:</p>
-              <p className="text-[#7D7D7D] md:inline">{assignedTo}</p>
+              <p className="text-[#7D7D7D] md:inline">{assigned_to}</p>
             </div>
             <div className="flex flex-col">
               <p className="text-[#2A2C3E] font-medium">Project Name:</p>

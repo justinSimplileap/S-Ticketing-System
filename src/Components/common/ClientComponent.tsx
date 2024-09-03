@@ -176,7 +176,7 @@ export default function ClientComponent({
     "/TeamMember/TicketManagement",
     "/TeamMember/TicketManagement/ViewTicket",
     "/TeamMember/Profile",
-    // "/AccountDetails",
+    "/AccountDetails",
     /^\/TeamMember\/TicketManagement\/ViewTicket\/[^/]+$/,
   ];
 
@@ -226,7 +226,9 @@ export default function ClientComponent({
           setIsSidebarExpanded={setIsSidebarExpanded}
         />
       )}
-      {matchesRoute(TeamMemberSidebarRoutes) && (
+      
+      {matchesRoute(TeamMemberSidebarRoutes) && 
+        !matchesRoute(ExtraRoutes) && (
         <TeamMemberSidebar
           isExpanded={isSidebarExpanded}
           setIsSidebarExpanded={setIsSidebarExpanded}

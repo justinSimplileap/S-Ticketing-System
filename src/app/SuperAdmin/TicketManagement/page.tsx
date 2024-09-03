@@ -132,14 +132,14 @@ export default function Page() {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          params: {
-            type: typeValue !== "Type" ? typeValue : undefined,
-            priority: priorityValue !== "Priority" ? priorityValue : undefined,
-            status: statusValue !== "Status" ? statusValue : undefined,
-            search: searchQuery || '',
-            // page: page,
-            limit: 10,
-          },
+          // params: {
+          //   type: typeValue !== "Type" ? typeValue : undefined,
+          //   priority: priorityValue !== "Priority" ? priorityValue : undefined,
+          //   status: statusValue !== "Status" ? statusValue : undefined,
+          //   search: searchQuery || '',
+          //   // page: page,
+          //   limit: 10,
+          // },
         }
       );
 
@@ -241,7 +241,7 @@ export default function Page() {
           setCustomerName={setCustomerName}
           clients={clients}
           handleReset={handleReset}
-          fetchTickets={fetchTickets}
+          // fetchTickets={fetchTickets}
         />
       </div>
       <div className="mx-3 lg:mx-8">

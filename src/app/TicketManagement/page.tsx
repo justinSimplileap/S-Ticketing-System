@@ -233,7 +233,7 @@ function TicketManagementPage() {
           statusValue={statusValue}
           setStatusValue={setStatusValue}
           handleReset={handleReset}
-          fetchTickets={fetchTickets}
+          // fetchTickets={fetchTickets}
           customerName={customerName}
           setCustomerName={setCustomerName}
           clients={clients}

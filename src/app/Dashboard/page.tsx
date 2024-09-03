@@ -52,6 +52,15 @@ const DashboardPage: React.FC = () => {
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    const loginSuccess = localStorage.getItem("loginSuccess");
+
+    if (loginSuccess) {
+      toast.success("Login successful!");
+      localStorage.removeItem("loginSuccess");
+    }
+  }, []);
+
   const fetchTickets = async () => {
     try {
       const response = await axios.get<{ tickets: Ticket[] }>(
@@ -136,7 +145,7 @@ const DashboardPage: React.FC = () => {
         </Button>
       </div>
       <div className="md:ml-8 ml-3 md:mr-8 mr-3 shadow-lg rounded-md">
-        <h1 className="md:text-2xl text-2xl p-7 text-[#2A2C3E]">Summary</h1>
+        <h1 className="md:text-2xl text-2xl p-7 text-[#2A2C3E] font-medium">Summary</h1>
         <div className="grid md:grid-cols-3 gap-5 md:mr-7 mr-2 ml-2">
           <div
             className="bg-[#F7F7F7] md:p-8 p-2 rounded-md md:ml-7 md:mb-7  mb-2  cursor-pointer"
@@ -259,14 +268,14 @@ const DashboardPage: React.FC = () => {
       </div>
       <div className="md:m-8 flex flex-col gap-5">
         <div className="flex md:px-0 md:py-7 p-3 justify-between gap-5">
-          <div className="md:text-2xl text-md text-[#2A2C3E] whitespace-nowrap">Recent Tickets</div>
-          <div className="md:text-2xl text-md text-[#696969] flex md:gap-3 gap-1 justify-center items-center whitespace-nowrap">
+          <div className="md:text-2xl text-md text-[#2A2C3E] whitespace-nowrap font-medium">Recent Tickets</div>
+          <div className="md:text-lg text-md text-[#696969] flex md:gap-3 gap-1 justify-center items-center whitespace-nowrap ">
             <div>
               <Link href="/TicketManagement">View All Tickets </Link>
             </div>
             <div>
               <Link href="#">
-                <Image src={Arrow} alt="hhh" width={28} className="w-[15px] sm:w-[100px] md:w-[35px]"/>
+                <Image src={Arrow} alt="hhh" width={20} className="w-[15px] sm:w-[100px] md:w-[20px]"/>
               </Link>
             </div>
           </div>

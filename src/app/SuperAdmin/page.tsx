@@ -62,6 +62,15 @@ export default function SuperAdminDashboard() {
     fetchTeamCard();
   }, []);
 
+  useEffect(() => {
+    const loginSuccess = localStorage.getItem("loginSuccess");
+
+    if (loginSuccess) {
+      toast.success("Login successful!");
+      localStorage.removeItem("loginSuccess");
+    }
+  }, []);
+
 
   const fetchCustomerCard = async () => {
     try {
@@ -408,18 +417,18 @@ export default function SuperAdminDashboard() {
       {/* end of top half */}
 
       <div className="m-4 lg:m-8 flex flex-col gap-5">
-        <div className="flex flex-col lg:flex-row p-3 lg:p-7 justify-between">
-          <div className="text-xl lg:text-3xl text-[#2A2C3E]">Recent Tickets</div>
-          <div className="text-xl lg:text-2xl text-[#696969] flex gap-3 lg:justify-center items-center pt-3 lg:pt-0">
+        <div className="flex flex-col lg:flex-row p-3 md::py-7 md:px-0 justify-between">
+          <div className="text-xl lg:text-2xl text-[#2A2C3E] font-medium">Recent Tickets</div>
+          <div className="text-xl lg:text-[15px] text-[#696969] flex gap-3 lg:justify-center items-center pt-3 lg:pt-0">
             <div>
               <Link href="/SuperAdmin/TicketManagement">View All Tickets </Link>
             </div>
             <div className="hidden lg:block">
               <Link href="/SuperAdmin/TicketManagement">
-                <Image src={Arrow} alt="hhh" width={28} />
+                <Image src={Arrow} alt="hhh" width={20} />
               </Link>
             </div>
-            <div className="lg:hidden">
+            <div className="lg:hidden"> 
               <Link href="#">
                 <Image src={Arrow} alt="hhh" width={18} />
               </Link>

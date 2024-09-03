@@ -57,6 +57,7 @@ const LoginForm = () => {
 
         // Save token to local storage
         localStorage.setItem("token", token);
+        localStorage.setItem("loginSuccess", "true");
 
         // Determine the redirect route based on role and onboarding status
         let redirectPath = "";
@@ -74,7 +75,7 @@ const LoginForm = () => {
         }
 
         // Successful login toast and redirection
-        toast.success("Login successful!");
+        
         localStorage.setItem("role", user.role);
         router.push(redirectPath);
       } else {

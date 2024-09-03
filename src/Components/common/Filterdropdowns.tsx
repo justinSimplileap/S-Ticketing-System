@@ -20,7 +20,7 @@ interface DropdownFiltersProps {
   setCustomerName: (value: string) => void;
   clients: Client[];
   handleReset: () => void;
-  fetchTickets: () => void;
+  // fetchTickets: () => void;
 }
 
 const DropdownFilters: React.FC<DropdownFiltersProps> = ({
@@ -34,7 +34,7 @@ const DropdownFilters: React.FC<DropdownFiltersProps> = ({
   setCustomerName,
   clients,
   handleReset,
-  fetchTickets,
+  // fetchTickets,
 }) => {
   const pathname = usePathname();
   console.log("this is path", pathname);
@@ -44,7 +44,7 @@ const DropdownFilters: React.FC<DropdownFiltersProps> = ({
     setValue: (value: string) => void
   ) => {
     setValue(e.target.value);
-    fetchTickets();
+    // fetchTickets();
   };
 
   return (

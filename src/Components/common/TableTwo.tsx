@@ -12,6 +12,7 @@ type Ticket = {
   subject: string;
   updatedAt: string;
   ticket_type: string;
+
 };
 
 type TableRow = {
